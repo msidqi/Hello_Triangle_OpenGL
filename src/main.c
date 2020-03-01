@@ -109,28 +109,6 @@ int		main(void)
 		glfwTerminate();
 		return (-1);
 	}
-
-	unsigned int VAO;
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
-/*
-** next VBO, EBO i.e glVertexAttribPointer glEnableVertexAttribArray calls will be stored inside this VAO
-** now you can bind this VAO in render loop without the need to configure each VBO (with glBindVertexArray(VAO); again)
-*/
-
-//vertex input-------------------
-	float vertices[] = {
-    -0.5f, -0.5f, 0.0f,
-     0.5f, -0.5f, 0.0f,
-     0.0f,  0.5f, 0.0f
-	};
-	unsigned int VBO;
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-// specify how data should be interpreted
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);//applies to the currently bound VBO to GL_ARRAY_BUFFER
-	glEnableVertexAttribArray(0); // enable location 0
 //reading/creating/compiling vertex shader
 	char *vertexShaderSource;
 	if (!(vertexShaderSource = read_shader_file("src/vertex_shader.glsl")))
@@ -154,6 +132,39 @@ int		main(void)
 	glDeleteShader(fragmentShader);
 	free(fragmentShaderSource);
 
+	
+//--------------------------------------------------------------------------------------
+	unsigned int VAO;
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
+/*
+** next VBO, EBO i.e glVertexAttribPointer glEnableVertexAttribArray calls will be stored inside this VAO
+** now you can bind this VAO in render loop without the need to configure each VBO (with glBindVertexArray(VAO); again)
+*/
+
+//vertex input-------------------
+	float vertices[] = {
+     0.5f,  0.5f, 0.0f,  // top right
+     0.5f, -0.5f, 0.0f,  // bottom right
+    -0.5f, -0.5f, 0.0f,  // bottom left
+    -0.5f,  0.5f, 0.0f   // top left 
+	};
+	unsigned int VBO;
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	unsigned int indices[] = {  // note that we start from 0!
+		0, 1, 3,   // first triangle
+		1, 2, 3    // second triangle
+	};
+	unsigned int EBO; // use EBO to remove duplicate/shared vertices in VBO's (now 4 v instead of 6)
+	glGenBuffers(1, &EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+// specify how data should be interpreted
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);//applies to the currently bound VBO to GL_ARRAY_BUFFER
+	glEnableVertexAttribArray(0); // enable location 0
+
 //window loop
 	while(!glfwWindowShouldClose(window))
 	{
@@ -165,7 +176,8 @@ int		main(void)
 
 		glUseProgram(shaderProgram);
 		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		// glDrawArrays(GL_TRIANGLES, 0, 3); // used for VBO's without indices
 		glfwSwapBuffers(window);
 	}
 	glfwTerminate();
