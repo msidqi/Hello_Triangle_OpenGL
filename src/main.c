@@ -144,27 +144,39 @@ int		main(void)
 
 	
 //--------------------------------------------------------------------------------------
-	unsigned int VAO;
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
 /*
 ** all next VBO, EBO i.e glVertexAttribPointer glEnableVertexAttribArray calls will be stored inside this VAO
 ** now you can bind this VAO in render loop without the need to configure each VBO,EBO (with glBindVertexArray(VAO); again)
 */
 
 //vertex input-------------------
-	float vertices[] = {
+	float vertices0[] = {
     -0.5f, 0.5f, 0.0f,	// top
     -0.9f, -0.5f, 0.0f,	// bottom left
 	-0.1f, -0.5f, 0.0f,	// bottom right
-    0.5f, 0.5f, 0.0f,	// top
+	};
+	float vertices1[] = {
+	0.5f, 0.5f, 0.0f,	// top
     0.1f, -0.5f, 0.0f,	// bottom left
 	0.9f, -0.5f, 0.0f,	// bottom right
 	};
-	unsigned int VBO;
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	unsigned int VBO[2];
+	glGenBuffers(2, VBO);
+
+	unsigned int VAO[2];
+	glGenVertexArrays(2, VAO);
+
+	glBindVertexArray(VAO[0]);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO[0]); 
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices0), vertices0, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);//applies to the currently bound VBO to GL_ARRAY_BUFFER
+	glEnableVertexAttribArray(0); // enable location 0
+	// glBindVertexArray(0); // unbind VAO_0
+
+	glBindVertexArray(VAO[1]);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO[1]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices1), vertices1, GL_STATIC_DRAW);
 	/*unsigned int indices[] = {  // note that we start from 0!
 		0, 1, 3,   // first triangle
 		1, 2, 3    // second triangle
@@ -174,7 +186,7 @@ int		main(void)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);*/
 // specify how data should be interpreted
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);//applies to the currently bound VBO to GL_ARRAY_BUFFER
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);//applies to the currently bound VBO to GL_ARRAY_BUFFER
 	glEnableVertexAttribArray(0); // enable location 0
 
 //window loop
@@ -187,16 +199,15 @@ int		main(void)
 		processInput(window);
 
 		glUseProgram(shaderProgram);
-		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		// glDrawArrays(GL_TRIANGLES, 0, 3);
-		// glDrawArrays(GL_TRIANGLES, 3, 3);
-		glDrawArrays(GL_TRIANGLES, 0, 6); // with one call
+		glBindVertexArray(VAO[0]);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glBindVertexArray(VAO[1]);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
 		glfwSwapBuffers(window);
 	}
-	glDeleteVertexArrays(1, &VAO);
+	glDeleteVertexArrays(2, &VAO[0]);
 	// glDeleteBuffers(1, &EBO);
-	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(2, &VBO[0]);
 	glfwTerminate();
 	return (0);
 }
