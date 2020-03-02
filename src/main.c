@@ -17,6 +17,12 @@ void	processInput(GLFWwindow *window)
 {
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
+	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 }
 
 int		init_setup(GLFWwindow **window, int width, int height, char *window_name)
@@ -25,7 +31,9 @@ int		init_setup(GLFWwindow **window, int width, int height, char *window_name)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // load only core OpenGL
-    //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // for Mac OS to Initialize
+#ifdef __APPLE__
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // for Mac OS to Initialize
+#endif
 	(*window) = glfwCreateWindow(width, height, window_name, NULL, NULL);
 	if ((*window) == NULL)
 	{
@@ -66,6 +74,7 @@ char	*read_shader_file(const char *file_name)
 	fclose(fd);
 	return (shader_buffer);
 }
+
 void	create_compile_shader(const char *shader_source, unsigned int *shader, int shader_type)
 {
 	int  success;
@@ -127,6 +136,7 @@ int		main(void)
 	unsigned int shaderProgram;
 	create_link_program(&shaderProgram, vertexShader, fragmentShader);
 
+//	free shaders / shaders source code
 	glDeleteShader(vertexShader);
 	free(vertexShaderSource);
 	glDeleteShader(fragmentShader);
@@ -138,29 +148,31 @@ int		main(void)
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 /*
-** next VBO, EBO i.e glVertexAttribPointer glEnableVertexAttribArray calls will be stored inside this VAO
-** now you can bind this VAO in render loop without the need to configure each VBO (with glBindVertexArray(VAO); again)
+** all next VBO, EBO i.e glVertexAttribPointer glEnableVertexAttribArray calls will be stored inside this VAO
+** now you can bind this VAO in render loop without the need to configure each VBO,EBO (with glBindVertexArray(VAO); again)
 */
 
 //vertex input-------------------
 	float vertices[] = {
-     0.5f,  0.5f, 0.0f,  // top right
-     0.5f, -0.5f, 0.0f,  // bottom right
-    -0.5f, -0.5f, 0.0f,  // bottom left
-    -0.5f,  0.5f, 0.0f   // top left 
+    -0.5f, 0.5f, 0.0f,	// top
+    -0.9f, -0.5f, 0.0f,	// bottom left
+	-0.1f, -0.5f, 0.0f,	// bottom right
+    0.5f, 0.5f, 0.0f,	// top
+    0.1f, -0.5f, 0.0f,	// bottom left
+	0.9f, -0.5f, 0.0f,	// bottom right
 	};
 	unsigned int VBO;
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	unsigned int indices[] = {  // note that we start from 0!
+	/*unsigned int indices[] = {  // note that we start from 0!
 		0, 1, 3,   // first triangle
 		1, 2, 3    // second triangle
 	};
 	unsigned int EBO; // use EBO to remove duplicate/shared vertices in VBO's (now 4 v instead of 6)
 	glGenBuffers(1, &EBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);*/
 // specify how data should be interpreted
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);//applies to the currently bound VBO to GL_ARRAY_BUFFER
 	glEnableVertexAttribArray(0); // enable location 0
@@ -176,10 +188,14 @@ int		main(void)
 
 		glUseProgram(shaderProgram);
 		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		// glDrawArrays(GL_TRIANGLES, 0, 3); // used for VBO's without indices
+		// glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glDrawArrays(GL_TRIANGLES, 0, 3); // used for VBO's without indices
+		glDrawArrays(GL_TRIANGLES, 3, 3); // used for VBO's without indices
 		glfwSwapBuffers(window);
 	}
+	glDeleteVertexArrays(1, &VAO);
+	// glDeleteBuffers(1, &EBO);
+	glDeleteBuffers(1, &VBO);
 	glfwTerminate();
 	return (0);
 }
