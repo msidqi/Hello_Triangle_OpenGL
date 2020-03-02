@@ -126,21 +126,27 @@ int		main(void)
 	create_compile_shader((const char *)vertexShaderSource, &vertexShader, GL_VERTEX_SHADER);
 	
 //reading/creating/compiling fragment shader
-	char *fragmentShaderSource;
-	if (!(fragmentShaderSource = read_shader_file("src/fragment_shader.glsl")))
+	char *fragmentShaderSource[2];
+	if (!(fragmentShaderSource[0] = read_shader_file("src/fragment_shader0.glsl")))
 		return (-1);
-	unsigned int fragmentShader;
-	create_compile_shader(fragmentShaderSource, &fragmentShader, GL_FRAGMENT_SHADER);
+	if (!(fragmentShaderSource[1] = read_shader_file("src/fragment_shader1.glsl")))
+		return (-1);
+	unsigned int fragmentShader[2];
+	create_compile_shader(fragmentShaderSource[0], &fragmentShader[0], GL_FRAGMENT_SHADER);
+	create_compile_shader(fragmentShaderSource[1], &fragmentShader[1], GL_FRAGMENT_SHADER);
 
 // creating program/linking shaders to program
-	unsigned int shaderProgram;
-	create_link_program(&shaderProgram, vertexShader, fragmentShader);
+	unsigned int shaderProgram[2];
+	create_link_program(&shaderProgram[0], vertexShader, fragmentShader[0]);
+	create_link_program(&shaderProgram[1], vertexShader, fragmentShader[1]);
 
 //	free shaders / shaders source code
 	glDeleteShader(vertexShader);
 	free(vertexShaderSource);
-	glDeleteShader(fragmentShader);
-	free(fragmentShaderSource);
+	glDeleteShader(fragmentShader[0]);
+	glDeleteShader(fragmentShader[1]);
+	free(fragmentShaderSource[0]);
+	free(fragmentShaderSource[1]);
 
 	
 //--------------------------------------------------------------------------------------
@@ -177,14 +183,6 @@ int		main(void)
 	glBindVertexArray(VAO[1]);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO[1]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices1), vertices1, GL_STATIC_DRAW);
-	/*unsigned int indices[] = {  // note that we start from 0!
-		0, 1, 3,   // first triangle
-		1, 2, 3    // second triangle
-	};
-	unsigned int EBO; // use EBO to remove duplicate/shared vertices in VBO's (now 4 v instead of 6)
-	glGenBuffers(1, &EBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);*/
 // specify how data should be interpreted
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);//applies to the currently bound VBO to GL_ARRAY_BUFFER
 	glEnableVertexAttribArray(0); // enable location 0
@@ -198,9 +196,10 @@ int		main(void)
 		glfwPollEvents();
 		processInput(window);
 
-		glUseProgram(shaderProgram);
+		glUseProgram(shaderProgram[0]);
 		glBindVertexArray(VAO[0]);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glUseProgram(shaderProgram[1]);
 		glBindVertexArray(VAO[1]);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 		glfwSwapBuffers(window);
