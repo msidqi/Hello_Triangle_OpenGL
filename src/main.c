@@ -199,9 +199,11 @@ int		main(void)
 		glUseProgram(shaderProgram[0]);
 		glBindVertexArray(VAO[0]);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
+
 		glUseProgram(shaderProgram[1]);
 		glBindVertexArray(VAO[1]);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
+
 		glfwSwapBuffers(window);
 	}
 	glDeleteVertexArrays(2, &VAO[0]);
