@@ -162,9 +162,9 @@ int		main(void)
 	-0.1f, -0.5f, 0.0f,	// bottom right
 	};
 	float vertices1[] = {
-	0.5f, 0.5f, 0.0f,	// top
-    0.1f, -0.5f, 0.0f,	// bottom left
-	0.9f, -0.5f, 0.0f,	// bottom right
+	0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,	// top
+    0.1f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,	// bottom left
+	0.9f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,	// bottom right
 	};
 
 	unsigned int VBO[2];
@@ -174,7 +174,7 @@ int		main(void)
 	glGenVertexArrays(2, VAO);
 
 	glBindVertexArray(VAO[0]);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO[0]); 
+	glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices0), vertices0, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);//applies to the currently bound VBO to GL_ARRAY_BUFFER
 	glEnableVertexAttribArray(0); // enable location 0
@@ -184,8 +184,10 @@ int		main(void)
 	glBindBuffer(GL_ARRAY_BUFFER, VBO[1]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices1), vertices1, GL_STATIC_DRAW);
 // specify how data should be interpreted
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);//applies to the currently bound VBO to GL_ARRAY_BUFFER
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof (float), (void*)0);//applies to the currently bound VBO to GL_ARRAY_BUFFER
 	glEnableVertexAttribArray(0); // enable location 0
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof (float), (void*)(3 * sizeof(float))/* pointer to the first color element in vertex data*/);
+	glEnableVertexAttribArray(1); // enable location 1
 
 //window loop
 	while(!glfwWindowShouldClose(window))
@@ -195,8 +197,11 @@ int		main(void)
 
 		glfwPollEvents();
 		processInput(window);
-
+		
+		int vertexColorLocation = glGetUniformLocation(shaderProgram[0], "changingColor"); // find location of uniform variable in fragmentshader
 		glUseProgram(shaderProgram[0]);
+		glUniform4f(vertexColorLocation, 1.0f, 0.3f, 0.6f, 1.0f);
+
 		glBindVertexArray(VAO[0]);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
