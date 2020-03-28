@@ -53,13 +53,30 @@ int		main(void)
 		glfwTerminate();
 		return (-1);
 	}
-	if (!(shader = shader_contruct("src/shaderSource/vertex.glsl", "src/shaderSource/fragment.glsl")))
+	if (!(shader = shader_contruct("src/shaders/shaderSource/vertex.glsl", "src/shaders/shaderSource/fragment.glsl")))
 	{
 		printf("ERROR::SHADER::CONSTRUCTION\n");
 		return (-1);
 	}
+
+	float texCoords[] = {
+    0.0f, 0.0f,  // lower-left corner  
+    1.0f, 0.0f,  // lower-right corner
+    0.5f, 1.0f   // top-center corner
+	};
+
+	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT); // set how openGL wraps textures on S axis (x)
+	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+	float borderColor[] = { 1.0f, 1.0f, 0.0f, 1.0f };
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); // texture filterng option for when using small texture on bigger obj
+
+	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR); // only after enabling MIPMAP with glGenerateMipmaps()
+	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); // sets how OpenGL handles filtering between different mipmap layers
 	float vertices1[] = {
-	0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,	// top
+	0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,		// top
     0.1f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,	// bottom left
 	0.9f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,	// bottom right
 	};

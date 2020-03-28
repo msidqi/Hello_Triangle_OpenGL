@@ -1,5 +1,5 @@
 #ifndef SHADERS_H
-#define SHADERS_H
+# define SHADERS_H
 
 typedef struct		s_shader
 {
