@@ -15,9 +15,11 @@ HEADERSPATH = include
 all : $(NAME)
 
 $(NAME) :
-	gcc -o $(NAME) $(SRC) -I$(HEADERSPATH) $(FLAGS)
+	gcc -o $(NAME) $(SRC) $(HEADERSPATH)/scop.h $(FLAGS)
+	# gcc -E $(SRC) $(HEADERSPATH)/scop.h $(FLAGS)
+	# gcc -o $(NAME) $(SRC) -I$(HEADERSPATH) $(FLAGS)
 
-clean : 
+clean :
 	rm -rf ogl
 fclean : clean
 	rm -rf ogl

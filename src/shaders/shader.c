@@ -1,4 +1,4 @@
-#include "shaders.h"
+#include "../../include/shaders.h"
 #include <glad/glad.h> 
 #include <stdio.h>
 #include <stdlib.h>
@@ -79,7 +79,7 @@ void setFloat(struct s_shader *this, const char *name, float value)
     glUniform1f(glGetUniformLocation(this->program_id, name), value); 
 }
 
-t_shader	*shader_contruct(const char *vshader_path, const char *fshader_path)
+t_shader	*shader_construct(const char *vshader_path, const char *fshader_path)
 {
 	t_shader		*this;
 	char			*vshader_source;

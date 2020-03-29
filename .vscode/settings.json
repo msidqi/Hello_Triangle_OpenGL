@@ -1,6 +1,11 @@
 {
 	"files.associations": {
 		"glfw3.h": "c",
-		"khrplatform.h": "c"
+		"khrplatform.h": "c",
+		"type_traits": "c",
+		"glad.h": "c",
+		"shaders.h": "c",
+		"texture_helper.h": "c",
+		"stb_image.h": "c"
 	}
 }

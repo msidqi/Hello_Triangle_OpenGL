@@ -11,7 +11,7 @@ typedef struct		s_shader
 	void			(*setFloat)(struct s_shader *this, const char *name, float value);
 }					t_shader;
 
-t_shader	*shader_contruct(const char *vshader_path, const char *fshader_path);
+t_shader	*shader_construct(const char *vshader_path, const char *fshader_path);
 char		*read_shader_file(const char *file_name);
 
 #endif
