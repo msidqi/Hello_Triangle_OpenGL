@@ -44,7 +44,6 @@ int		create_compile_shader(char *shader_source, unsigned int *shader, int shader
 		printf("ERROR::SHADER::%s::COMPILATION_FAILED\n%s\n", type, info_log);
 		return (0);
 	}
-	free(shader_source);
 	return (1);
 }
 
@@ -63,8 +62,6 @@ int		create_link_program(unsigned int *shader_program, unsigned int vshader, uns
 		printf("ERROR::PROGRAM::LINKING_FAILED\n%s\n", info_log);
 		return (0);
 	}
-	glDeleteShader(vshader);
-	glDeleteShader(fshader);
 	return (1);
 }
 
@@ -95,11 +92,15 @@ t_shader	*shader_contruct(const char *vshader_path, const char *fshader_path)
 	if (!(vshader_source = read_shader_file(vshader_path))
 	|| !create_compile_shader(vshader_source, &vshader, GL_VERTEX_SHADER))
 		return NULL;
+	free(vshader_source);
 	if (!(fshader_source = read_shader_file(fshader_path))
 	|| !create_compile_shader(fshader_source, &fshader, GL_FRAGMENT_SHADER))
 		return NULL;
+	free(fshader_source);
 	if (!(create_link_program(&this->program_id, vshader, fshader)))
 		return (NULL);
+	glDeleteShader(vshader);
+	glDeleteShader(fshader);
 	this->use = &use_shader_program;
 	this->setInt = &setInt;
 	this->setFloat = &setFloat;
