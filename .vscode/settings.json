@@ -6,6 +6,8 @@
 		"glad.h": "c",
 		"shaders.h": "c",
 		"texture_helper.h": "c",
-		"stb_image.h": "c"
+		"stb_image.h": "c",
+		"scop.h": "c",
+		"stdio.h": "c"
 	}
 }
