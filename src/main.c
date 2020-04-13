@@ -64,7 +64,7 @@ int		main(void)
 	tex0
 	->load(tex0, "texture/container.jpg")
 	->bind(tex0, GL_TEXTURE_2D, 0)
-	->set_params(tex0, (t_tex_params){WRAP_CE, WRAP_CE, 0, FILTER_L, FILTER_L})
+	->set_params(tex0, (t_tex_params){WRAP_CE, WRAP_CE, 0, FILTER_N, FILTER_N})
 	->exec(tex0);
 	
 	t_texture *tex1 = texture_construct();
@@ -72,7 +72,7 @@ int		main(void)
 	tex1
 	->load(tex1, "texture/awesomeface.png")
 	->bind(tex1, GL_TEXTURE_2D, 1)
-	->set_params(tex1, (t_tex_params){WRAP_R, WRAP_R, 0, FILTER_L, FILTER_L})
+	->set_params(tex1, (t_tex_params){WRAP_R, WRAP_R, 0, FILTER_N, FILTER_N})
 	->exec(tex1);
 
 //	bind both textures to shader >> no need to bind inside loop
@@ -82,10 +82,10 @@ int		main(void)
 //---------------------------------
 	float vertices1[] = {
     // positions          // colors           // texture coords
-     0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   2.0f, 2.0f,   // top right
-     0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   2.0f, 0.0f,   // bottom right
-    -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
-    -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 2.0f    // top left
+	0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   0.55f, 0.55f, // top right
+	0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   0.55f, 0.45f, // bottom right
+	-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.45f, 0.45f, // bottom left
+	-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.45f, 0.55f  // top left 
 	};
 	unsigned int indices[] = {  // indicies for the vetexes (used in EBO)
         0, 1, 3,  // first Triangle
