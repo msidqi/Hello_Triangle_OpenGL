@@ -5,6 +5,8 @@ void	framebuffer_size_callback(GLFWwindow* window, int width, int height) // cal
     glViewport(0, 0, width, height);
 }
 
+float mixValue = 0.2f;
+
 void	processInput(GLFWwindow *window)
 {
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -15,6 +17,18 @@ void	processInput(GLFWwindow *window)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+    {
+        mixValue += 0.01f;
+        if(mixValue >= 1.0f)
+            mixValue = 1.0f;
+    }
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+    {
+        mixValue -= 0.01f;
+        if (mixValue <= 0.0f)
+            mixValue = 0.0f;
+    }
 }
 
 int		init_setup(GLFWwindow **window, int width, int height, char *window_name)
@@ -64,7 +78,7 @@ int		main(void)
 	tex0
 	->load(tex0, "texture/container.jpg")
 	->bind(tex0, GL_TEXTURE_2D, 0)
-	->set_params(tex0, (t_tex_params){WRAP_CE, WRAP_CE, 0, FILTER_N, FILTER_N})
+	->set_params(tex0, (t_tex_params){WRAP_R, WRAP_R, 0, FILTER_N, FILTER_N})
 	->exec(tex0);
 	
 	t_texture *tex1 = texture_construct();
@@ -82,10 +96,10 @@ int		main(void)
 //---------------------------------
 	float vertices1[] = {
     // positions          // colors           // texture coords
-	0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   0.55f, 0.55f, // top right
-	0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   0.55f, 0.45f, // bottom right
-	-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.45f, 0.45f, // bottom left
-	-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.45f, 0.55f  // top left 
+     0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   2.0f, 2.0f,   // top right
+     0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   2.0f, 0.0f,   // bottom right
+    -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
+    -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 2.0f    // top left
 	};
 	unsigned int indices[] = {  // indicies for the vetexes (used in EBO)
         0, 1, 3,  // first Triangle
@@ -131,7 +145,7 @@ int		main(void)
 
 		glfwPollEvents();
 		processInput(window);
-
+		shader->setFloat(shader, "mixValue", mixValue);
 		shader->use(shader);
 		// glBindTexture(GL_TEXTURE_2D, tex0->gl_id); // no need to bind inside loop
 		glBindVertexArray(VAO);
