@@ -64,7 +64,7 @@ int		main(void)
 	tex0
 	->load(tex0, "texture/container.jpg")
 	->bind(tex0, GL_TEXTURE_2D, 0)
-	->set_params(tex0)
+	->set_params(tex0, (t_tex_params){WRAP_CE, WRAP_CE, 0, FILTER_L, FILTER_L})
 	->exec(tex0);
 	
 	t_texture *tex1 = texture_construct();
@@ -72,22 +72,20 @@ int		main(void)
 	tex1
 	->load(tex1, "texture/awesomeface.png")
 	->bind(tex1, GL_TEXTURE_2D, 1)
-	->set_params(tex1)
+	->set_params(tex1, (t_tex_params){WRAP_R, WRAP_R, 0, FILTER_L, FILTER_L})
 	->exec(tex1);
 
 //	bind both textures to shader >> no need to bind inside loop
 	shader->use(shader); // must use shader before setting uniform values
-	glUniform1i(glGetUniformLocation(shader->program_id, "tex0Sampler"), 0); // set it manually
-	glUniform1i(glGetUniformLocation(shader->program_id, "tex1Sampler"), 1); // set it manually
-	// shader->setInt(shader, "tex0Sampler", 0); // default is 0
-	// shader->setInt(shader, "tex1Sampler", 1); // tell OpenGL that tex1Sampler belongs to texture unit 1 (previously set in bind() function)
+	shader->setInt(shader, "tex0Sampler", 0); // default is 0
+	shader->setInt(shader, "tex1Sampler", 1); // tell OpenGL that tex1Sampler belongs to texture unit 1 (previously set in bind() function)
 //---------------------------------
 	float vertices1[] = {
     // positions          // colors           // texture coords
-     0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
-     0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
+     0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   2.0f, 2.0f,   // top right
+     0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   2.0f, 0.0f,   // bottom right
     -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
-    -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left
+    -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 2.0f    // top left
 	};
 	unsigned int indices[] = {  // indicies for the vetexes (used in EBO)
         0, 1, 3,  // first Triangle

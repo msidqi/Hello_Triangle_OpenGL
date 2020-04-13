@@ -26,7 +26,7 @@ t_texture	*bind(t_texture *this, int gl_tex_target, int texture_unit)
 	return (this);
 }
 
-t_texture	*set_params(t_texture *this)
+t_texture	*set_params(t_texture *this, t_tex_params opts)
 {
 	if (this->gl_target == -1)
 	{
@@ -35,10 +35,16 @@ t_texture	*set_params(t_texture *this)
 	}
 	else
 	{
-		glTexParameteri(this->gl_target, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set how openGL wraps textures on S axis (x)
-		glTexParameteri(this->gl_target, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(this->gl_target, GL_TEXTURE_MIN_FILTER, GL_LINEAR); // texture filterng option for when using small texture on bigger obj
-		glTexParameteri(this->gl_target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		if (opts.wrap_s)
+			glTexParameteri(this->gl_target, GL_TEXTURE_WRAP_S, opts.wrap_s);	// set how openGL wraps textures on S axis (x)
+		if (opts.wrap_t)
+			glTexParameteri(this->gl_target, GL_TEXTURE_WRAP_T, opts.wrap_t);
+		if (opts.wrap_r)
+			glTexParameteri(this->gl_target, GL_TEXTURE_WRAP_R, opts.wrap_r);
+		if (opts.filter_min)
+			glTexParameteri(this->gl_target, GL_TEXTURE_MIN_FILTER, opts.filter_min); // texture filterng option for when using small texture on bigger obj
+		if (opts.filter_mag)
+			glTexParameteri(this->gl_target, GL_TEXTURE_MAG_FILTER, opts.filter_mag);
 	}
 	return (this);
 }
@@ -74,7 +80,7 @@ t_texture	*texture_construct()
 {
 	t_texture *this;
 
-	stbi_set_flip_vertically_on_load(1);
+	// stbi_set_flip_vertically_on_load(1);
 	if(!(this = (t_texture *)malloc(sizeof(t_texture))))
 		return(NULL);
 	this->error = 0;
