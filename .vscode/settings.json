@@ -8,6 +8,7 @@
 		"texture_helper.h": "c",
 		"stb_image.h": "c",
 		"scop.h": "c",
-		"stdio.h": "c"
+		"stdio.h": "c",
+		"libgl.h": "c"
 	}
 }

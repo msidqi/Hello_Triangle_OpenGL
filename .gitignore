@@ -1,0 +1,5 @@
+exec
+a.out
+calc.c
+*.a
+*.o
