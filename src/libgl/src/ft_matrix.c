@@ -48,8 +48,8 @@ t_vec4			ft_translate_vec4(t_vec4 vec, double x, double y, double z)
 	t_mat4 tr_mat;
 
 	tr_mat = ft_mat4_create();
-	tr_mat.v[0][3] = x;
-	tr_mat.v[1][3] = y;
-	tr_mat.v[2][3] = z;
+	tr_mat.v[0][3] += x;
+	tr_mat.v[1][3] += y;
+	tr_mat.v[2][3] += z;
 	return (ft_mat4_x_vec4(tr_mat, vec));
 }
