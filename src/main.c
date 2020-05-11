@@ -109,8 +109,8 @@ int		main(void)
 
 //	bind both textures to shader >> no need to bind inside loop
 	shader->use(shader); // must use shader before setting uniform values
-	shader->setInt(shader, "tex0Sampler", 0); // default is 0
-	shader->setInt(shader, "tex1Sampler", 1); // tell OpenGL that tex1Sampler belongs to texture unit 1 (previously set in bind() function)
+	shader->set_int(shader, "tex0Sampler", 0); // default is 0
+	shader->set_int(shader, "tex1Sampler", 1); // tell OpenGL that tex1Sampler belongs to texture unit 1 (previously set in bind() function)
 //---------------------------------
 	float vertices1[] = {
     // positions          // colors           // texture coords
@@ -182,17 +182,16 @@ int		main(void)
 
 		glfwPollEvents();
 		processInput(window);
-		shader->setFloat(shader, "mixValue", mixValue);
+		shader->set_float(shader, "mixValue", mixValue);
 		shader->use(shader);
 		// glBindTexture(GL_TEXTURE_2D, tex0->gl_id); // no need to bind inside loop
-	
 
 // --------------Rotate in time then translate---------
-t_mat4 final = ft_mat4_rotate(identity, glfwGetTime(), (t_vec3){.0, .0, 1.0});
-final = ft_mat4_translate(final, (t_vec3){.5, -0.5, .0});
-t_mat4f finalf = mat4_to_mat4f(final);
-unsigned int transformLoc = glGetUniformLocation(shader->program_id, "transform"); // get location of 'uniform mat4 transform;'
-glUniformMatrix4fv(transformLoc, 1, GL_FALSE, (const GLfloat *)finalf.v); // send matrix data
+		t_mat4 final = ft_mat4_rotate(identity, glfwGetTime(), (t_vec3){.0, .0, 1.0});
+		final = ft_mat4_translate(final, (t_vec3){.5, -0.5, .0});
+		const t_mat4f finalf = mat4_to_mat4f(final);
+
+		shader->set_mat4f(shader, "transform", &finalf);
 // -----------------------------------------------------------
 
 		glBindVertexArray(VAO);

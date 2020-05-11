@@ -92,14 +92,20 @@ typedef enum		e_key_code
 typedef struct		s_vec2
 {
 	double			x;
-	double			y;
+	int				y;
 }					t_vec2;
 
-typedef struct		s_vec2int
+typedef struct		s_vec2i
 {
 	int				x;
 	int				y;
-}					t_vec2int;
+}					t_vec2i;
+
+typedef struct		s_vec2f
+{
+	float				x;
+	float				y;
+}					t_vec2f;
 
 typedef struct		s_vec3
 {
@@ -108,12 +114,19 @@ typedef struct		s_vec3
 	double			z;
 }					t_vec3;
 
-typedef struct		s_vec3int
+typedef struct		s_vec3f
+{
+	float			x;
+	float			y;
+	float			z;
+}					t_vec3f;
+
+typedef struct		s_vec3i
 {
 	int				x;
 	int				y;
 	int				z;
-}					t_vec3int;
+}					t_vec3i;
 
 typedef struct		s_matrix
 {
@@ -129,6 +142,14 @@ typedef struct		s_vec4
 	double			z;
 	double			w;
 }					t_vec4;
+
+typedef struct		s_vec4f
+{
+	float			x;
+	float			y;
+	float			z;
+	float			w;
+}					t_vec4f;
 
 /*
 ** Homogenous Coordinates

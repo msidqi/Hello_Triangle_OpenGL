@@ -1,5 +1,9 @@
 #ifndef SHADERS_H
 # define SHADERS_H
+#include "libgl.h"
+#include <glad/glad.h> 
+#include <stdio.h>
+#include <stdlib.h>
 
 typedef struct		s_shader
 {
@@ -7,8 +11,15 @@ typedef struct		s_shader
 	unsigned int	vertex_id;
 	unsigned int	fragment_id;
 	void			(*use)(struct s_shader *this);
-	void			(*setInt)(struct s_shader *this, const char *name, int value);
-	void			(*setFloat)(struct s_shader *this, const char *name, float value);
+	void			(*set_int)(struct s_shader *this, const char *name, const int value);
+	void			(*set_float)(struct s_shader *this, const char *name, const float value);
+	void			(*set_vec2)(struct s_shader *this, const char *name, const t_vec2f *value);
+	void			(*set_vec2f)(struct s_shader *this, const char *name, float x, float y);
+	void			(*set_vec3)(struct s_shader *this, const char *name, const t_vec3f *value);
+	void			(*set_vec3f)(struct s_shader *this, const char *name, float x, float y, float z);
+	void			(*set_vec4)(struct s_shader *this, const char *name, const t_vec4f *value);
+	void			(*set_vec4f)(struct s_shader *this, const char *name, float x, float y, float z, float w);
+	void			(*set_mat4f)(struct s_shader *this, const char *name, const t_mat4f *mat);
 }					t_shader;
 
 t_shader	*shader_construct(const char *vshader_path, const char *fshader_path);
