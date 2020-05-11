@@ -87,6 +87,7 @@ int		main(void)
 	}
 	if (!(shader = shader_construct("src/shaders/shaderSource/vertex.glsl", "src/shaders/shaderSource/fragment.glsl")))
 	{
+		glfwTerminate();
 		printf("ERROR::SHADER::CONSTRUCTION\n");
 		return (-1);
 	}
@@ -157,19 +158,20 @@ int		main(void)
 // -----------------Transform Matrix--------------------
 	t_mat4 scale;
 	t_mat4 rot;
+	t_mat4 translate;
 	t_mat4 result;
 	t_mat4 identity;
 
 	identity = ft_mat4_create();
-	/* // rotate then scale
-	scale = ft_mat4_scale(identity, (t_vec3){.5, .5, .5});
-	rot = ft_mat4_rotation_xyz(ft_to_rad(45.0), (t_vec3){1.0, .0, 1.0});
-	result = ft_mat4_x_mat4(rot, scale); // scale then rotate
-	t_mat4f resultf = mat4_to_mat4f(result);
+	 // rotate then scale
+	// scale = ft_mat4_scale(identity, (t_vec3){.5, .5, .5});
+	/*rot = ft_mat4_rotation_xyz(ft_to_rad(45.0), (t_vec3){1.0, .0, 1.0});
+	translate = ft_mat4_translate(identity, (t_vec3){.5, -0.5, .0});
+	result = ft_mat4_x_mat4(translate, rot); // scale then rotate
+	// result = ft_mat4_x_mat4(scale, rot); // scale then rotate
+	const t_mat4f resultf = mat4_to_mat4f(result);
 
-	unsigned int transformLoc = glGetUniformLocation(shader->program_id, "transform"); // get location of 'uniform mat4 transform;'
-	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, (const GLfloat *)resultf.v); // send matrix data
-	*/
+	shader->set_mat4f(shader, "transform", &resultf);*/
 
 	
 // ------------------------------------------------
@@ -187,7 +189,9 @@ int		main(void)
 		// glBindTexture(GL_TEXTURE_2D, tex0->gl_id); // no need to bind inside loop
 
 // --------------Rotate in time then translate---------
-		t_mat4 final = ft_mat4_rotate(identity, glfwGetTime(), (t_vec3){.0, .0, 1.0});
+		double current_time = glfwGetTime();
+		t_mat4 final = ft_mat4_rotate(identity, current_time, (t_vec3){.0, .0, 1.0});
+		final = ft_mat4_scale(final, (t_vec3){sin(current_time * .8), sin(current_time * .8), .0});
 		final = ft_mat4_translate(final, (t_vec3){.5, -0.5, .0});
 		const t_mat4f finalf = mat4_to_mat4f(final);
 
@@ -199,12 +203,12 @@ int		main(void)
 
 		glfwSwapBuffers(window);
 	}
-	tex0->destroy(&tex0);
-	tex1->destroy(&tex1);
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &EBO);
 	glDeleteBuffers(1, &VBO);
 	glfwTerminate();
-	free(shader);
+	if(tex0) tex0->destroy(&tex0);
+	if(tex1) tex1->destroy(&tex1);
+	if(shader) free(shader);
 	return (0);
 }

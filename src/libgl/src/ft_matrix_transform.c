@@ -128,7 +128,7 @@ t_mat4		ft_mat4_rotation_xyz(double angle_rad, t_vec3 v)
 {
 	return (ft_mat4_x_mat4(
 		ft_mat4_rotation_x(angle_rad * v.x),
-		ft_mat4_x_mat4(ft_mat4_rotation_x(angle_rad * v.y),
+		ft_mat4_x_mat4(ft_mat4_rotation_y(angle_rad * v.y),
 						ft_mat4_rotation_z(angle_rad * v.z))));
 }
 
