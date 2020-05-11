@@ -1,3 +1,3 @@
 <video width="400" controls>
-  <source src="mov_bbb.mp4" type="video/mp4">
+  <source src="https://github.com/msidqi/Hello_Triangle_OpenGL/blob/master/preview/wow.webm" type="video/WebM">
 </video>
