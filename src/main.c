@@ -154,23 +154,21 @@ int		main(void)
 
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float))); // https://learnopengl.com/img/getting-started/vertex_attribute_pointer_interleaved_textures.png
 	glEnableVertexAttribArray(2);
-// ------------------------------------------------
+// -----------------Transform Matrix--------------------
 	t_mat4 scale;
 	t_mat4 rot;
-	t_mat4 identity;
 	t_mat4 result;
 
-	identity = ft_mat4_create();
-	scale = ft_mat4_scale(identity, (t_vec3){.5, .5, .5});
-	// rot = ft_mat4_rotate(identity, ft_to_rad(70.0), (t_vec3){.0, 1.0, 0.0});
-	rot = ft_mat4_rotation_y(ft_to_rad(70.0));
+	scale = ft_mat4_scale(ft_mat4_create(), (t_vec3){.5, .5, .5});
+	rot = ft_mat4_rotation_xyz(ft_to_rad(45.0), (t_vec3){1.0, .0, 1.0});
 
-	result = ft_mat4_x_mat4(rot, scale);
-	
-	t_mat4f r = mat4_to_mat4f(result);
-	ft_putmat4f(&r);
+	result = ft_mat4_x_mat4(rot, scale); // scale then rotate
+
+	t_mat4f resultf = mat4_to_mat4f(result);
+	// get location of 'uniform mat4 transform;'
 	unsigned int transformLoc = glGetUniformLocation(shader->program_id, "transform");
-	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, (const GLfloat *)r.v);
+	// send matrix data
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, (const GLfloat *)resultf.v);
 // ------------------------------------------------
 
 //window loop

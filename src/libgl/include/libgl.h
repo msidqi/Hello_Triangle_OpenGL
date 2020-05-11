@@ -161,17 +161,16 @@ union mat4 {
 		double		w3;
 	}				t_m;
 	double			v[4][4];
+	// float			f[4][4];
 };
 
 typedef struct		s_mat4
 {
-	int				type;
 	double			v[4][4];
 }					t_mat4;
 
 typedef struct		s_mat4f
 {
-	int				type;
 	float			v[4][4];
 }					t_mat4f;
 
@@ -277,6 +276,7 @@ t_mat4				ft_mat4_rotate(t_mat4 mat, double angle, t_vec3 vec);
 t_mat4				ft_mat4_rotation_x(double angle_rad);
 t_mat4				ft_mat4_rotation_y(double angle_rad);
 t_mat4				ft_mat4_rotation_z(double angle_rad);
+t_mat4				ft_mat4_rotation_xyz(double angle_rad, t_vec3 v);
 t_vec4				ft_create_vec4(double x, double y, double z, double w);
 t_mat4				ft_mat4_x_mat4(t_mat4 m0, t_mat4 m1);
 t_mat4				ft_mat4_x_mat4_col(t_mat4 m0, t_mat4 m1);

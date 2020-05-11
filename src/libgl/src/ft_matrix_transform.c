@@ -29,7 +29,7 @@ t_mat4		ft_mat4_scale(t_mat4 mat, t_vec3 v)
 	return (mat);
 }
 
-t_mat4			ft_mat4_translate_d(t_mat4 mat, double x, double y, double z)
+t_mat4		ft_mat4_translate_d(t_mat4 mat, double x, double y, double z)
 {
 	mat.v[0][3] += x;
 	mat.v[1][3] += y;
@@ -37,7 +37,7 @@ t_mat4			ft_mat4_translate_d(t_mat4 mat, double x, double y, double z)
 	return (mat);
 }
 
-t_mat4			ft_mat4_translate(t_mat4 mat, t_vec3 v)
+t_mat4		ft_mat4_translate(t_mat4 mat, t_vec3 v)
 {
 	mat.v[0][3] += v.x;
 	mat.v[1][3] += v.y;
@@ -116,7 +116,19 @@ t_mat4		ft_mat4_rotation_z(double angle_rad)
 	return (rotation);
 }
 
-t_mat4	ft_mat4_rotate(t_mat4 mat, double angle_rad, t_vec3 v)
+t_mat4		ft_mat4_rotation_xyz(double angle_rad, t_vec3 v)
+{
+	return (ft_mat4_x_mat4(
+		ft_mat4_rotation_x(angle_rad * v.x),
+		ft_mat4_x_mat4(ft_mat4_rotation_x(angle_rad * v.y),
+						ft_mat4_rotation_z(angle_rad * v.z))));
+}
+
+/*
+ @deprecated
+*/
+
+t_mat4		ft_mat4_rotate(t_mat4 mat, double angle_rad, t_vec3 v)
 {
 	double cos_a = cos(angle_rad);
 	double sin_a = sin(angle_rad);
