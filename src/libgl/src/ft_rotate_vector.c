@@ -36,7 +36,7 @@ t_vec3	ft_vec3_rotate_x(t_vec3 vector, double rotation_angle)
 	sin(rotation_angle) * vector.y + cos(rotation_angle) * vector.z});
 }
 
-t_vec3	ft_vec3_rotate_z_const(t_vec3 vector)
+t_vec3	ft_vec3_rotate_z_const(t_vec3 vector) // @deprecated
 {
 	return ((t_vec3){
 	0.99999979 * vector.x + 0.00065042 * vector.y,

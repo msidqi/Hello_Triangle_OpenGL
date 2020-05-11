@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include "shaders.h"
 #include "texture_helper.h"
+#include "libgl.h"
 
 typedef struct	s_wind
 {

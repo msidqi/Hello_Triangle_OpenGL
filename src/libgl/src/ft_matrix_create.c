@@ -25,9 +25,9 @@ t_mat4	ft_mat4_create(void)
 		while (++j < 4)
 		{
 			if (j == i)
-				mat.v[i][j] = 1;
+				mat.v[i][j] = 1.0;
 			else
-				mat.v[i][j] = 0;
+				mat.v[i][j] = 0.0;
 		}
 	}
 	return (mat);

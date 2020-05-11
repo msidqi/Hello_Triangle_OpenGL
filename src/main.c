@@ -56,6 +56,24 @@ int		init_setup(GLFWwindow **window, int width, int height, char *window_name)
 	return (1);
 }
 
+t_mat4f mat4_to_mat4f(t_mat4 mat)
+{
+	t_mat4f ret;
+	int i;
+	int j;
+
+	i = -1;
+	while (++i < 4)
+	{
+		j = -1;
+		while (++j < 4)
+		{
+			ret.v[i][j] = (float)mat.v[i][j];
+		}
+	}
+	return (ret);
+}
+
 int		main(void)
 {
 	GLFWwindow* window;
@@ -136,6 +154,24 @@ int		main(void)
 
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float))); // https://learnopengl.com/img/getting-started/vertex_attribute_pointer_interleaved_textures.png
 	glEnableVertexAttribArray(2);
+// ------------------------------------------------
+	t_mat4 scale;
+	t_mat4 rot;
+	t_mat4 identity;
+	t_mat4 result;
+
+	identity = ft_mat4_create();
+	scale = ft_mat4_scale(identity, (t_vec3){.5, .5, .5});
+	// rot = ft_mat4_rotate(identity, ft_to_rad(70.0), (t_vec3){.0, 1.0, 0.0});
+	rot = ft_mat4_rotation_y(ft_to_rad(70.0));
+
+	result = ft_mat4_x_mat4(rot, scale);
+	
+	t_mat4f r = mat4_to_mat4f(result);
+	ft_putmat4f(&r);
+	unsigned int transformLoc = glGetUniformLocation(shader->program_id, "transform");
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, (const GLfloat *)r.v);
+// ------------------------------------------------
 
 //window loop
 	while(!glfwWindowShouldClose(window))

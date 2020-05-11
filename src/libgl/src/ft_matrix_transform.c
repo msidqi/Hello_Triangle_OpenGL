@@ -44,34 +44,90 @@ t_mat4			ft_mat4_translate(t_mat4 mat, t_vec3 v)
 	mat.v[2][3] += v.z;
 	return (mat);
 }
+
 /*
 ** rotation around X axis matrix
 [1          0         0  ]
 [0        cos(a)  -sin(a)]
 [0        sin(a)   cos(a)]
+*/
 
+t_mat4		ft_mat4_rotation_x(double angle_rad)
+{
+	t_mat4 rotation;
+	double cos_a;
+	double sin_a;
+
+	cos_a = cos(angle_rad);
+	sin_a = sin(angle_rad);
+	rotation = ft_mat4_create();
+	rotation.v[1][1] = cos_a;
+	rotation.v[2][2] = cos_a;
+	rotation.v[1][2] = -sin_a;
+	rotation.v[2][1] = sin_a;
+	return (rotation);
+}
+
+/*
 ** rotation around Y axis matrix
 [cos(a)     0      sin(a)]
 [0          1         0  ]
 [-sin(a)    0      cos(a)]
+*/
 
+t_mat4		ft_mat4_rotation_y(double angle_rad)
+{
+	t_mat4 rotation;
+	double cos_a;
+	double sin_a;
+
+	cos_a = cos(angle_rad);
+	sin_a = sin(angle_rad);
+	rotation = ft_mat4_create();
+	rotation.v[0][0] = cos_a;
+	rotation.v[2][2] = cos_a;
+	rotation.v[0][2] = -sin_a;
+	rotation.v[2][0] = sin_a;
+	return (rotation);
+}
+
+/*
 ** rotation around Z axis matrix
 [cos(a)  -sin(a)      0  ]
 [sin(a)   cos(a)      0  ]
 [  0        0         0  ]
 */
 
-t_mat4	ft_mat4_rotate(t_mat4 mat, double angle, t_vec3 v)
+t_mat4		ft_mat4_rotation_z(double angle_rad)
 {
-	double a = ft_to_rad(angle);
-	double cos_a = cos(a);
-	double sin_a = sin(a);
+	t_mat4 rotation;
+	double cos_a;
+	double sin_a;
+
+	cos_a = cos(angle_rad);
+	sin_a = sin(angle_rad);
+	rotation = ft_mat4_create();
+	rotation.v[0][0] = cos_a;
+	rotation.v[1][1] = cos_a;
+	rotation.v[2][2] = 0;
+	rotation.v[0][1] = sin_a;
+	rotation.v[1][0] = -sin_a;
+
+	return (rotation);
+}
+
+t_mat4	ft_mat4_rotate(t_mat4 mat, double angle_rad, t_vec3 v)
+{
+	double cos_a = cos(angle_rad);
+	double sin_a = sin(angle_rad);
 
 	t_vec3 axis = ft_vec3_normalize(v);
 
 	t_vec3 temp = ft_vec3_scalar(axis, 1.0 - cos_a);
 
-	t_mat4 rotate = ft_mat4_create();
+	t_mat4 identity = ft_mat4_create();
+	
+	t_mat4 rotate = identity;
 	rotate.v[0][0] = cos_a + temp.x * axis.x;
 	rotate.v[0][1] = 0 +     temp.x * axis.y + sin_a * axis.z;
 	rotate.v[0][2] = 0 +     temp.x * axis.z - sin_a * axis.y;
@@ -84,7 +140,7 @@ t_mat4	ft_mat4_rotate(t_mat4 mat, double angle, t_vec3 v)
 	rotate.v[2][1] = 0 +     temp.z * axis.y - sin_a * axis.x;
 	rotate.v[2][2] = cos_a + temp.z * axis.z;
 
-	t_mat4 result = ft_mat4_create();
+	t_mat4 result = identity;
 	result.v[0][0] = mat.v[0][0] * rotate.v[0][0] + mat.v[1][1] * rotate.v[0][1] + mat.v[2][2] * rotate.v[0][2];
 	result.v[1][1] = mat.v[0][0] * rotate.v[1][0] + mat.v[1][1] * rotate.v[1][1] + mat.v[2][2] * rotate.v[1][2];
 	result.v[2][2] = mat.v[0][0] * rotate.v[2][0] + mat.v[1][1] * rotate.v[2][1] + mat.v[2][2] * rotate.v[2][2];

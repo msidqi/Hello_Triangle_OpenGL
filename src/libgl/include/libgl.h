@@ -169,6 +169,12 @@ typedef struct		s_mat4
 	double			v[4][4];
 }					t_mat4;
 
+typedef struct		s_mat4f
+{
+	int				type;
+	float			v[4][4];
+}					t_mat4f;
+
 typedef struct		s_startend
 {
 	t_vec2			start;
@@ -268,6 +274,9 @@ t_mat4				ft_mat4_scale(t_mat4 mat, t_vec3 v);
 t_mat4				ft_mat4_translate_d(t_mat4 mat, double x, double y, double z);
 t_mat4				ft_mat4_translate(t_mat4 mat, t_vec3 v);
 t_mat4				ft_mat4_rotate(t_mat4 mat, double angle, t_vec3 vec);
+t_mat4				ft_mat4_rotation_x(double angle_rad);
+t_mat4				ft_mat4_rotation_y(double angle_rad);
+t_mat4				ft_mat4_rotation_z(double angle_rad);
 t_vec4				ft_create_vec4(double x, double y, double z, double w);
 t_mat4				ft_mat4_x_mat4(t_mat4 m0, t_mat4 m1);
 t_mat4				ft_mat4_x_mat4_col(t_mat4 m0, t_mat4 m1);
@@ -276,6 +285,7 @@ t_vec4				ft_mat4_x_vec4_col(t_mat4 mat, t_vec4 vec);
 void				ft_putvec3(t_vec3 *vec);
 void				ft_putvec4(t_vec4 *vec);
 void				ft_putmat4(t_mat4 *mat);
+void				ft_putmat4f(t_mat4f *mat);
 t_vec4				ft_vec4_sub(t_vec4 vec1, t_vec4 vec2);
 t_vec4				ft_vec4_normalize(t_vec4 a);
 double				ft_vec4_mag(t_vec4 a);

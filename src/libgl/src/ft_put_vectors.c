@@ -57,3 +57,25 @@ void	ft_putmat4(t_mat4 *mat)
 	}
 	printf(" )\n");
 }
+
+void	ft_putmat4f(t_mat4f *mat)
+{
+	int i;
+	int j;
+
+	i = -1;
+	printf("Matrix( \n");
+	while (++i < 4)
+	{
+		j = -1;
+		while (++j < 4)
+		{
+			printf("% f", mat->v[i][j]);
+			if (i < 3 || j < 3)
+				printf(", ");
+		}
+		if (i < 3 || j < 3)
+			printf("\n");
+	}
+	printf(" )\n");
+}
