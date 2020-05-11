@@ -124,11 +124,20 @@ t_mat4		ft_mat4_rotation_xyz(double angle_rad, t_vec3 v)
 						ft_mat4_rotation_z(angle_rad * v.z))));
 }
 
+t_mat4		ft_mat4_rotate(t_mat4 mat, double angle_rad, t_vec3 v)
+{
+	t_mat4 rotation;
+
+	rotation = ft_mat4_rotation_xyz(angle_rad, v);
+	return (ft_mat4_x_mat4(mat, rotation));
+}
+
+
 /*
  @deprecated
 */
 
-t_mat4		ft_mat4_rotate(t_mat4 mat, double angle_rad, t_vec3 v)
+/*t_mat4		ft_mat4_rotate(t_mat4 mat, double angle_rad, t_vec3 v)
 {
 	double cos_a = cos(angle_rad);
 	double sin_a = sin(angle_rad);
@@ -158,4 +167,4 @@ t_mat4		ft_mat4_rotate(t_mat4 mat, double angle_rad, t_vec3 v)
 	result.v[2][2] = mat.v[0][0] * rotate.v[2][0] + mat.v[1][1] * rotate.v[2][1] + mat.v[2][2] * rotate.v[2][2];
 	result.v[3][3] = mat.v[3][3];
 	return result;
-}
+}*/

@@ -158,17 +158,17 @@ int		main(void)
 	t_mat4 scale;
 	t_mat4 rot;
 	t_mat4 result;
+	t_mat4 identity;
 
-	scale = ft_mat4_scale(ft_mat4_create(), (t_vec3){.5, .5, .5});
+	identity = ft_mat4_create();
+	/* // rotate then scale
+	scale = ft_mat4_scale(identity, (t_vec3){.5, .5, .5});
 	rot = ft_mat4_rotation_xyz(ft_to_rad(45.0), (t_vec3){1.0, .0, 1.0});
-
 	result = ft_mat4_x_mat4(rot, scale); // scale then rotate
-
 	t_mat4f resultf = mat4_to_mat4f(result);
-	// get location of 'uniform mat4 transform;'
-	unsigned int transformLoc = glGetUniformLocation(shader->program_id, "transform");
-	// send matrix data
-	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, (const GLfloat *)resultf.v);
+	*/
+
+	
 // ------------------------------------------------
 
 //window loop
@@ -182,6 +182,13 @@ int		main(void)
 		shader->setFloat(shader, "mixValue", mixValue);
 		shader->use(shader);
 		// glBindTexture(GL_TEXTURE_2D, tex0->gl_id); // no need to bind inside loop
+	
+t_mat4 final = ft_mat4_translate(identity, (t_vec3){.5, -0.5, .0});
+final = ft_mat4_rotate(final, glfwGetTime(), (t_vec3){1.0, .0, 1.0});
+t_mat4f finalf = mat4_to_mat4f(final);
+unsigned int transformLoc = glGetUniformLocation(shader->program_id, "transform"); // get location of 'uniform mat4 transform;'
+glUniformMatrix4fv(transformLoc, 1, GL_FALSE, (const GLfloat *)finalf.v); // send matrix data
+
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
