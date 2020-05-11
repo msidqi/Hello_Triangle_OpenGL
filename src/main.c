@@ -166,6 +166,9 @@ int		main(void)
 	rot = ft_mat4_rotation_xyz(ft_to_rad(45.0), (t_vec3){1.0, .0, 1.0});
 	result = ft_mat4_x_mat4(rot, scale); // scale then rotate
 	t_mat4f resultf = mat4_to_mat4f(result);
+
+	unsigned int transformLoc = glGetUniformLocation(shader->program_id, "transform"); // get location of 'uniform mat4 transform;'
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, (const GLfloat *)resultf.v); // send matrix data
 	*/
 
 	
@@ -183,11 +186,14 @@ int		main(void)
 		shader->use(shader);
 		// glBindTexture(GL_TEXTURE_2D, tex0->gl_id); // no need to bind inside loop
 	
-t_mat4 final = ft_mat4_translate(identity, (t_vec3){.5, -0.5, .0});
-final = ft_mat4_rotate(final, glfwGetTime(), (t_vec3){1.0, .0, 1.0});
+
+// --------------Rotate in time then translate---------
+t_mat4 final = ft_mat4_rotate(identity, glfwGetTime(), (t_vec3){.0, .0, 1.0});
+final = ft_mat4_translate(final, (t_vec3){.5, -0.5, .0});
 t_mat4f finalf = mat4_to_mat4f(final);
 unsigned int transformLoc = glGetUniformLocation(shader->program_id, "transform"); // get location of 'uniform mat4 transform;'
 glUniformMatrix4fv(transformLoc, 1, GL_FALSE, (const GLfloat *)finalf.v); // send matrix data
+// -----------------------------------------------------------
 
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

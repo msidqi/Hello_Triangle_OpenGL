@@ -272,6 +272,7 @@ t_mat4				ft_mat4_scale_d(t_mat4 mat, double x, double y,
 t_mat4				ft_mat4_scale(t_mat4 mat, t_vec3 v);
 t_mat4				ft_mat4_translate_d(t_mat4 mat, double x, double y, double z);
 t_mat4				ft_mat4_translate(t_mat4 mat, t_vec3 v);
+t_mat4				ft_mat4_translate_row(t_mat4 mat, t_vec3 v);
 t_mat4				ft_mat4_rotate(t_mat4 mat, double angle, t_vec3 vec);
 t_mat4				ft_mat4_rotation_x(double angle_rad);
 t_mat4				ft_mat4_rotation_y(double angle_rad);
