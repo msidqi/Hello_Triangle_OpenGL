@@ -68,9 +68,10 @@ typedef struct	s_cmd_handler
 	char					*to_parse;
 	struct s_cmd_handler	*(*get)(struct s_cmd_handler *this); // expects this->to_parse to contain a string;
 	int						(*exec)(struct s_cmd_handler *this, t_obj *obj);
-	void					(*destroy)(struct s_cmd_handler *this);
+	void					(*destroy)(struct s_cmd_handler **this);
 	void					(*parse_geometric_vertex)(char *line, t_list **vertices_lst);
 	void					(*parse_vertex_index)(char *line, t_list **indices_lst);
 }				t_cmd_handler;
 
 t_cmd_handler	*ft_command_construct();
+void			ft_destroy_object(t_obj **obj);

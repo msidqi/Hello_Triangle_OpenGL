@@ -23,9 +23,20 @@ t_obj	*ft_obj_from_file(char *path)
 	{
 		cmd->get(cmd)->exec(cmd, obj);
 	}
-	cmd->destroy(cmd);
+	cmd->destroy(&cmd);
 	close(fd);
 	return (obj);
+}
+
+void	ft_delete_content(void *content, size_t size)
+{
+	free(content);
+}
+
+void			ft_destroy_object(t_obj **obj)
+{
+	ft_lstdel(&(*obj)->vertices, ft_delete_content);
+	ft_memdel((void **)&(*obj));
 }
 
 int main(int argc, char **argv)
@@ -44,7 +55,8 @@ int main(int argc, char **argv)
 		perror("ft_obj_from_file()");
 		return (0);
 	}
-
+	ft_memdel((void **)&full_path);
+	ft_destroy_object(&obj);
 	// ctnr.obj_lst = NULL;
 	// ft_lstadd(&ctnr.obj_lst, obj); // add object to main list
 
