@@ -103,8 +103,8 @@ typedef struct		s_vec2i
 
 typedef struct		s_vec2f
 {
-	float				x;
-	float				y;
+	float			x;
+	float			y;
 }					t_vec2f;
 
 typedef struct		s_vec3
@@ -113,6 +113,13 @@ typedef struct		s_vec3
 	double			y;
 	double			z;
 }					t_vec3;
+
+typedef struct		s_col
+{
+	double			r;
+	double			g;
+	double			b;
+}					t_col;	
 
 typedef struct		s_vec3f
 {
@@ -127,6 +134,13 @@ typedef struct		s_vec3i
 	int				y;
 	int				z;
 }					t_vec3i;
+
+typedef union		u_vec3
+{
+    struct { float x, y, z; };
+    struct { float r, g, b; };
+    float arr[3];
+}					tu_vec3;
 
 typedef struct		s_matrix
 {

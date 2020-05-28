@@ -34,8 +34,8 @@ void	processInput(GLFWwindow *window)
 int		init_setup(GLFWwindow **window, int width, int height, char *window_name)
 {
 	glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // load only core OpenGL
 #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // for Mac OS to Initialize
@@ -174,6 +174,8 @@ int		main(void)
 	shader->set_mat4f(shader, "transform", &resultf);*/
 
 	
+	t_mat4 final = ft_mat4_rotate(identity, ft_to_rad(-55.0), (t_vec3){1.0, .0, .0});
+	const t_mat4f finalf = mat4_to_mat4f(final);
 // ------------------------------------------------
 
 //window loop
@@ -188,13 +190,7 @@ int		main(void)
 		shader->use(shader);
 		// glBindTexture(GL_TEXTURE_2D, tex0->gl_id); // no need to bind inside loop
 
-// --------------Rotate in time then translate---------
-		double current_time = glfwGetTime();
-		t_mat4 final = ft_mat4_rotate(identity, current_time, (t_vec3){.0, .0, 1.0});
-		final = ft_mat4_scale(final, (t_vec3){sin(current_time * .8), sin(current_time * .8), .0});
-		final = ft_mat4_translate(final, (t_vec3){.5, -0.5, .0});
-		const t_mat4f finalf = mat4_to_mat4f(final);
-
+// --------------set uniform that's in vertex shader---------
 		shader->set_mat4f(shader, "transform", &finalf);
 // -----------------------------------------------------------
 
