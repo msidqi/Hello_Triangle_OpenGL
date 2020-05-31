@@ -12,6 +12,7 @@ ALONE_SRC = $(addprefix $(SRC_PATH)/, $(SRC))
 OBJ = $(addprefix $(OBJS_DIR)/,$(SRC:.c=.o))
 HEADERS = parser.h
 HEADERSPATH = include
+CC = gcc -Wall -Wextra -Werror
 
 # ----- main
 all : $(NAME)
@@ -25,7 +26,7 @@ $(NAME) : $(OBJ)
 
 alone : $(STANDALONE)
 $(STANDALONE) : $(OBJ) $(MAIN)
-	gcc -o $@ $(MAIN) $(ALONE_SRC) $(LIBFT) $(LIBGL) -I$(HEADERSPATH) -I$(LIBGL_H_PATH) -I$(LIBFT_H_PATH)
+	$(CC) -o $@ $(MAIN) $(ALONE_SRC) $(LIBFT) $(LIBGL) -I$(HEADERSPATH) -I$(LIBGL_H_PATH) -I$(LIBFT_H_PATH)
 
 clean : cleanlibgl cleanlibft
 	rm -rf $(OBJ)

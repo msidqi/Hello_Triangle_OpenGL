@@ -17,7 +17,7 @@ int main(int argc, char **argv)
 		return (0);
 	}
 	ft_print_indices(obj);
-	// ft_print_vertices(obj);
+	ft_print_vertices(obj);
 	ft_destroy_object(&obj);
 	// ctnr.obj_lst = NULL;
 	// ft_lstadd(&ctnr.obj_lst, obj); // add object to main list

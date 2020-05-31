@@ -1,8 +1,5 @@
 #include "parser.h"
 
-t_container ctnr;
-
-
 t_obj			*ft_obj_from_file(char *path)
 {
 	int				fd;
@@ -32,6 +29,7 @@ t_obj			*ft_obj_from_file(char *path)
 static void		ft_delete_content(void *content, size_t size)
 {
 	free(content);
+	(void)size;
 }
 
 static void		ft_delete_face(void *content, size_t size)
@@ -43,6 +41,7 @@ static void		ft_delete_face(void *content, size_t size)
 	free(face->vnormals);
 	free(face->vtexture);
 	free(face);
+	(void)size;
 }
 
 void			ft_destroy_object(t_obj **obj)

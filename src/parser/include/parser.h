@@ -66,11 +66,11 @@ typedef struct		s_material
 
 typedef struct		s_face
 {
-	size_t			n_of_indices;
-	size_t			flags; // F_INDEX | F_NORMAL | F_TEXTURE_COORDS
-	size_t			*vindices; // If an index is positive then it refers to the offset in that vertex list, starting at 1. If an index is negative then it relatively refers to the end of the vertex list, -1 referring to the last element.
-	size_t			*vnormals;
-	size_t			*vtexture;
+	unsigned int	n_of_indices;
+	unsigned int	flags; // F_INDEX | F_NORMAL | F_TEXTURE_COORDS
+	unsigned int	*vindices; // If an index is positive then it refers to the offset in that vertex list, starting at 1. If an index is negative then it relatively refers to the end of the vertex list, -1 referring to the last element.
+	unsigned int	*vnormals;
+	unsigned int	*vtexture;
 }					t_face;
 
 typedef struct		s_cmd
