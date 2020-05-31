@@ -26,7 +26,17 @@ void	ft_print_vertices(t_obj *obj)
 	}
 }
 
-void	ft_print_indices(t_obj *obj)
+static void	ft_print_array(char *name, size_t *array, size_t len)
+{
+	int	j;
+
+	j = -1;
+	printf("%s [ ", name);
+	while (++j < len)
+		printf(j != len - 1 ? "%zu, " : "%zu ]\n", array[j]);
+}
+
+void		ft_print_indices(t_obj *obj)
 {
 	t_list *head;
 	t_face *face;
@@ -46,11 +56,15 @@ void	ft_print_indices(t_obj *obj)
 			return ;
 		}
 		face = (t_face *)head->content;
-		printf("face->n_of_indices: %zu\n", face->n_of_indices);
+		printf("number of indices: %zu\n", face->n_of_indices);
 		j = -1;
-		while (++j < face->n_of_indices)
-			printf("components[%d] == %zu\n", j, face->vindices[j]);
-		printf("-----\n");
+		if (face->flags & F_INDEX)
+			ft_print_array("vindices", face->vindices, face->n_of_indices);
+		if (face->flags & F_TEXTURE_COORDS)
+			ft_print_array("vtexture", face->vtexture, face->n_of_indices);
+		if (face->flags & F_NORMAL)
+			ft_print_array("vnormal", face->vnormals, face->n_of_indices);
 		head = head->next;
+		printf("-----------------\n");
 	}
 }

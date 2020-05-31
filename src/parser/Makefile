@@ -1,12 +1,14 @@
 NAME = parser.a
+STANDALONE = parseObj
 LIBGL_H_PATH = ../libgl/include
 LIBFT_H_PATH = ../libft/include
 LIBGL = ../libgl/libgl.a
 LIBFT = ../libft/libft.a
 SRC_PATH = src
-SRC = command.c  parser.c  print.c
+SRC = command.c  parsing.c object.c  print.c
+MAIN = main.c
 OBJS_DIR = .obj
-# SRC = $(addprefix $(SRC_PATH)/, $(SRC_FILES))
+ALONE_SRC = $(addprefix $(SRC_PATH)/, $(SRC))
 OBJ = $(addprefix $(OBJS_DIR)/,$(SRC:.c=.o))
 HEADERS = parser.h
 HEADERSPATH = include
@@ -20,8 +22,10 @@ $(OBJ) : $(OBJS_DIR)/%.o : $(SRC_PATH)/%.c | $(OBJS_DIR) makelibgl makelibft
 $(NAME) : $(OBJ)
 	ar rc $@ $(OBJ)
 	ranlib $(NAME)
-# $(NAME) : $(OBJ) makelibgl makelibft
-# 	gcc -o $(NAME) $(SRC) $(LIBFT) $(LIBGL) -I$(HEADERSPATH) -I$(LIBGL_H_PATH) -I$(LIBFT_H_PATH)
+
+alone : $(STANDALONE)
+$(STANDALONE) : $(OBJ) $(MAIN)
+	gcc -o $@ $(MAIN) $(ALONE_SRC) $(LIBFT) $(LIBGL) -I$(HEADERSPATH) -I$(LIBGL_H_PATH) -I$(LIBFT_H_PATH)
 
 clean : cleanlibgl cleanlibft
 	rm -rf $(OBJ)

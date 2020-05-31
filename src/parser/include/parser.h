@@ -35,8 +35,8 @@ typedef enum		e_command_code
 typedef enum		e_face_flags
 {
 	F_INDEX = 1,
-	F_NORMAL,
-	F_TEXTURE_COORDS
+	F_NORMAL = 2,
+	F_TEXTURE_COORDS = 4
 }					t_face_flags;
 
 typedef struct		s_container
@@ -85,8 +85,22 @@ typedef struct		s_cmd
 }					t_cmd;
 
 t_cmd				*ft_command_construct();
-t_obj				*ft_obj_from_file(char *path);
-void				ft_destroy_object(t_obj **obj);
+
 void				ft_print_vertices(t_obj *obj);
 void				ft_print_indices(t_obj *obj);
+
+/*
+* object functions
+*/
+
 t_obj				*ft_obj_from_args(int argc, char **argv);
+t_obj				*ft_obj_from_file(char *path);
+void				ft_destroy_object(t_obj **obj);
+
+
+/*
+* parsing functions
+*/
+
+void				ft_parse_indices(char *line, t_list **indices);
+void				ft_parse_geometric_vertex(char *line, t_list **vertices);

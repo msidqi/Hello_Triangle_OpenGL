@@ -66,23 +66,3 @@ t_obj			*ft_obj_from_args(int argc, char **argv)
 	}
 	return (obj);
 }
-
-/*int main(int argc, char **argv)
-{
-	t_obj	*obj;
-	char	*full_path;
-	if (argc < 2)
-		return (0);
-	full_path = argv[1];
-	if (!full_path || !(obj = ft_obj_from_file(full_path)))
-	{
-		perror("ft_obj_from_file()");
-		return (0);
-	}
-	ft_print_vertices(obj);
-	ft_destroy_object(&obj);
-	// ctnr.obj_lst = NULL;
-	// ft_lstadd(&ctnr.obj_lst, obj); // add object to main list
-	// ft_lstmap(ctnr.obj_lst, ); free objects
-	return (0);
-}*/
