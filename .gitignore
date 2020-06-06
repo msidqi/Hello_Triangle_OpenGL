@@ -1,5 +1,7 @@
 exec
 a.out
+parseObj
 calc.c
 *.a
 *.o
+*.gch

@@ -10,6 +10,7 @@ void	ft_print_vertices(t_obj *obj)
 		ft_putendl_fd("ft_print_vertices(): read attempt read from (nil) vertices", 2);
 		return ;
 	}
+	printf("Number of vertices: | %u |\n", obj->vertices_len);
 	head = obj->vertices;
 	while (head)
 	{
@@ -46,6 +47,7 @@ void		ft_print_indices(t_obj *obj)
 		ft_putendl_fd("ft_print_indices(): read attempt read from (nil) indices", 2);
 		return ;
 	}
+	printf("Number of indices: | %u |\n", obj->indices_len);
 	head = obj->indices;
 	while (head)
 	{

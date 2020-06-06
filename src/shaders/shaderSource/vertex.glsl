@@ -14,11 +14,16 @@ layout (location = 2) in vec2 aTexCord;
 out vec3 ourColor;
 out vec2 TexCoord;
 
-uniform mat4 transform;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+
+uniform mat4 result;
 
 void main(void)
 {
-	gl_Position = transform * vec4(aPos.xyz, 1.0);
+	gl_Position = projection * view * model * vec4(aPos.xyz, 1.0);
+	// gl_Position = result * vec4(aPos.xyz, 1.0);
 	ourColor = aCol;
 	TexCoord = aTexCord;
 }

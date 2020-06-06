@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libgl.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msidqi <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/22 21:43:22 by msidqi            #+#    #+#             */
-/*   Updated: 2019/10/25 18:28:52 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/06/06 08:17:16 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -299,6 +299,26 @@ t_vec3				ft_vec3_rotate_x(t_vec3 vector, double rotation_angle);
 t_vec2				ft_vec2_from_angle(double size, double angle);
 t_matrix			*ft_create_matrix(int rows, int cols);
 t_mat4				ft_mat4_create();
+t_mat4				ft_mat4_create_init(double init);
+
+t_mat4f				ft_mat4f_create(void);
+t_mat4f				ft_mat4f_create_init(float init);
+t_vec4f				ft_mat4f_x_vec4f(t_mat4f m, t_vec4f v);
+t_vec4f				ft_mat4f_x_vec4f_col(t_mat4f m, t_vec4f v);
+t_mat4f				ft_mat4f_x_mat4f(t_mat4f m0, t_mat4f m1);
+t_mat4f				ft_mat4f_x_mat4f_col(t_mat4f m0, t_mat4f m1);
+t_mat4f				ft_mat4f_scale_f(t_mat4f mat, float x, float y, float z);
+t_mat4f				ft_mat4f_scale(t_mat4f mat, t_vec3f v);
+t_mat4f				ft_mat4f_translate_f(t_mat4f mat, float x, float y, float z);
+t_mat4f				ft_mat4f_translate(t_mat4f mat, t_vec3f v);
+t_mat4f				ft_mat4f_translate_row(t_mat4f mat, t_vec3f v);
+t_mat4f				ft_mat4f_rotation_x(float angle_rad);
+t_mat4f				ft_mat4f_rotation_y(float angle_rad);
+t_mat4f				ft_mat4f_rotation_z(float angle_rad);
+t_mat4f				ft_mat4f_rotation_xyz(float angle_rad, t_vec3f v);
+t_mat4f				ft_mat4f_rotate(t_mat4f mat, float angle_rad, t_vec3f v);
+t_mat4f				ft_perspective_matrixf(float fov_rad, float asp_ratio, float near, float far);
+
 int					ft_destroy_matrix(t_matrix *mat);
 t_mat4				ft_get_translation_matrix4(t_mat4 mat, double x,
 		double y, double z);
@@ -318,6 +338,8 @@ t_mat4				ft_mat4_x_mat4(t_mat4 m0, t_mat4 m1);
 t_mat4				ft_mat4_x_mat4_col(t_mat4 m0, t_mat4 m1);
 t_vec4				ft_mat4_x_vec4(t_mat4 mat, t_vec4 vec);
 t_vec4				ft_mat4_x_vec4_col(t_mat4 mat, t_vec4 vec);
+t_mat4				ft_perspective_matrix(float fov_rad, float asp_ratio, float near, float far);
+
 void				ft_putvec3(t_vec3 *vec);
 void				ft_putvec4(t_vec4 *vec);
 void				ft_putmat4(t_mat4 *mat);

@@ -1,9 +1,11 @@
-#include <fcntl.h>
-#include <stdio.h>
-#include <errno.h>
-#include "libft.h"
-#include "libgl.h"
-#define MODELS_DIR "../../models/"
+#ifndef PARSER_H
+# define PARSER_H
+# include <fcntl.h>
+# include <stdio.h>
+# include <errno.h>
+# include "libft.h"
+# include "libgl.h"
+# define MODELS_DIR "../../models/"
 
 typedef enum		e_illumination_mode
 {
@@ -47,10 +49,21 @@ typedef struct		s_container
 typedef struct		s_obj
 {
 	char			*mtlib; // name of .mtl file that contains color && texture of model
-	t_list			*vertices;
-	t_list			*indices;
+	t_list			*vertices; // content is t_vec4f
+	unsigned int	vertices_len;
+	t_list			*indices; // content is t_face
+	unsigned int	indices_len;
 	t_list			*materials;
 }					t_obj;
+
+typedef struct		s_face
+{
+	unsigned int	n_of_indices;
+	unsigned int	flags; // F_INDEX | F_NORMAL | F_TEXTURE_COORDS
+	unsigned int	*vindices; // If an index is positive then it refers to the offset in that vertex list, starting at 1. If an index is negative then it relatively refers to the end of the vertex list, -1 referring to the last element.
+	unsigned int	*vnormals;
+	unsigned int	*vtexture;
+}					t_face;
 
 typedef struct		s_material
 {
@@ -64,15 +77,6 @@ typedef struct		s_material
 	float			illum;	// illumination mode | enum: t_illumination_mode
 }					t_material;
 
-typedef struct		s_face
-{
-	unsigned int	n_of_indices;
-	unsigned int	flags; // F_INDEX | F_NORMAL | F_TEXTURE_COORDS
-	unsigned int	*vindices; // If an index is positive then it refers to the offset in that vertex list, starting at 1. If an index is negative then it relatively refers to the end of the vertex list, -1 referring to the last element.
-	unsigned int	*vnormals;
-	unsigned int	*vtexture;
-}					t_face;
-
 typedef struct		s_cmd
 {
 	int				cmd_code;
@@ -80,8 +84,8 @@ typedef struct		s_cmd
 	struct s_cmd	*(*get)(struct s_cmd *this); // expects this->to_parse to contain a string;
 	int				(*exec)(struct s_cmd *this, t_obj *obj);
 	void			(*destroy)(struct s_cmd **this);
-	void			(*parse_geometric_vertex)(char *line, t_list **vertices_lst);
-	void			(*parse_indices)(char *line, t_list **indices_lst);
+	unsigned int	(*parse_geometric_vertex)(char *line, t_list **vertices_lst);
+	unsigned int	(*parse_indices)(char *line, t_list **indices_lst);
 }					t_cmd;
 
 t_cmd				*ft_command_construct();
@@ -102,5 +106,7 @@ void				ft_destroy_object(t_obj **obj);
 * parsing functions
 */
 
-void				ft_parse_indices(char *line, t_list **indices);
-void				ft_parse_geometric_vertex(char *line, t_list **vertices);
+unsigned int		ft_parse_indices(char *line, t_list **indices);
+unsigned int		ft_parse_geometric_vertex(char *line, t_list **vertices);
+
+#endif

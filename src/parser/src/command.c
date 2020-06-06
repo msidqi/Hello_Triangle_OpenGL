@@ -39,10 +39,12 @@ static int		ft_command_exec(t_cmd *this, t_obj *obj)
 		ft_memdel((void **)&this->to_parse);
 		return (0);
 	}
-	if (this->cmd_code == C_GEOMETRIC_VERTEX)
-		this->parse_geometric_vertex(this->to_parse, &obj->vertices);
-	if (this->cmd_code == C_VERTEX_INDEX)
-		this->parse_indices(this->to_parse, &obj->indices);
+	if (this->cmd_code == C_GEOMETRIC_VERTEX &&
+		this->parse_geometric_vertex(this->to_parse, &obj->vertices))
+		obj->vertices_len++;
+	if (this->cmd_code == C_VERTEX_INDEX &&
+		this->parse_indices(this->to_parse, &obj->indices))
+		obj->indices_len++;
 	ft_memdel((void **)&this->to_parse);
 	this->cmd_code = C_SKIP;
 	return (1);

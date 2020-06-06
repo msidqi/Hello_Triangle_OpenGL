@@ -1,6 +1,6 @@
 #include "parser.h"
 
-void			ft_parse_geometric_vertex(char *line, t_list **vertices)
+unsigned int	ft_parse_geometric_vertex(char *line, t_list **vertices)
 {
 	char			**arr;
 	unsigned int	n;
@@ -11,13 +11,14 @@ void			ft_parse_geometric_vertex(char *line, t_list **vertices)
 	{
 		ft_free_tab(&arr);
 		ft_putendl_fd("ft_parse_geometric_vertex(): skiped invalid vertex", 2);
-		return ;
+		return (0);
 	}
 	// (x,y,z[,w]) w default: 1.0
 	(*vertex) = (t_vec4f){ft_atof(arr[1]), ft_atof(arr[2]), ft_atof(arr[3]),
 				n == 5 ? ft_atof(arr[4]) : 1.0};
 	ft_lstadd(vertices, ft_lstnew((const void *)vertex, sizeof(t_vec4f)));
 	ft_free_tab(&arr);
+	return (1);
 }
 
 unsigned int	ft_get_face_components(unsigned int values[3], char *index_line)
@@ -43,7 +44,7 @@ unsigned int	ft_get_face_components(unsigned int values[3], char *index_line)
 	return (flag);
 }
 
-void		ft_destroy_face(t_face **face)
+void			ft_destroy_face(t_face **face)
 {
 	if ((*face)->flags & F_INDEX)
 		free((*face)->vindices);
@@ -54,7 +55,7 @@ void		ft_destroy_face(t_face **face)
 	ft_memdel((void **)&(*face));
 }
 
-void 		ft_store_face_component(t_face *face, unsigned int i, unsigned int values[3])
+void 			ft_store_face_component(t_face *face, unsigned int i, unsigned int values[3])
 {
 	if ((face->flags & F_INDEX) && values[0])
 		face->vindices[i] = values[0];
@@ -64,7 +65,7 @@ void 		ft_store_face_component(t_face *face, unsigned int i, unsigned int values
 		face->vnormals[i] = values[2];
 }
 
-void			ft_parse_indices(char *line, t_list **indices)
+unsigned int	ft_parse_indices(char *line, t_list **indices)
 {
 	t_face			*face;
 	char			**splited_line;
@@ -77,7 +78,7 @@ void			ft_parse_indices(char *line, t_list **indices)
 	if (split_len < 4 || !(face = (t_face *)ft_memalloc(sizeof(t_face))))
 	{
 		ft_free_tab(&splited_line);
-		return ;
+		return (0);
 	}
 	face->n_of_indices = split_len - 1;
 	i = 1; //skip cmd at splited_line[0]
@@ -100,6 +101,10 @@ void			ft_parse_indices(char *line, t_list **indices)
 		ft_store_face_component(face, i - 1, index_comps);
 	}
 	if (face)
+	{
 		ft_lstadd(indices, ft_lstnew((const void *)face, sizeof(t_face)));
+		return (1);
+	}
 	ft_free_tab(&splited_line);
+	return (0);
 }

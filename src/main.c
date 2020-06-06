@@ -74,11 +74,17 @@ t_mat4f mat4_to_mat4f(t_mat4 mat)
 	return (ret);
 }
 
-int		main(void)
+int		main(int argc, char **argv)
 {
-	GLFWwindow* window;
-	t_shader *shader;
+	GLFWwindow	*window;
+	t_shader	*shader;
+	// t_obj		*obj;
 
+	// obj = ft_obj_from_args(argc, argv);
+	// ft_print_indices(obj);
+	// ft_print_vertices(obj);
+	// ft_destroy_object(&obj);
+	// return (0);
 	window = NULL;
 	if (!init_setup(&window, 800, 600, "OpenGL"))
 	{
@@ -156,28 +162,35 @@ int		main(void)
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float))); // https://learnopengl.com/img/getting-started/vertex_attribute_pointer_interleaved_textures.png
 	glEnableVertexAttribArray(2);
 // -----------------Transform Matrix--------------------
-	t_mat4 scale;
-	t_mat4 rot;
-	t_mat4 translate;
-	t_mat4 result;
-	t_mat4 identity;
+	t_mat4f scale;
+	t_mat4f rot;
+	t_mat4f translate;
+	t_mat4f identity;
 
-	identity = ft_mat4_create();
-	 // rotate then scale
-	// scale = ft_mat4_scale(identity, (t_vec3){.5, .5, .5});
-	/*rot = ft_mat4_rotation_xyz(ft_to_rad(45.0), (t_vec3){1.0, .0, 1.0});
-	translate = ft_mat4_translate(identity, (t_vec3){.5, -0.5, .0});
-	result = ft_mat4_x_mat4(translate, rot); // scale then rotate
-	// result = ft_mat4_x_mat4(scale, rot); // scale then rotate
-	const t_mat4f resultf = mat4_to_mat4f(result);
+	// rotate then scale
+   // scale = ft_mat4_scale(identity, (t_vec3){.5, .5, .5});
+   /*rot = ft_mat4_rotation_xyz(ft_to_rad(45.0), (t_vec3){1.0, .0, 1.0});
+   translate = ft_mat4_translate(identity, (t_vec3){.5, -0.5, .0});
+   result = ft_mat4_x_mat4(translate, rot); // scale then rotate
+   // result = ft_mat4_x_mat4(scale, rot); // scale then rotate
+   const t_mat4f resultf = mat4_to_mat4f(result);
 
-	shader->set_mat4f(shader, "transform", &resultf);*/
+   shader->set_mat4f(shader, "transform", &resultf);*/
+	identity = ft_mat4f_create();
 
-	
-	t_mat4 final = ft_mat4_rotate(identity, ft_to_rad(-55.0), (t_vec3){1.0, .0, .0});
-	const t_mat4f finalf = mat4_to_mat4f(final);
+	t_mat4f model;
+	model = ft_mat4f_rotate(identity, (float)ft_to_rad(-70.0), (t_vec3f){1.0f, .0f, .0f});
+	t_mat4f view;
+	view = ft_mat4f_translate(identity, (t_vec3f){.0f, 1.0f, -2.2f});
+	t_mat4f projection;
+	projection = ft_perspective_matrixf((float)ft_to_rad(90.0), 800.0f / 600.0f, 0.1f, 100.0f);
+
+	const t_mat4f result = ft_mat4f_x_mat4f(model, ft_mat4f_x_mat4f(view, projection));
+
+	// const t_mat4f modelf = mat4_to_mat4f(model);
+	// const t_mat4f viewf = mat4_to_mat4f(view);
+	// const t_mat4f projectionf = mat4_to_mat4f(projection);
 // ------------------------------------------------
-
 //window loop
 	while(!glfwWindowShouldClose(window))
 	{
@@ -191,7 +204,10 @@ int		main(void)
 		// glBindTexture(GL_TEXTURE_2D, tex0->gl_id); // no need to bind inside loop
 
 // --------------set uniform that's in vertex shader---------
-		shader->set_mat4f(shader, "transform", &finalf);
+		shader->set_mat4f(shader, "result", &result);
+		shader->set_mat4f(shader, "model", &model);
+		shader->set_mat4f(shader, "view", &view);
+		shader->set_mat4f(shader, "projection", &projection);
 // -----------------------------------------------------------
 
 		glBindVertexArray(VAO);
