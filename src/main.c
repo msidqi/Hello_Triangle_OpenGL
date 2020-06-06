@@ -46,17 +46,17 @@ void	processInput(GLFWwindow *window)
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
 		translation.z -= 0.1f;
 	if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
-		rotation.x += .3f;
+		rotation.x += .1f;
 	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
-		rotation.x -= .3f;
+		rotation.x -= .1f;
 	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
-		rotation.y += .3f;
+		rotation.y += .1f;
 	if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS)
-		rotation.y -= .3f;
+		rotation.y -= .1f;
 	if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
-		rotation.z += .3f;
+		rotation.z += .1f;
 	if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS)
-		rotation.z -= .3f;
+		rotation.z -= .1f;
 }
 
 int		init_setup(GLFWwindow **window, int width, int height, char *window_name)
@@ -81,6 +81,7 @@ int		init_setup(GLFWwindow **window, int width, int height, char *window_name)
 		return (0);
 	}
 	glfwSetFramebufferSizeCallback(*window, framebuffer_size_callback);
+	glEnable(GL_DEPTH_TEST);
 	return (1);
 }
 
@@ -147,7 +148,7 @@ int		main(int argc, char **argv)
 	shader->set_int(shader, "tex0Sampler", 0); // default is 0
 	shader->set_int(shader, "tex1Sampler", 1); // tell OpenGL that tex1Sampler belongs to texture unit 1 (previously set in bind() function)
 //---------------------------------
-	float vertices1[] = {
+	/*float vertices1[] = {
     // positions          // colors           // texture coords
      0.5f,  0.5f, .0f,   1.0f, 0.0f, 0.0f,   2.0f, 2.0f,   // top right
      0.5f, -0.5f, .0f,   0.0f, 1.0f, 0.0f,   2.0f, 0.0f,   // bottom right
@@ -188,6 +189,65 @@ int		main(int argc, char **argv)
 	glEnableVertexAttribArray(1); // enable location 0
 
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float))); // https://learnopengl.com/img/getting-started/vertex_attribute_pointer_interleaved_textures.png
+	glEnableVertexAttribArray(2);*/
+
+	float vertices[] = {
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+	
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+	
+		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+	
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+	
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+	
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+	};
+	unsigned int VBO;
+	glGenBuffers(1, &VBO);
+	unsigned int VAO;
+	glGenVertexArrays(1, &VAO);
+
+	glBindVertexArray(VAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 
 // ------------------------------------------------
@@ -195,7 +255,7 @@ int		main(int argc, char **argv)
 	while(!glfwWindowShouldClose(window))
 	{
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glfwPollEvents();
 		processInput(window);
@@ -212,26 +272,25 @@ int		main(int argc, char **argv)
 		identity = ft_mat4f_create();
 		model = ft_mat4f_rotation_xyz(ft_to_radf(rot_angle), rotation);
 		view = ft_mat4f_translate(identity, translation);
-		// ft_putmat4f(&view);
 		projection = ft_perspective_matrixf(ft_to_radf(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-		// ft_putmat4f(&projection);
-
 		result = ft_mat4f_x_mat4f(model, ft_mat4f_x_mat4f(view, projection));
 
 // --------------set uniform that's in vertex shader---------
-		shader->set_mat4f(shader, "result", (const t_mat4f *)&result);
 		shader->set_mat4f(shader, "model", &model);
 		shader->set_mat4f(shader, "view", &view);
 		shader->set_mat4f(shader, "projection", &projection);
+		shader->set_mat4f(shader, "result", (const t_mat4f *)&result);
 // -----------------------------------------------------------
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 
-		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		/*glBindVertexArray(VAO);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);*/
 
 		glfwSwapBuffers(window);
 	}
+	// cleanup ---------------------------
 	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &EBO);
+	// glDeleteBuffers(1, &EBO);
 	glDeleteBuffers(1, &VBO);
 	glfwTerminate();
 	if(tex0) tex0->destroy(&tex0);

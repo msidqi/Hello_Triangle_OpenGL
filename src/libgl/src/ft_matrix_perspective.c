@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/31 15:31:41 by msidqi            #+#    #+#             */
-/*   Updated: 2020/06/06 16:56:47 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/06/06 18:03:40 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,9 @@ t_mat4f	ft_perspective_matrixf(float fov_rad, float asp_ratio, float near, float
 	perspective = ft_mat4f_create();
 	perspective.v[0][0] = 1.0f / (tan_fov_over_2 * asp_ratio);
 	perspective.v[1][1] = 1.0f / tan_fov_over_2;
-	perspective.v[2][2] = far / (near - far);
+	perspective.v[2][2] = (-near - far) / (near - far);
 	perspective.v[2][3] = 1.0f;
-	perspective.v[3][2] = -(far * near) / (far - near);
+	perspective.v[3][2] = 2.0f * far * near / (near - far);
 	return (perspective);
 }
 
