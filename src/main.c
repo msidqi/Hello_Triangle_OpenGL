@@ -6,10 +6,10 @@ void	framebuffer_size_callback(GLFWwindow* window, int width, int height) // cal
 }
 
 float mixValue = 0.2f;
-float xAxis = .0f;
-float yAxis = .0f;
-float zAxis = .0f;
-float rotation = -55.0f;
+
+t_vec3f translation = (t_vec3f){.0f, .0f, 3.0f};
+float rot_angle = -55.0f;
+t_vec3f rotation = (t_vec3f){1.0f, 0.0f, 0.0f};
 
 void	processInput(GLFWwindow *window)
 {
@@ -34,21 +34,29 @@ void	processInput(GLFWwindow *window)
             mixValue = 0.0f;
 	}
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		yAxis += 0.1f;
+		translation.y += 0.1f;
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		yAxis -= 0.1f;
+		translation.y -= 0.1f;
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		xAxis += 0.1f;
+		translation.x += 0.1f;
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		xAxis -= 0.1f;
+		translation.x -= 0.1f;
 	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-		zAxis += 0.1f;
+		translation.z += 0.1f;
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-		zAxis -= 0.1f;
-	if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
-		rotation += 0.6f;
-	if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
-		rotation -= 0.6f;
+		translation.z -= 0.1f;
+	if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
+		rotation.x += .3f;
+	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
+		rotation.x -= .3f;
+	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
+		rotation.y += .3f;
+	if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS)
+		rotation.y -= .3f;
+	if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
+		rotation.z += .3f;
+	if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS)
+		rotation.z -= .3f;
 }
 
 int		init_setup(GLFWwindow **window, int width, int height, char *window_name)
@@ -202,10 +210,10 @@ int		main(int argc, char **argv)
 		t_mat4f result;
 
 		identity = ft_mat4f_create();
-		model = ft_mat4f_rotation_xyz(ft_to_radf(rotation), (t_vec3f){1.0f, .2f, 0.0f});
-		view = ft_mat4f_translate(identity, (t_vec3f){xAxis, yAxis, zAxis});
+		model = ft_mat4f_rotation_xyz(ft_to_radf(rot_angle), rotation);
+		view = ft_mat4f_translate(identity, translation);
 		// ft_putmat4f(&view);
-		projection = ft_perspective_matrixf(ft_to_radf(90.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+		projection = ft_perspective_matrixf(ft_to_radf(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 		// ft_putmat4f(&projection);
 
 		result = ft_mat4f_x_mat4f(model, ft_mat4f_x_mat4f(view, projection));
