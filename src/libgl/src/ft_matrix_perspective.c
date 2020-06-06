@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/31 15:31:41 by msidqi            #+#    #+#             */
-/*   Updated: 2020/06/06 09:25:19 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/06/06 15:13:27 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,10 @@ t_mat4f	ft_perspective_matrixf(float fov_rad, float asp_ratio, float near, float
 	perspective.v[0][0] = 1.0f / (tan_fov_over_2 * asp_ratio);
 	perspective.v[1][1] = 1.0f / tan_fov_over_2;
 	perspective.v[2][2] = far / (near - far);
-	// perspective.v[2][2] = (-near - far) / (near - far);
+	perspective.v[2][2] = (-near - far) / (near - far);
 	perspective.v[2][3] = 1.0f;
 	perspective.v[3][2] = -(far * near) / (far - near);
-	// perspective.v[3][2] = 2.0f * far * near / (near - far);
+	perspective.v[3][2] = 2.0f * far * near / (near - far);
 	return (perspective);
 }
 
@@ -71,19 +71,3 @@ t_mat4f	ft_perspective_matrixf_row(float fov_rad, float asp_ratio, float near, f
 	perspective.v[3][2] = 1.0f;
 	return (perspective);
 }
-
-/*template<typename T>
-	GLM_FUNC_QUALIFIER mat<4, 4, T, defaultp> perspectiveRH_ZO(T fovy, T aspect, T zNear, T zFar)
-	{
-		assert(abs(aspect - std::numeric_limits<T>::epsilon()) > static_cast<T>(0));
-
-		T const tanHalfFovy = tan(fovy / 2.0f);
-
-		mat<4, 4, T, defaultp> Result(static_cast<T>(0));
-		Result[0][0] = 1.0f / (aspect * tanHalfFovy);
-		Result[1][1] = 1.0f / (tanHalfFovy);
-		Result[2][2] = zFar / (zNear - zFar);
-		Result[2][3] = - 1.0f;
-		Result[3][2] = -(zFar * zNear) / (zFar - zNear);
-		return Result;
-	}*/

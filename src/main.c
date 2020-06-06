@@ -6,6 +6,10 @@ void	framebuffer_size_callback(GLFWwindow* window, int width, int height) // cal
 }
 
 float mixValue = 0.2f;
+float xAxis = .0f;
+float yAxis = .0f;
+float zAxis = .0f;
+float rotation = -55.0f;
 
 void	processInput(GLFWwindow *window)
 {
@@ -28,7 +32,23 @@ void	processInput(GLFWwindow *window)
         mixValue -= 0.01f;
         if (mixValue <= 0.0f)
             mixValue = 0.0f;
-    }
+	}
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		yAxis += 0.1f;
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		yAxis -= 0.1f;
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		xAxis += 0.1f;
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		xAxis -= 0.1f;
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+		zAxis += 0.1f;
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+		zAxis -= 0.1f;
+	if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
+		rotation += 0.6f;
+	if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
+		rotation -= 0.6f;
 }
 
 int		init_setup(GLFWwindow **window, int width, int height, char *window_name)
@@ -121,10 +141,10 @@ int		main(int argc, char **argv)
 //---------------------------------
 	float vertices1[] = {
     // positions          // colors           // texture coords
-     0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   2.0f, 2.0f,   // top right
-     0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   2.0f, 0.0f,   // bottom right
-    -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
-    -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 2.0f    // top left
+     0.5f,  0.5f, .0f,   1.0f, 0.0f, 0.0f,   2.0f, 2.0f,   // top right
+     0.5f, -0.5f, .0f,   0.0f, 1.0f, 0.0f,   2.0f, 0.0f,   // bottom right
+    -0.5f, -0.5f, .0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
+    -0.5f,  0.5f, .0f,   1.0f, 1.0f, 0.0f,   0.0f, 2.0f    // top left
 	};
 	unsigned int indices[] = {  // indicies for the vetexes (used in EBO)
         0, 1, 3,  // first Triangle
@@ -161,35 +181,7 @@ int		main(int argc, char **argv)
 
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float))); // https://learnopengl.com/img/getting-started/vertex_attribute_pointer_interleaved_textures.png
 	glEnableVertexAttribArray(2);
-// -----------------Transform Matrix--------------------
-	t_mat4f scale;
-	t_mat4f rot;
-	t_mat4f translate;
-	t_mat4f identity;
 
-	// rotate then scale
-   // scale = ft_mat4_scale(identity, (t_vec3){.5, .5, .5});
-   /*rot = ft_mat4_rotation_xyz(ft_to_rad(45.0), (t_vec3){1.0, .0, 1.0});
-   translate = ft_mat4_translate(identity, (t_vec3){.5, -0.5, .0});
-   result = ft_mat4_x_mat4(translate, rot); // scale then rotate
-   // result = ft_mat4_x_mat4(scale, rot); // scale then rotate
-   const t_mat4f resultf = mat4_to_mat4f(result);
-
-   shader->set_mat4f(shader, "transform", &resultf);*/
-	identity = ft_mat4f_create();
-
-	t_mat4f model;
-	model = ft_mat4f_rotate(identity, (float)ft_to_rad(-70.0), (t_vec3f){1.0f, .0f, .0f});
-	t_mat4f view;
-	view = ft_mat4f_translate_row(identity, (t_vec3f){.0f, 1.0f, -2.2f});
-	t_mat4f projection;
-	projection = ft_perspective_matrixf((float)ft_to_rad(90.0), 800.0f / 600.0f, 0.1f, 100.0f);
-
-	const t_mat4f result = ft_mat4f_x_mat4f(model, ft_mat4f_x_mat4f(view, projection));
-
-	// const t_mat4f modelf = mat4_to_mat4f(model);
-	// const t_mat4f viewf = mat4_to_mat4f(view);
-	// const t_mat4f projectionf = mat4_to_mat4f(projection);
 // ------------------------------------------------
 //window loop
 	while(!glfwWindowShouldClose(window))
@@ -202,9 +194,24 @@ int		main(int argc, char **argv)
 		shader->set_float(shader, "mixValue", mixValue);
 		shader->use(shader);
 		// glBindTexture(GL_TEXTURE_2D, tex0->gl_id); // no need to bind inside loop
+// -----------------Transform Matrix--------------------
+		t_mat4f identity;
+		t_mat4f model;
+		t_mat4f view;
+		t_mat4f projection;
+		t_mat4f result;
+
+		identity = ft_mat4f_create();
+		model = ft_mat4f_rotation_xyz(ft_to_radf(rotation), (t_vec3f){1.0f, .2f, 0.0f});
+		view = ft_mat4f_translate(identity, (t_vec3f){xAxis, yAxis, zAxis});
+		// ft_putmat4f(&view);
+		projection = ft_perspective_matrixf(ft_to_radf(90.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+		// ft_putmat4f(&projection);
+
+		result = ft_mat4f_x_mat4f(model, ft_mat4f_x_mat4f(view, projection));
 
 // --------------set uniform that's in vertex shader---------
-		shader->set_mat4f(shader, "result", &result);
+		shader->set_mat4f(shader, "result", (const t_mat4f *)&result);
 		shader->set_mat4f(shader, "model", &model);
 		shader->set_mat4f(shader, "view", &view);
 		shader->set_mat4f(shader, "projection", &projection);

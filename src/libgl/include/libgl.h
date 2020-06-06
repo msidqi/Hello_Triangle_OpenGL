@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/22 21:43:22 by msidqi            #+#    #+#             */
-/*   Updated: 2020/06/06 09:16:49 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/06/06 14:39:10 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -268,6 +268,8 @@ typedef struct		s_obj_function
 
 double				ft_to_rad(double deg);
 double				ft_to_deg(double radian);
+float				ft_to_radf(float deg);
+float				ft_to_degf(float radian);
 double				lerp(double x1, double x2, double lerp);
 t_vec2				ft_vec2_lerp(t_vec2 v1, t_vec2 v2, double lrp);
 double				ft_lerp(double goal, double current, double delta_time);

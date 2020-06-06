@@ -6,7 +6,7 @@
 #    By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/23 00:08:25 by msidqi            #+#    #+#              #
-#    Updated: 2020/06/06 08:21:32 by msidqi           ###   ########.fr        #
+#    Updated: 2020/06/06 11:24:22 by msidqi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ ft_color_operations.c ft_mat_create_destroy.c\
 ft_screenshot.c ft_vec_normalize_magnitude.c ft_put_vectors.c \
 ft_rotate_vector.c strings.c ft_matrix_transform.c ft_matrix.c \
 ft_matrix_create.c ft_matrix_op.c ft_matrix_perspective.c\
-ft_matrix_transform_f.c ft_matrix_op_f.c
+ft_matrix_transform_f.c ft_matrix_op_f.c ft_putmat4.c
 # ft_gl_mat_transform.c ft_gl_mat_create.c ft_gl_mat.c
 INCLUDE = include
 INC = include/libgl.h
