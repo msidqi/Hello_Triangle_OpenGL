@@ -181,7 +181,7 @@ int		main(int argc, char **argv)
 	t_mat4f model;
 	model = ft_mat4f_rotate(identity, (float)ft_to_rad(-70.0), (t_vec3f){1.0f, .0f, .0f});
 	t_mat4f view;
-	view = ft_mat4f_translate(identity, (t_vec3f){.0f, 1.0f, -2.2f});
+	view = ft_mat4f_translate_row(identity, (t_vec3f){.0f, 1.0f, -2.2f});
 	t_mat4f projection;
 	projection = ft_perspective_matrixf((float)ft_to_rad(90.0), 800.0f / 600.0f, 0.1f, 100.0f);
 

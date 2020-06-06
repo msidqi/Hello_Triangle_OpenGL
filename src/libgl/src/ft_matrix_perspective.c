@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/31 15:31:41 by msidqi            #+#    #+#             */
-/*   Updated: 2020/06/06 08:20:49 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/06/06 09:25:19 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,33 @@ t_mat4	ft_perspective_matrix(float fov_rad, float asp_ratio, float near, float f
 	perspective.v[0][0] = 1.0f / (tan_fov_over_2 * asp_ratio);
 	perspective.v[1][1] = 1.0f / tan_fov_over_2;
 	perspective.v[2][2] = (-near - far) / (near - far);
-	perspective.v[2][3] = 2.0f * far * near / (near - far);
-	perspective.v[3][2] = 1.0f;
+	perspective.v[2][3] = 1.0f;
+	perspective.v[3][2] = 2.0f * far * near / (near - far);
 	return (perspective);
 }
 
 t_mat4f	ft_perspective_matrixf(float fov_rad, float asp_ratio, float near, float far)
+{
+	t_mat4f	perspective;
+	float	tan_fov_over_2;
+	
+	tan_fov_over_2 = tanf(fov_rad / 2.0f);
+	if (near < 0.0f)
+		near = 0.1f;
+	if (far < 0.0f)
+		far = 100.0f;
+	perspective = ft_mat4f_create();
+	perspective.v[0][0] = 1.0f / (tan_fov_over_2 * asp_ratio);
+	perspective.v[1][1] = 1.0f / tan_fov_over_2;
+	perspective.v[2][2] = far / (near - far);
+	// perspective.v[2][2] = (-near - far) / (near - far);
+	perspective.v[2][3] = 1.0f;
+	perspective.v[3][2] = -(far * near) / (far - near);
+	// perspective.v[3][2] = 2.0f * far * near / (near - far);
+	return (perspective);
+}
+
+t_mat4f	ft_perspective_matrixf_row(float fov_rad, float asp_ratio, float near, float far)
 {
 	t_mat4f	perspective;
 	float	tan_fov_over_2;
@@ -51,26 +72,7 @@ t_mat4f	ft_perspective_matrixf(float fov_rad, float asp_ratio, float near, float
 	return (perspective);
 }
 
-/*t_mat4	ft_perspective_matrixr(float fov_rad, float asp_ratio, float near, float far)
-{
-	t_mat4	perspective;
-	float	tan_fov_over_2;
-	
-	tan_fov_over_2 = tanf(fov_rad / 2.0f);
-	if (near < 0.0f)
-		near = 0.1f;
-	if (far < 0.0f)
-		far = 100.0f;
-	perspective = ft_mat4_create();
-	perspective.v[0][0] = 1.0f / (tan_fov_over_2 * asp_ratio);
-	perspective.v[1][1] = 1.0f / tan_fov_over_2;
-	perspective.v[2][2] = (-near - far) / (near - far);
-	perspective.v[2][3] = 2.0f * far * near / (near - far);
-	perspective.v[3][2] = 1.0f;
-	return (perspective);
-}
-
-template<typename T>
+/*template<typename T>
 	GLM_FUNC_QUALIFIER mat<4, 4, T, defaultp> perspectiveRH_ZO(T fovy, T aspect, T zNear, T zFar)
 	{
 		assert(abs(aspect - std::numeric_limits<T>::epsilon()) > static_cast<T>(0));
@@ -84,5 +86,4 @@ template<typename T>
 		Result[2][3] = - 1.0f;
 		Result[3][2] = -(zFar * zNear) / (zFar - zNear);
 		return Result;
-	}
-*/
+	}*/

@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/22 21:43:22 by msidqi            #+#    #+#             */
-/*   Updated: 2020/06/06 08:17:16 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/06/06 09:16:49 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -318,7 +318,7 @@ t_mat4f				ft_mat4f_rotation_z(float angle_rad);
 t_mat4f				ft_mat4f_rotation_xyz(float angle_rad, t_vec3f v);
 t_mat4f				ft_mat4f_rotate(t_mat4f mat, float angle_rad, t_vec3f v);
 t_mat4f				ft_perspective_matrixf(float fov_rad, float asp_ratio, float near, float far);
-
+t_mat4f				ft_perspective_matrixf_row(float fov_rad, float asp_ratio, float near, float far);
 int					ft_destroy_matrix(t_matrix *mat);
 t_mat4				ft_get_translation_matrix4(t_mat4 mat, double x,
 		double y, double z);
