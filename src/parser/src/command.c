@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   command.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/06/07 12:50:28 by msidqi            #+#    #+#             */
+/*   Updated: 2020/06/07 12:50:29 by msidqi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "parser.h"
 
 static t_cmd	*ft_get_command(t_cmd *this)
@@ -27,6 +39,11 @@ static void		ft_destory_command(t_cmd **this)
 	}
 }
 
+/*
+returns 1 on successful parse and storing of line
+0 on skip (null to_parse, invalid command, comment command)
+-1 on uninitialized command
+*/
 static int		ft_command_exec(t_cmd *this, t_obj *obj)
 {
 	if (this->cmd_code == C_UNINITIALIZED)

@@ -20,7 +20,7 @@ void	ft_print_vertices(t_obj *obj)
 			return ;
 		}
 		vertex = (t_vec4f *)head->content;
-		printf("(%f, %f, %f, %f)\n",
+		printf("(% f, % f, % f, % f)\n",
 		vertex->x, vertex->y,
 		vertex->z, vertex->w);
 		head = head->next;
@@ -29,12 +29,12 @@ void	ft_print_vertices(t_obj *obj)
 
 static void	ft_print_array(char *name, unsigned int *array, unsigned int len)
 {
-	unsigned int	j;
+	unsigned int	i;
 
-	j = -1;
+	i = -1;
 	printf("%s [ ", name);
-	while (++j < len)
-		printf(j != len - 1 ? "%u, " : "%u ]\n", array[j]);
+	while (++i < len)
+		printf(i != len - 1 ? "%3u, " : "%3u ]\n", array[i]);
 }
 
 void		ft_print_indices(t_obj *obj)
@@ -67,4 +67,36 @@ void		ft_print_indices(t_obj *obj)
 		head = head->next;
 		printf("-----------------\n");
 	}
+}
+
+void		ft_print_vertices_array(t_obj *obj, float *array)
+{
+	int i;
+	
+	i = -1;
+	printf("number of vertices: %u | number of floats %u\n",
+	obj->vertices_len, obj->vertices_len * 3);
+	while (++i < obj->vertices_len * 3)
+	{
+		if (i % 3 == 0)
+			printf("\nvertices_array ");
+		printf("% f ", array[i]);
+	}
+	printf("\nconfirmed vindices len %d (should be %u)\n----------------------\n",
+	i, obj->vertices_len * 3);}
+
+void		ft_print_vindices_array(t_obj *obj, unsigned int *vindices_array)
+{
+	int i;
+	
+	i = 0;
+	printf("number of vindices: %u | number of unsigned int %u\n",
+	obj->indices_len, obj->indices_len * 3 /*face->n_of_indices*/);
+	while (i < obj->indices_len * 3)
+	{
+		ft_print_array("vindices_array", vindices_array + i, 3);
+		i += 3;
+	}
+	printf("confirmed vindices len %d (should be %u)\n----------------------\n",
+	i, obj->indices_len * 3 /*face->n_of_indices*/);
 }

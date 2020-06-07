@@ -92,6 +92,8 @@ t_cmd				*ft_command_construct();
 
 void				ft_print_vertices(t_obj *obj);
 void				ft_print_indices(t_obj *obj);
+void				ft_print_vertices_array(t_obj *obj, float *array);
+void				ft_print_vindices_array(t_obj *obj, unsigned int *vindices_array);
 
 /*
 * object functions
@@ -99,8 +101,10 @@ void				ft_print_indices(t_obj *obj);
 
 t_obj				*ft_obj_from_args(int argc, char **argv);
 t_obj				*ft_obj_from_file(char *path);
+int					ft_convert_object(t_obj *obj);
 void				ft_destroy_object(t_obj **obj);
-
+void				ft_delete_face(void *content, size_t size);
+void				ft_delete_content(void *content, size_t size);
 
 /*
 * parsing functions

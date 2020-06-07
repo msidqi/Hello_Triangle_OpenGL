@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/06/07 12:50:24 by msidqi            #+#    #+#             */
+/*   Updated: 2020/06/07 12:50:25 by msidqi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "parser.h"
 
 unsigned int	ft_parse_geometric_vertex(char *line, t_list **vertices)
@@ -74,7 +86,7 @@ unsigned int	ft_parse_indices(char *line, t_list **indices)
 	unsigned int	i;
 	unsigned int	flags;
 
-	split_len = (unsigned int)ft_strlsplit(line, ' ', &splited_line); // f 16/2/1 2/3/4 3/5/6 17/7/8 v1/vt1/vn1
+	split_len = (unsigned int)ft_strlsplit(line, ' ', &splited_line); // f v1/vt1/vn1
 	if (split_len < 4 || !(face = (t_face *)ft_memalloc(sizeof(t_face))))
 	{
 		ft_free_tab(&splited_line);
@@ -100,11 +112,11 @@ unsigned int	ft_parse_indices(char *line, t_list **indices)
 		}
 		ft_store_face_component(face, i - 1, index_comps);
 	}
+	ft_free_tab(&splited_line);
 	if (face)
 	{
 		ft_lstadd(indices, ft_lstnew((const void *)face, sizeof(t_face)));
 		return (1);
 	}
-	ft_free_tab(&splited_line);
 	return (0);
 }

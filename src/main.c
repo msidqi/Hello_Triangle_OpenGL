@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/06/07 12:50:34 by msidqi            #+#    #+#             */
+/*   Updated: 2020/06/07 14:20:06 by msidqi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "scop.h" 
 
 void	framebuffer_size_callback(GLFWwindow* window, int width, int height) // callback to resize the viewport @ window size-change
@@ -59,6 +71,23 @@ void	processInput(GLFWwindow *window)
 		rotation.z -= .1f;
 }
 
+
+void	ft_fps_print()
+{
+	static double	last_time = 0;
+	static size_t	frames_count = 0;
+	double			current_time;
+
+	if (!last_time)
+		last_time = glfwGetTime();
+	if (current_time - last_time > 1.0)
+	{
+		printf("%f ms/frame\n", 1000.0/(double)frames_count);
+		frames_count = 0;
+		last_time += 1.0;
+	}
+}
+
 int		init_setup(GLFWwindow **window, int width, int height, char *window_name)
 {
 	glfwInit();
@@ -81,39 +110,28 @@ int		init_setup(GLFWwindow **window, int width, int height, char *window_name)
 		return (0);
 	}
 	glfwSetFramebufferSizeCallback(*window, framebuffer_size_callback);
-	glEnable(GL_DEPTH_TEST);
 	return (1);
-}
-
-t_mat4f mat4_to_mat4f(t_mat4 mat)
-{
-	t_mat4f ret;
-	int i;
-	int j;
-
-	i = -1;
-	while (++i < 4)
-	{
-		j = -1;
-		while (++j < 4)
-		{
-			ret.v[i][j] = (float)mat.v[i][j];
-		}
-	}
-	return (ret);
 }
 
 int		main(int argc, char **argv)
 {
 	GLFWwindow	*window;
 	t_shader	*shader;
-	// t_obj		*obj;
+	t_obj		*obj;
 
-	// obj = ft_obj_from_args(argc, argv);
-	// ft_print_indices(obj);
-	// ft_print_vertices(obj);
-	// ft_destroy_object(&obj);
-	// return (0);
+	if (!(obj = ft_obj_from_args(argc, argv)))
+	{
+		printf("Object was not loaded\n");
+		return (0);
+	}
+	ft_convert_object(obj);
+	ft_destroy_object(&obj);
+	return (0);
+
+
+
+
+
 	window = NULL;
 	if (!init_setup(&window, 800, 600, "OpenGL"))
 	{
@@ -127,8 +145,10 @@ int		main(int argc, char **argv)
 		return (-1);
 	}
 
+	// -------Enable depth testing globally
+	glEnable(GL_DEPTH_TEST);
+
 	t_texture *tex0 = texture_construct();
-	
 	tex0
 	->load(tex0, "texture/container.jpg")
 	->bind(tex0, GL_TEXTURE_2D, 0)
@@ -136,7 +156,6 @@ int		main(int argc, char **argv)
 	->exec(tex0);
 	
 	t_texture *tex1 = texture_construct();
-
 	tex1
 	->load(tex1, "texture/awesomeface.png")
 	->bind(tex1, GL_TEXTURE_2D, 1)
@@ -148,7 +167,8 @@ int		main(int argc, char **argv)
 	shader->set_int(shader, "tex0Sampler", 0); // default is 0
 	shader->set_int(shader, "tex1Sampler", 1); // tell OpenGL that tex1Sampler belongs to texture unit 1 (previously set in bind() function)
 //---------------------------------
-	/*float vertices1[] = {
+	/* // square
+	float vertices1[] = {
     // positions          // colors           // texture coords
      0.5f,  0.5f, .0f,   1.0f, 0.0f, 0.0f,   2.0f, 2.0f,   // top right
      0.5f, -0.5f, .0f,   0.0f, 1.0f, 0.0f,   2.0f, 0.0f,   // bottom right
@@ -191,6 +211,7 @@ int		main(int argc, char **argv)
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float))); // https://learnopengl.com/img/getting-started/vertex_attribute_pointer_interleaved_textures.png
 	glEnableVertexAttribArray(2);*/
 
+	/* // cube
 	float vertices[] = {
 		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 		 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
@@ -248,14 +269,15 @@ int		main(int argc, char **argv)
 	glEnableVertexAttribArray(0);
 
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(2);
+	glEnableVertexAttribArray(2);*/
 
 // ------------------------------------------------
 //window loop
 	while(!glfwWindowShouldClose(window))
 	{
+		ft_fps_print();
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and z-buffer
 
 		glfwPollEvents();
 		processInput(window);
@@ -281,17 +303,19 @@ int		main(int argc, char **argv)
 		shader->set_mat4f(shader, "projection", &projection);
 		shader->set_mat4f(shader, "result", (const t_mat4f *)&result);
 // -----------------------------------------------------------
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		/*// cube
+		glDrawArrays(GL_TRIANGLES, 0, 36);*/
 
-		/*glBindVertexArray(VAO);
+		/* // square
+		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);*/
 
 		glfwSwapBuffers(window);
 	}
-	// cleanup ---------------------------
-	glDeleteVertexArrays(1, &VAO);
+	// -------------- cleanup --------------
+	// glDeleteVertexArrays(1, &VAO);
 	// glDeleteBuffers(1, &EBO);
-	glDeleteBuffers(1, &VBO);
+	// glDeleteBuffers(1, &VBO);
 	glfwTerminate();
 	if(tex0) tex0->destroy(&tex0);
 	if(tex1) tex1->destroy(&tex1);

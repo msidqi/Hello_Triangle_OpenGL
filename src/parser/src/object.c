@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   object.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/06/07 12:50:19 by msidqi            #+#    #+#             */
+/*   Updated: 2020/06/07 14:12:16 by msidqi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "parser.h"
 
 t_obj			*ft_obj_from_file(char *path)
@@ -26,13 +38,13 @@ t_obj			*ft_obj_from_file(char *path)
 	return (obj);
 }
 
-static void		ft_delete_content(void *content, size_t size)
+void		ft_delete_content(void *content, size_t size)
 {
 	free(content);
 	(void)size;
 }
 
-static void		ft_delete_face(void *content, size_t size)
+void		ft_delete_face(void *content, size_t size)
 {
 	t_face *face;
 	
