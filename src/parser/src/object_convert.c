@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:16 by msidqi            #+#    #+#             */
-/*   Updated: 2020/06/07 17:04:04 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/06/07 18:27:32 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,15 +46,16 @@ int				ft_convert_object(t_obj *obj)
 {
 	if (!obj || obj->vertices_len < 3 || obj->indices_len < 3)
 		return (0);
-	float *vertices_array = (float *)ft_lst_to_arr(obj->vertices, (size_t)obj->vertices_len, sizeof(float) * 3);
-	ft_print_vertices_array(obj, vertices_array);
+	obj->vertices_array = (float *)ft_lst_to_arr(obj->vertices, (size_t)obj->vertices_len, sizeof(float) * 3);
+	ft_print_vertices_array(obj, obj->vertices_array);
 	ft_lstdel(&obj->vertices, ft_delete_content);
-	free(vertices_array);
+	// free(vertices_array);
 
-	unsigned int *vindices_array = ft_lst_to_vindices(obj->indices, (size_t)obj->indices_len);
-	ft_print_vindices_array(obj, vindices_array);
+	obj->vindices_array = ft_lst_to_vindices(obj->indices, (size_t)obj->indices_len);
+	ft_print_vindices_array(obj, obj->vindices_array);
 	ft_lstdel(&obj->indices, ft_delete_face);
-	free(vindices_array);
+	// free(vindices_array);
+
 
 	return (1);
 }

@@ -54,6 +54,9 @@ typedef struct		s_obj
 	t_list			*indices; // content is t_face
 	unsigned int	indices_len;
 	t_list			*materials;
+
+	float			*vertices_array;
+	unsigned int	*vindices_array;
 }					t_obj;
 
 typedef struct		s_face
