@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:24 by msidqi            #+#    #+#             */
-/*   Updated: 2020/06/07 12:50:25 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/06/11 19:11:17 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void			ft_destroy_face(t_face **face)
 void 			ft_store_face_component(t_face *face, unsigned int i, unsigned int values[3])
 {
 	if ((face->flags & F_INDEX) && values[0])
-		face->vindices[i] = values[0];
+		face->vindices[i] = values[0] < 0 ? 0 : values[0] - 1;
 	if ((face->flags & F_TEXTURE_COORDS) && values[1])
 		face->vtexture[i] = values[1];
 	if ((face->flags & F_NORMAL) && values[2])

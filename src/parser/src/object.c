@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:19 by msidqi            #+#    #+#             */
-/*   Updated: 2020/06/07 14:12:16 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/06/11 18:43:33 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,14 @@ void		ft_delete_face(void *content, size_t size)
 
 void			ft_destroy_object(t_obj **obj)
 {
-	ft_lstdel(&(*obj)->vertices, ft_delete_content);
-	ft_lstdel(&(*obj)->indices, ft_delete_face);
+	if ((*obj)->vertices)
+		ft_lstdel(&(*obj)->vertices, ft_delete_content);
+	if ((*obj)->indices)
+		ft_lstdel(&(*obj)->indices, ft_delete_face);
+	if ((*obj)->vindices_array)
+		ft_memdel((void **)&(*obj)->vindices_array);
+	if ((*obj)->vertices_array)
+		ft_memdel((void **)&(*obj)->vertices_array);
 	ft_memdel((void **)&(*obj));
 }
 
