@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:28 by msidqi            #+#    #+#             */
-/*   Updated: 2020/06/07 12:50:29 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/06/21 23:12:50 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,10 @@ static int		ft_command_exec(t_cmd *this, t_obj *obj)
 		this->parse_geometric_vertex(this->to_parse, &obj->vertices))
 		obj->vertices_len++;
 	if (this->cmd_code == C_VERTEX_INDEX &&
-		this->parse_indices(this->to_parse, &obj->indices))
+		this->parse_indices(this->to_parse, &obj->indices, &obj->indices_len))
 		obj->indices_len++;
 	ft_memdel((void **)&this->to_parse);
+	printf("number of indices %u | number of vertices %u \n", obj->indices_len, obj->vertices_len);
 	this->cmd_code = C_SKIP;
 	return (1);
 }

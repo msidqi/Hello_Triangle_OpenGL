@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:24 by msidqi            #+#    #+#             */
-/*   Updated: 2020/06/11 19:11:17 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/06/22 00:20:10 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void 			ft_store_face_component(t_face *face, unsigned int i, unsigned int value
 		face->vnormals[i] = values[2];
 }
 
-unsigned int	ft_parse_indices(char *line, t_list **indices)
+unsigned int	ft_parse_indices(char *line, t_list **indices, unsigned int *indices_len)
 {
 	t_face			*face;
 	char			**splited_line;
@@ -115,7 +115,43 @@ unsigned int	ft_parse_indices(char *line, t_list **indices)
 	ft_free_tab(&splited_line);
 	if (face)
 	{
-		ft_lstadd(indices, ft_lstnew((const void *)face, sizeof(t_face)));
+		t_face *other_face;
+
+		if (face->n_of_indices == 4)
+		{
+			other_face = (t_face *)ft_memalloc(sizeof(t_face));
+			other_face->flags = face->flags;
+			other_face->n_of_indices = 3;
+			if ((other_face->flags & F_INDEX))
+			{
+				other_face->vindices = (unsigned int *)ft_memalloc(sizeof(unsigned int) * 3);
+				other_face->vindices[0] = face->vindices[0];
+				other_face->vindices[1] = face->vindices[2];
+				other_face->vindices[2] = face->vindices[3];
+			}
+			if ((other_face->flags & F_TEXTURE_COORDS))
+			{
+				other_face->vtexture = ft_memalloc(sizeof(unsigned int) * 3);
+				other_face->vtexture[0] = face->vtexture[0];
+				other_face->vtexture[1] = face->vtexture[2];
+				other_face->vtexture[2] = face->vtexture[3];
+			}
+			if ((other_face->flags & F_NORMAL))
+			{
+				other_face->vnormals = ft_memalloc(sizeof(unsigned int) * 3);
+				other_face->vnormals[0] = face->vnormals[0];
+				other_face->vnormals[1] = face->vnormals[2];
+				other_face->vnormals[2] = face->vnormals[3];
+			}
+			ft_lstadd(indices, ft_lstnew((const void *)other_face, sizeof(t_face))); // insert new_face
+			(*indices_len)++;
+
+
+			// face->n_of_indices = 3;
+			ft_lstadd(indices, ft_lstnew((const void *)face, sizeof(t_face)));
+			// printf("need to split this\n");
+		} else // insert original face
+			ft_lstadd(indices, ft_lstnew((const void *)face, sizeof(t_face)));
 		return (1);
 	}
 	return (0);

@@ -1,4 +1,4 @@
-#version 400 core
+#version 330 core
 
 /*
 ** use glVertexAttribPointer's position parameter to specify to OpenGL

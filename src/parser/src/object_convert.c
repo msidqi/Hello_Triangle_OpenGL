@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:16 by msidqi            #+#    #+#             */
-/*   Updated: 2020/06/12 13:40:14 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/06/21 23:17:02 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ unsigned int	*ft_lst_to_vindices(t_list *head, size_t list_size)
 
 int				ft_convert_object(t_obj *obj)
 {
-	if (!obj || obj->vertices_len < 3 || obj->indices_len < 3)
+	if (!obj || obj->vertices_len < 3 || obj->indices_len < 2)
 		return (0);
 	obj->vertices_array = (float *)ft_lst_to_arr(obj->vertices, (size_t)obj->vertices_len, sizeof(float) * 3);
 	// ft_print_vertices_array(obj, obj->vertices_array);

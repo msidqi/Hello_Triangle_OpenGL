@@ -88,7 +88,7 @@ typedef struct		s_cmd
 	int				(*exec)(struct s_cmd *this, t_obj *obj);
 	void			(*destroy)(struct s_cmd **this);
 	unsigned int	(*parse_geometric_vertex)(char *line, t_list **vertices_lst);
-	unsigned int	(*parse_indices)(char *line, t_list **indices_lst);
+	unsigned int	(*parse_indices)(char *line, t_list **indices_lst, unsigned int *indices_len);
 }					t_cmd;
 
 t_cmd				*ft_command_construct();
@@ -113,7 +113,7 @@ void				ft_delete_content(void *content, size_t size);
 * parsing functions
 */
 
-unsigned int		ft_parse_indices(char *line, t_list **indices);
+unsigned int		ft_parse_indices(char *line, t_list **indices, unsigned int *indices_len);
 unsigned int		ft_parse_geometric_vertex(char *line, t_list **vertices);
 
 #endif
