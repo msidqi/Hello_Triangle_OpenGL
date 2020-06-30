@@ -11,19 +11,23 @@ layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aCol;
 layout (location = 2) in vec2 aTexCord;
 
+out vec3 variantColor;
 out vec3 ourColor;
 out vec2 TexCoord;
 
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
+// uniform mat4 model;
+// uniform mat4 view;
+// uniform mat4 projection;
 
-// uniform mat4 result;
+uniform mat4 result;
 
 void main(void)
 {
-	gl_Position = projection * view * model * vec4(aPos.xyz, 1.0);
-	// gl_Position = result * vec4(aPos.xyz, 1.0);
+	// gl_Position = projection * view * model * vec4(aPos.xyz, 1.0);
+	gl_Position = result * vec4(aPos.xyz, 1.0);
+	variantColor.x = sin(aPos.x) > 0 ? 0.5 : 0.7;
+	variantColor.y = sin(aPos.y) > 0 ? 0.1: 0.5;
+	variantColor.z = 0.2;
 	ourColor = aCol;
 	TexCoord = aTexCord;
 }

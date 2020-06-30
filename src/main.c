@@ -18,6 +18,7 @@ void	framebuffer_size_callback(GLFWwindow* window, int width, int height) // cal
 }
 
 float mixValue = 0.2f;
+float scaleFactor = 1.0f;
 
 t_vec3f translation = (t_vec3f){.0f, .0f, 3.0f};
 float rot_angle = -55.0f;
@@ -33,6 +34,14 @@ void	processInput(GLFWwindow *window)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+	if (glfwGetKey(window, GLFW_KEY_KP_ADD) == GLFW_PRESS)
+    {
+        scaleFactor += 0.001f;
+    }
+    if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS)
+    {
+        scaleFactor -= 0.001f;
+	}
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
     {
         mixValue += 0.0001f;
@@ -276,6 +285,7 @@ int		main(int argc, char **argv)
 
 		glfwPollEvents();
 		processInput(window);
+		shader->set_float(shader, "scaleFactor", scaleFactor);
 		shader->set_float(shader, "mixValue", mixValue);
 		shader->use(shader);
 		// glBindTexture(GL_TEXTURE_2D, tex0->gl_id); // no need to bind inside loop
@@ -284,19 +294,19 @@ int		main(int argc, char **argv)
 		t_mat4f model;
 		t_mat4f view;
 		t_mat4f projection;
-		// t_mat4f result;
+		t_mat4f result;
 
-		identity = ft_mat4f_create();
+		identity = ft_mat4f_create_init(scaleFactor);//ft_mat4f_create();
 		model = ft_mat4f_rotation_xyz(ft_to_radf(rot_angle), rotation);
 		view = ft_mat4f_translate(identity, translation);
 		projection = ft_perspective_matrixf(ft_to_radf(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-		// result = ft_mat4f_x_mat4f(model, ft_mat4f_x_mat4f(view, projection));
+		result = ft_mat4f_x_mat4f(model, ft_mat4f_x_mat4f(view, projection));
 
 // --------------set uniform that's in vertex shader---------
-		shader->set_mat4f(shader, "model", &model);
-		shader->set_mat4f(shader, "view", &view);
-		shader->set_mat4f(shader, "projection", &projection);
-		// shader->set_mat4f(shader, "result", (const t_mat4f *)&result);
+		// shader->set_mat4f(shader, "model", &model);
+		// shader->set_mat4f(shader, "view", &view);
+		// shader->set_mat4f(shader, "projection", &projection);
+		shader->set_mat4f(shader, "result", (const t_mat4f *)&result);
 // -----------------------------------------------------------
 		/*// cube
 		glDrawArrays(GL_TRIANGLES, 0, 36);*/

@@ -77,6 +77,48 @@ void 			ft_store_face_component(t_face *face, unsigned int i, unsigned int value
 		face->vnormals[i] = values[2];
 }
 
+void			ft_multi_face(t_face *face, t_list **indices)
+{
+	t_face *new_face[2];
+
+	new_face[0] = (t_face *)ft_memalloc(sizeof(t_face));
+	new_face[0]->flags = face->flags;
+	new_face[0]->n_of_indices = 3;
+	new_face[1] = (t_face *)ft_memalloc(sizeof(t_face));
+	new_face[1]->flags = face->flags;
+	new_face[1]->n_of_indices = 3;
+	if ((face->flags & F_INDEX))
+	{
+		new_face[0]->vindices = (unsigned int *)ft_memalloc(sizeof(unsigned int) * 3);
+		new_face[0]->vindices[0] = face->vindices[0];
+		new_face[0]->vindices[1] = face->vindices[2];
+		new_face[0]->vindices[2] = face->vindices[3];
+		new_face[1]->vindices = (unsigned int *)ft_memalloc(sizeof(unsigned int) * 3);
+		ft_memmove(new_face[1]->vindices, face->vindices, sizeof(unsigned int) * 3);
+	}
+	if ((face->flags & F_TEXTURE_COORDS))
+	{
+		new_face[0]->vtexture = (unsigned int *)ft_memalloc(sizeof(unsigned int) * 3);
+		new_face[0]->vtexture[0] = face->vtexture[0];
+		new_face[0]->vtexture[1] = face->vtexture[2];
+		new_face[0]->vtexture[2] = face->vtexture[3];
+		new_face[1]->vtexture = (unsigned int *)ft_memalloc(sizeof(unsigned int) * 3);
+		ft_memmove(new_face[1]->vtexture, face->vtexture, sizeof(unsigned int) * 3);
+	}
+	if ((face->flags & F_NORMAL))
+	{
+		new_face[0]->vnormals = (unsigned int *)ft_memalloc(sizeof(unsigned int) * 3);
+		new_face[0]->vnormals[0] = face->vnormals[0];
+		new_face[0]->vnormals[1] = face->vnormals[2];
+		new_face[0]->vnormals[2] = face->vnormals[3];
+		new_face[1]->vnormals = (unsigned int *)ft_memalloc(sizeof(unsigned int) * 3);
+		ft_memmove(new_face[1]->vnormals, face->vnormals, sizeof(unsigned int) * 3);
+	}
+	ft_delete_face(face, 0);
+	ft_lstadd(indices, ft_lstnew((const void *)new_face[0], sizeof(t_face))); // insert new_face
+	ft_lstadd(indices, ft_lstnew((const void *)new_face[1], sizeof(t_face)));
+}
+
 unsigned int	ft_parse_indices(char *line, t_list **indices, unsigned int *indices_len)
 {
 	t_face			*face;
@@ -115,42 +157,13 @@ unsigned int	ft_parse_indices(char *line, t_list **indices, unsigned int *indice
 	ft_free_tab(&splited_line);
 	if (face)
 	{
-		t_face *other_face;
-
 		if (face->n_of_indices == 4)
 		{
-			other_face = (t_face *)ft_memalloc(sizeof(t_face));
-			other_face->flags = face->flags;
-			other_face->n_of_indices = 3;
-			if ((other_face->flags & F_INDEX))
-			{
-				other_face->vindices = (unsigned int *)ft_memalloc(sizeof(unsigned int) * 3);
-				other_face->vindices[0] = face->vindices[0];
-				other_face->vindices[1] = face->vindices[2];
-				other_face->vindices[2] = face->vindices[3];
-			}
-			if ((other_face->flags & F_TEXTURE_COORDS))
-			{
-				other_face->vtexture = ft_memalloc(sizeof(unsigned int) * 3);
-				other_face->vtexture[0] = face->vtexture[0];
-				other_face->vtexture[1] = face->vtexture[2];
-				other_face->vtexture[2] = face->vtexture[3];
-			}
-			if ((other_face->flags & F_NORMAL))
-			{
-				other_face->vnormals = ft_memalloc(sizeof(unsigned int) * 3);
-				other_face->vnormals[0] = face->vnormals[0];
-				other_face->vnormals[1] = face->vnormals[2];
-				other_face->vnormals[2] = face->vnormals[3];
-			}
-			ft_lstadd(indices, ft_lstnew((const void *)other_face, sizeof(t_face))); // insert new_face
+			ft_multi_face(face, indices);
 			(*indices_len)++;
-
-
-			// face->n_of_indices = 3;
-			ft_lstadd(indices, ft_lstnew((const void *)face, sizeof(t_face)));
 			// printf("need to split this\n");
-		} else // insert original face
+		}
+		else // insert original face
 			ft_lstadd(indices, ft_lstnew((const void *)face, sizeof(t_face)));
 		return (1);
 	}
