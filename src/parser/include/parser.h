@@ -27,6 +27,7 @@ typedef enum		e_command_code
 	C_UNINITIALIZED = -1,
 	C_SKIP = 0,
 	C_GEOMETRIC_VERTEX,
+	C_TEXTURE_COORD,
 	C_VERTEX_INDEX,
 	C_COMMENT,
 }					t_command_code;
@@ -38,7 +39,7 @@ typedef enum		e_face_flags
 {
 	F_INDEX = 1,
 	F_NORMAL = 2,
-	F_TEXTURE_COORDS = 4
+	F_TEXTURE_INDEX = 4
 }					t_face_flags;
 
 typedef struct		s_container
@@ -48,9 +49,15 @@ typedef struct		s_container
 
 typedef struct		s_obj
 {
+	unsigned int	flags;
+
 	char			*mtlib; // name of .mtl file that contains color && texture of model
 	t_list			*vertices; // content is t_vec4f
 	unsigned int	vertices_len;
+
+	t_list			*tex_coords; // content is t_vec4f
+	unsigned int	tex_len;
+
 	t_list			*indices; // content is t_face
 	unsigned int	indices_len;
 	t_list			*materials;
@@ -62,7 +69,7 @@ typedef struct		s_obj
 typedef struct		s_face
 {
 	unsigned int	n_of_indices;
-	unsigned int	flags; // F_INDEX | F_NORMAL | F_TEXTURE_COORDS
+	unsigned int	flags; // F_INDEX | F_NORMAL | F_TEXTURE_INDEX
 	unsigned int	*vindices; // If an index is positive then it refers to the offset in that vertex list, starting at 1. If an index is negative then it relatively refers to the end of the vertex list, -1 referring to the last element.
 	unsigned int	*vnormals;
 	unsigned int	*vtexture;
@@ -88,6 +95,7 @@ typedef struct		s_cmd
 	int				(*exec)(struct s_cmd *this, t_obj *obj);
 	void			(*destroy)(struct s_cmd **this);
 	unsigned int	(*parse_geometric_vertex)(char *line, t_list **vertices_lst);
+	unsigned int	(*parse_texture_coords)(char *line, t_list **tex_coords);
 	unsigned int	(*parse_indices)(char *line, t_list **indices_lst, unsigned int *indices_len);
 }					t_cmd;
 
@@ -95,7 +103,7 @@ t_cmd				*ft_command_construct();
 
 void				ft_print_vertices(t_obj *obj);
 void				ft_print_indices(t_obj *obj);
-void				ft_print_vertices_array(t_obj *obj, float *array);
+void				ft_print_vertices_array(t_obj *obj);
 void				ft_print_vindices_array(t_obj *obj, unsigned int *vindices_array);
 
 /*
@@ -115,5 +123,6 @@ void				ft_delete_content(void *content, size_t size);
 
 unsigned int		ft_parse_indices(char *line, t_list **indices, unsigned int *indices_len);
 unsigned int		ft_parse_geometric_vertex(char *line, t_list **vertices);
+unsigned int		ft_parse_texture_coordinates(char *line, t_list **tex_coords);
 
 #endif

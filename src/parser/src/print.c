@@ -60,7 +60,7 @@ void		ft_print_indices(t_obj *obj)
 		printf("number of indices: %u\n", face->n_of_indices);
 		if (face->flags & F_INDEX)
 			ft_print_array("vindices", face->vindices, face->n_of_indices);
-		if (face->flags & F_TEXTURE_COORDS)
+		if (face->flags & F_TEXTURE_INDEX)
 			ft_print_array("vtexture", face->vtexture, face->n_of_indices);
 		if (face->flags & F_NORMAL)
 			ft_print_array("vnormal", face->vnormals, face->n_of_indices);
@@ -69,7 +69,7 @@ void		ft_print_indices(t_obj *obj)
 	}
 }
 
-void		ft_print_vertices_array(t_obj *obj, float *array)
+static void	ft_vertices_array_no_tex(t_obj *obj)
 {
 	int i;
 	
@@ -80,10 +80,36 @@ void		ft_print_vertices_array(t_obj *obj, float *array)
 	{
 		if (i % 3 == 0)
 			printf("\nvertices_array ");
-		printf("% f ", array[i]);
+		printf("% f ", obj->vertices_array[i]);
 	}
 	printf("\nconfirmed vindices len %d (should be %u)\n----------------------\n",
-	i, obj->vertices_len * 3);}
+	i, obj->vertices_len * 3);
+}
+
+static void	ft_vertices_array_with_tex(t_obj *obj)
+{
+	int i;
+	
+	i = -1;
+	printf("number of vertices: %u | number of floats (including tex) %u\n",
+	obj->vertices_len, obj->vertices_len * 5);
+	while (++i < obj->vertices_len * 5)
+	{
+		if (i % 5 == 0)
+			printf(" ]\nvertices_arr [ ");
+		printf("% -.8f ,", obj->vertices_array[i]);
+	}
+	printf("\nconfirmed vindices len %d (should be %u)\n----------------------\n",
+	i, obj->vertices_len * 5);
+}
+
+void		ft_print_vertices_array(t_obj *obj)
+{
+	if (obj->flags == 1)
+		ft_vertices_array_with_tex(obj);
+	else
+		ft_vertices_array_no_tex(obj);
+}
 
 void		ft_print_vindices_array(t_obj *obj, unsigned int *vindices_array)
 {

@@ -24,6 +24,8 @@ static t_cmd	*ft_get_command(t_cmd *this)
 		this->cmd_code = C_VERTEX_INDEX;
 	else if (!ft_strncmp(this->to_parse, "v", (size_t)index))
 		this->cmd_code = C_GEOMETRIC_VERTEX;
+	else if (!ft_strncmp(this->to_parse, "vt", (size_t)index))
+		this->cmd_code = C_TEXTURE_COORD;
 	else
 		this->cmd_code = C_SKIP;
 	return (this);
@@ -59,11 +61,14 @@ static int		ft_command_exec(t_cmd *this, t_obj *obj)
 	if (this->cmd_code == C_GEOMETRIC_VERTEX &&
 		this->parse_geometric_vertex(this->to_parse, &obj->vertices))
 		obj->vertices_len++;
+	if (this->cmd_code == C_TEXTURE_COORD &&
+		this->parse_texture_coords(this->to_parse, &obj->tex_coords))
+		obj->tex_len++;
 	if (this->cmd_code == C_VERTEX_INDEX &&
 		this->parse_indices(this->to_parse, &obj->indices, &obj->indices_len))
 		obj->indices_len++;
 	ft_memdel((void **)&this->to_parse);
-	// printf("number of indices %u | number of vertices %u \n", obj->indices_len, obj->vertices_len);
+	// printf("number of indices %u | number of vertices %u |number of tex_coords %u\n", obj->indices_len, obj->vertices_len, obj->tex_len);
 	this->cmd_code = C_SKIP;
 	return (1);
 }
@@ -74,6 +79,7 @@ t_cmd			*ft_command_construct()
 
 	if (!(c = (t_cmd *)ft_memalloc(sizeof(t_cmd))))
 		return (NULL);
+	c->parse_texture_coords = &ft_parse_texture_coordinates;
 	c->parse_geometric_vertex = &ft_parse_geometric_vertex;
 	c->parse_indices = &ft_parse_indices;
 	c->get = &ft_get_command;

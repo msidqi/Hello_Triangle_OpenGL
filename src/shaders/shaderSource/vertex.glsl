@@ -8,8 +8,8 @@
 ** glVertexAttribPointer((position = 0), (size of vertex-attribute = 3), GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 */
 layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec3 aCol;
-layout (location = 2) in vec2 aTexCord;
+layout (location = 2) in vec3 aCol;
+layout (location = 1) in vec2 aTexCord;
 
 out vec3 variantColor;
 out vec3 ourColor;

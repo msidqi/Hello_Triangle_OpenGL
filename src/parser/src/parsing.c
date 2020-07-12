@@ -33,6 +33,26 @@ unsigned int	ft_parse_geometric_vertex(char *line, t_list **vertices)
 	return (1);
 }
 
+unsigned int	ft_parse_texture_coordinates(char *line, t_list **tex_coords)
+{
+	char			**arr;
+	unsigned int	n;
+	t_vec2f			*coords;
+
+	n = (unsigned int)ft_strlsplit(line, ' ', &arr);
+	if ((n != 3) || !(coords = (t_vec2f *)ft_memalloc(sizeof(t_vec2f))))
+	{
+		ft_free_tab(&arr);
+		ft_putendl_fd("ft_parse_texture_coordinates(): skiped invalid coords", 2);
+		return (0);
+	}
+	// (x,y)
+	(*coords) = (t_vec2f){ft_atof(arr[1]), ft_atof(arr[2])};
+	ft_lstadd(tex_coords, ft_lstnew((const void *)coords, sizeof(t_vec2f)));
+	ft_free_tab(&arr);
+	return (1);
+}
+
 unsigned int	ft_get_face_components(unsigned int values[3], char *index_line)
 {
 	unsigned int	flag;
@@ -46,7 +66,7 @@ unsigned int	ft_get_face_components(unsigned int values[3], char *index_line)
 	else
 		values[0] = 0;
 	if (found[0] && (values[1] = ft_atoi(found[0] + 1)))
-		flag = flag | F_TEXTURE_COORDS;
+		flag = flag | F_TEXTURE_INDEX;
 	else
 		values[1] = 0;
 	if (found[1] && (values[2] = ft_atoi(found[1] + 1)))
@@ -60,7 +80,7 @@ void			ft_destroy_face(t_face **face)
 {
 	if ((*face)->flags & F_INDEX)
 		free((*face)->vindices);
-	if ((*face)->flags & F_TEXTURE_COORDS)
+	if ((*face)->flags & F_TEXTURE_INDEX)
 		free((*face)->vtexture);
 	if ((*face)->flags & F_NORMAL)
 		free((*face)->vnormals);
@@ -71,7 +91,7 @@ void 			ft_store_face_component(t_face *face, unsigned int i, unsigned int value
 {
 	if ((face->flags & F_INDEX) && values[0])
 		face->vindices[i] = values[0] < 0 ? 0 : values[0] - 1;
-	if ((face->flags & F_TEXTURE_COORDS) && values[1])
+	if ((face->flags & F_TEXTURE_INDEX) && values[1])
 		face->vtexture[i] = values[1];
 	if ((face->flags & F_NORMAL) && values[2])
 		face->vnormals[i] = values[2];
@@ -96,7 +116,7 @@ void			ft_multi_face(t_face *face, t_list **indices)
 		new_face[1]->vindices = (unsigned int *)ft_memalloc(sizeof(unsigned int) * 3);
 		ft_memmove(new_face[1]->vindices, face->vindices, sizeof(unsigned int) * 3);
 	}
-	if ((face->flags & F_TEXTURE_COORDS))
+	if ((face->flags & F_TEXTURE_INDEX))
 	{
 		new_face[0]->vtexture = (unsigned int *)ft_memalloc(sizeof(unsigned int) * 3);
 		new_face[0]->vtexture[0] = face->vtexture[0];
@@ -139,7 +159,7 @@ unsigned int	ft_parse_indices(char *line, t_list **indices, unsigned int *indice
 	face->flags = ft_get_face_components(index_comps, splited_line[i]);
 	if (face->flags & F_INDEX)
 		face->vindices = ft_memalloc(sizeof(unsigned int) * face->n_of_indices);
-	if (face->flags & F_TEXTURE_COORDS)
+	if (face->flags & F_TEXTURE_INDEX)
 		face->vtexture = ft_memalloc(sizeof(unsigned int) * face->n_of_indices);
 	if (face->flags & F_NORMAL)
 		face->vnormals = ft_memalloc(sizeof(unsigned int) * face->n_of_indices);

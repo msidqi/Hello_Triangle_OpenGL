@@ -17,7 +17,7 @@ void	framebuffer_size_callback(GLFWwindow* window, int width, int height) // cal
     glViewport(0, 0, width, height);
 }
 
-float mixValue = 0.2f;
+float mixValue = 1.0f;
 float scaleFactor = 1.0f;
 
 t_vec3f translation = (t_vec3f){.0f, .0f, 3.0f};
@@ -141,6 +141,7 @@ int		main(int argc, char **argv)
 		return (0);
 	}
 	// if (obj) ft_destroy_object(&obj);
+	// ft_print_vertices_array(obj);
 	// return (0);
 
 
@@ -168,22 +169,30 @@ int		main(int argc, char **argv)
 
 	t_texture *tex0 = texture_construct();
 	tex0
-	->load(tex0, "texture/container.jpg")
+	->load(tex0, "texture/wall.jpg")
 	->bind(tex0, GL_TEXTURE_2D, 0)
 	->set_params(tex0, (t_tex_params){WRAP_R, WRAP_R, 0, FILTER_N, FILTER_N})
 	->exec(tex0);
 	
 	t_texture *tex1 = texture_construct();
 	tex1
-	->load(tex1, "texture/awesomeface.png")
+	->load(tex1, "texture/capsule0.jpg")
 	->bind(tex1, GL_TEXTURE_2D, 1)
 	->set_params(tex1, (t_tex_params){WRAP_R, WRAP_R, 0, FILTER_N, FILTER_N})
 	->exec(tex1);
+
+	t_texture *tex2 = texture_construct();
+	tex2
+	->load(tex2, "texture/space.png")
+	->bind(tex2, GL_TEXTURE_2D, 2)
+	->set_params(tex2, (t_tex_params){WRAP_R, WRAP_R, 0, FILTER_N, FILTER_N})
+	->exec(tex2);
 
 //	bind both textures to shader >> no need to bind inside loop
 	shader->use(shader); // must use shader before setting uniform values
 	shader->set_int(shader, "tex0Sampler", 0); // default is 0
 	shader->set_int(shader, "tex1Sampler", 1); // tell OpenGL that tex1Sampler belongs to texture unit 1 (previously set in bind() function)
+	shader->set_int(shader, "tex2Sampler", 2);
 //---------------------------------
 	unsigned int VBO;
 	glGenBuffers(1, &VBO);
@@ -196,7 +205,25 @@ int		main(int argc, char **argv)
 	glGenBuffers(1, &EBO);
 
 // -- bind buffers --
-    // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+if (obj->flags & F_INDEX && obj->flags & F_TEXTURE_INDEX)
+{
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * obj->vertices_len * 5, obj->vertices_array, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * obj->indices_len * 3, obj->vindices_array, GL_STATIC_DRAW);
+
+// specify how data should be interpreted
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0); // enable location 0
+
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1); // enable location 0
+}
+else if (obj->flags & F_INDEX == F_INDEX)
+{
+	// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * obj->vertices_len * 3, obj->vertices_array, GL_STATIC_DRAW);
@@ -204,10 +231,10 @@ int		main(int argc, char **argv)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * obj->indices_len * 3, obj->vindices_array, GL_STATIC_DRAW);
 
-// specify how data should be interpreted
+	// specify how data should be interpreted
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);//applies to the currently bound VBO to GL_ARRAY_BUFFER
 	glEnableVertexAttribArray(0); // enable location 0
-
+}
 	// glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));//applies to the currently bound VBO to GL_ARRAY_BUFFER
 	// glEnableVertexAttribArray(1); // enable location 0
 
@@ -281,7 +308,6 @@ int		main(int argc, char **argv)
 		ft_fps_print();
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and z-buffer
-
 
 		glfwPollEvents();
 		processInput(window);

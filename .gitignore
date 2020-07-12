@@ -5,3 +5,4 @@ calc.c
 *.a
 *.o
 *.gch
+capsule_original.obj
