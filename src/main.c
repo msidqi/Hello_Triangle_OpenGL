@@ -17,12 +17,25 @@ void	framebuffer_size_callback(GLFWwindow* window, int width, int height) // cal
     glViewport(0, 0, width, height);
 }
 
-float mixValue = 1.0f;
-float scaleFactor = 1.0f;
 
 t_vec3f translation = (t_vec3f){.0f, .0f, 3.0f};
 float rot_angle = -55.0f;
 t_vec3f rotation = (t_vec3f){1.0f, 0.0f, 0.0f};
+
+typedef struct		s_event_handler
+{
+	double		rel_mouse_ypos;
+	double		rel_mouse_xpos;
+	double		mouse_xpos_old;
+	double		mouse_ypos_old;
+	int			isScaleMode;
+	int			isLeftClick;
+	float		mixValue;
+	float		scaleFactor;
+
+}				t_event_handler;
+
+t_event_handler e;
 
 void	processInput(GLFWwindow *window)
 {
@@ -34,38 +47,41 @@ void	processInput(GLFWwindow *window)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        e.isScaleMode = !e.isScaleMode;
+
 	if (glfwGetKey(window, GLFW_KEY_KP_ADD) == GLFW_PRESS)
     {
-        scaleFactor += 0.001f;
+        e.scaleFactor += 0.001f;
     }
     if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS)
     {
-        scaleFactor -= 0.001f;
+        e.scaleFactor -= 0.001f;
 	}
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
     {
-        mixValue += 0.0001f;
-        if(mixValue >= 1.0f)
-            mixValue = 1.0f;
+        e.mixValue += 0.0001f;
+        if(e.mixValue >= 1.0f)
+            e.mixValue = 1.0f;
     }
     if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
     {
-        mixValue -= 0.0001f;
-        if (mixValue <= 0.0f)
-            mixValue = 0.0f;
+        e.mixValue -= 0.0001f;
+        if (e.mixValue <= 0.0f)
+            e.mixValue = 0.0f;
 	}
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		translation.y += .003f;
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		translation.y -= .003f;
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		translation.x += .003f;
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		translation.x -= .003f;
-	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-		translation.z += .003f;
-	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-		translation.z -= .003f;
+	// if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+	// 	translation.y += .003f;
+	// if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+	// 	translation.y -= .003f;
+	// if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+	// 	translation.x += .003f;
+	// if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+	// 	translation.x -= .003f;
+	// if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+	// 	translation.z += .003f;
+	// if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+	// 	translation.z -= .003f;
 	if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
 		rotation.x += .003f;
 	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
@@ -80,6 +96,45 @@ void	processInput(GLFWwindow *window)
 		rotation.z -= .003f;
 }
 
+void	scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	if (e.isScaleMode)
+	{
+		if (yoffset > 0)
+			e.scaleFactor += 0.1f;
+		if (yoffset < 0)
+			e.scaleFactor -= 0.1f;
+	}
+	else
+	{
+		if (yoffset > 0)
+			translation.z += .3f;
+		if (yoffset < 0)
+			translation.z -= .3f;
+	}
+}
+
+void	cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
+{
+	e.rel_mouse_xpos = xpos - e.mouse_xpos_old;
+	e.rel_mouse_ypos = ypos - e.mouse_ypos_old;
+	printf("%f %f\n", e.rel_mouse_xpos, e.rel_mouse_ypos);
+	if (e.isLeftClick)
+	{
+		translation.y += .003f * -e.rel_mouse_ypos;
+		translation.x += .003f * e.rel_mouse_xpos;
+	}
+	e.mouse_xpos_old = xpos;
+	e.mouse_ypos_old = ypos;
+}
+
+void	mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+		e.isLeftClick = 1;
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
+		e.isLeftClick = 0;
+}
 
 void	ft_fps_print()
 {
@@ -129,7 +184,15 @@ int		main(int argc, char **argv)
 	GLFWwindow	*window;
 	t_shader	*shader;
 	t_obj		*obj = NULL;
-
+	
+	e.isLeftClick = 0;
+	e.isScaleMode = 0;
+	e.mixValue = 1.0f;
+	e.scaleFactor = 1.0f;
+	e.rel_mouse_xpos = 0;
+	e.rel_mouse_ypos = 0;
+	e.mouse_xpos_old = 0;
+	e.mouse_ypos_old = 0;
 	if (!(obj = ft_obj_from_args(argc, argv)))
 	{
 		printf("Object was not loaded\n");
@@ -302,6 +365,11 @@ else if (obj->flags & F_INDEX == F_INDEX)
 	glEnableVertexAttribArray(2);*/
 
 // ------------------------------------------------
+	glfwSetScrollCallback(window, scroll_callback);
+	// glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetCursorPosCallback(window, cursor_position_callback);
+
+	glfwSetMouseButtonCallback(window, mouse_button_callback);
 //window loop
 	while(!glfwWindowShouldClose(window))
 	{
@@ -311,8 +379,8 @@ else if (obj->flags & F_INDEX == F_INDEX)
 
 		glfwPollEvents();
 		processInput(window);
-		shader->set_float(shader, "scaleFactor", scaleFactor);
-		shader->set_float(shader, "mixValue", mixValue);
+		shader->set_float(shader, "scaleFactor", e.scaleFactor);
+		shader->set_float(shader, "mixValue", e.mixValue);
 		shader->use(shader);
 		// glBindTexture(GL_TEXTURE_2D, tex0->gl_id); // no need to bind inside loop
 // -----------------Transform Matrix--------------------
@@ -322,7 +390,7 @@ else if (obj->flags & F_INDEX == F_INDEX)
 		t_mat4f projection;
 		t_mat4f result;
 
-		identity = ft_mat4f_create_init(scaleFactor);//ft_mat4f_create();
+		identity = ft_mat4f_create_init(e.scaleFactor);//ft_mat4f_create();
 		model = ft_mat4f_rotation_xyz(ft_to_radf(rot_angle), rotation);
 		view = ft_mat4f_translate(identity, translation);
 		projection = ft_perspective_matrixf(ft_to_radf(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
