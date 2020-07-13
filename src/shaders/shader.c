@@ -90,7 +90,7 @@ t_shader	*shader_construct(const char *vshader_path, const char *fshader_path)
 		return (NULL);
 	glDeleteShader(vshader);
 	glDeleteShader(fshader);
-	ft_putendl_fd("building shaders done.", 1);
 	init_shader(this);
+	ft_putendl_fd("building shaders done.", 1);
 	return (this);
 }

@@ -9,7 +9,8 @@
 # include "libgl.h"
 # include "libft.h"
 # include "parser.h"
-
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600
 typedef struct		s_wind
 {
 	GLFWwindow		*window;
@@ -35,13 +36,19 @@ typedef struct		s_event_handler
 	double			mouse_xpos_old;
 	double			mouse_ypos_old;
 	int				isScaleMode;
+	int				isRotMode;
+	int				isSmoothTransition;
+	float			initialTransTime;
 	int				isLeftClick;
 	int				isRightClick;
 	float			mixValue;
 	float			scaleFactor;
 	t_vec3f			translation;
+	float			translation_mod;
 	t_vec3f			rotation;
 	float			rot_angle;
+	int				width;
+	int				height;
 }					t_event_handler;
 
 void				processInput(GLFWwindow *window);

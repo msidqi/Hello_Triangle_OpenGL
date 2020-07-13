@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 21:38:17 by msidqi            #+#    #+#             */
-/*   Updated: 2020/07/12 21:39:17 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/07/13 13:24:10 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,26 +24,19 @@ int		init_setup(GLFWwindow **window, int width, int height, char *window_name)
 	(*window) = glfwCreateWindow(width, height, window_name, NULL, NULL);
 	if ((*window) == NULL)
 	{
-		printf("Failed to create GLFW window");
+		printf("Error: Failed to create GLFW window");
+		glfwTerminate();
 		return (0);
 	}
 	glfwMakeContextCurrent(*window);
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) // load OpenGL functions with GLAD
 	{
-		printf("Failed to initialize GLAD");
+		printf("Error: Failed to initialize GLAD");
+		glfwTerminate();
 		return (0);
 	}
 	glfwSetFramebufferSizeCallback(*window, framebuffer_size_callback);
 	// -------Enable depth testing globally
 	glEnable(GL_DEPTH_TEST);
 	return (1);
-}
-
-/*
-* callback to resize the viewport @ window size-change
-*/
-
-void			framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-    glViewport(0, 0, width, height);
 }

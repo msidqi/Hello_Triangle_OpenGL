@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:16 by msidqi            #+#    #+#             */
-/*   Updated: 2020/07/13 01:05:57 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/07/13 13:45:00 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,9 +94,8 @@ void			*ft_lst_to_vertices_pthread(void *param)
 			obj->vertices_array[i * 5 + 2] = ((float *)iterators[0]->content)[2];
 			obj->vertices_array[i * 5 + 3] = ((float *)iterators[1]->content)[0];
 			obj->vertices_array[i * 5 + 4] = ((float *)iterators[1]->content)[1];
-			// ft_memcpy(obj->vertices_array + i * sizeof(float) * 5, (const void *)iterators[0]->content, sizeof(float) * 3);
-			// ft_memcpy(obj->vertices_array + i * sizeof(float) * 5 + sizeof(float) * 3, (const void *)iterators[1]->content, sizeof(float) * 2);
-			// ft_memcpy(obj->vertices_array + i * sizeof(float) * 3, (const void *)iterators[0]->content, sizeof(float) * 3);
+			// ft_memcpy((obj->vertices_array + i * sizeof(float) * 5), (const void *)iterators[0]->content, sizeof(float) * 3);
+			// ft_memcpy((obj->vertices_array + i * sizeof(float) * 5 + sizeof(float) * 3), (const void *)iterators[1]->content, sizeof(float) * 2);
 			i--;
 			iterators[0] = iterators[0]->next;
 			iterators[1] = iterators[1]->next;
@@ -118,14 +117,20 @@ int				ft_convert_object(t_obj *obj)
 {
 	ft_putendl_fd("converting object...", 1);
 	if (!obj || obj->vertices_len < 3 || obj->indices_len < 2)
+	{
+		ft_putendl_fd("Error: Could not convert object", 2);
 		return (0);
+	}
 	pthread_t id[2];
 	pthread_create(&id[0], NULL, ft_lst_to_vindices_pthread, (void *)obj);
 	pthread_create(&id[1], NULL, ft_lst_to_vertices_pthread, (void *)obj);
 	pthread_join(id[0], NULL);
 	pthread_join(id[1], NULL);
 	if (!obj->vertices_array || !obj->vindices_array)
+	{
+		ft_putendl_fd("Error: Object was not converted", 2);
 		return (0);
+	}
 	ft_putendl_fd("converting object done.", 1);
 	return (1);
 }

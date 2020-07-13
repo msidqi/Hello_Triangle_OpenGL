@@ -21,10 +21,12 @@ uniform mat4 final_matrix;
 
 void main(void)
 {
+	float sinPosx = sin(aPos.x);
+	float sinPosy = sin(aPos.y);
 	// gl_Position = projection * view * model * vec4(aPos.xyz, 1.0);
 	gl_Position = final_matrix * vec4(aPos.xyz, 1.0);
-	variantColor.x = sin(aPos.x) > 0 ? 0.5 : 0.7;
-	variantColor.y = sin(aPos.y) > 0 ? 0.1: 0.5;
+	variantColor.x =  0.5 * float(sinPosx > 0) + 0.7 * float(sinPosx < 0);
+	variantColor.y = 0.1 * float(sinPosy > 0) + 0.5 * float(sinPosy < 0);
 	variantColor.z = 0.2;
 	TexCoord = aTexCord;
 }
