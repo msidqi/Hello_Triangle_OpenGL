@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:19 by msidqi            #+#    #+#             */
-/*   Updated: 2020/06/11 18:43:33 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/07/12 22:01:53 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 t_obj			*ft_obj_from_file(char *path)
 {
-	int				fd;
+	int		fd;
 	t_cmd	*cmd;
-	t_obj 			*obj;
+	t_obj 	*obj;
 
 	if ((fd = open(path, O_RDONLY)) < 0)
 		return (NULL);
@@ -30,9 +30,7 @@ t_obj			*ft_obj_from_file(char *path)
 	}
 	obj->vertices = NULL;
 	while (get_next_line(fd, &cmd->to_parse) > 0)
-	{
 		cmd->get(cmd)->exec(cmd, obj);
-	}
 	cmd->destroy(&cmd);
 	close(fd);
 	return (obj);
@@ -76,10 +74,12 @@ t_obj			*ft_obj_from_args(int argc, char **argv)
 	if (argc < 2)
 		return (NULL);
 	full_path = argv[1];
+	ft_putendl_fd("reading file...", 1);
 	if (!full_path || !(obj = ft_obj_from_file(full_path)))
 	{
 		perror("ft_obj_from_file()");
 		return (NULL);
 	}
+	ft_putendl_fd("reading file done.", 1);
 	return (obj);
 }

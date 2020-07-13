@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:24 by msidqi            #+#    #+#             */
-/*   Updated: 2020/06/22 00:20:10 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/07/13 00:58:58 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ unsigned int	ft_parse_texture_coordinates(char *line, t_list **tex_coords)
 	t_vec2f			*coords;
 
 	n = (unsigned int)ft_strlsplit(line, ' ', &arr);
-	if ((n != 3) || !(coords = (t_vec2f *)ft_memalloc(sizeof(t_vec2f))))
+	if ((n < 3) || !(coords = (t_vec2f *)ft_memalloc(sizeof(t_vec2f))))
 	{
 		ft_free_tab(&arr);
 		ft_putendl_fd("ft_parse_texture_coordinates(): skiped invalid coords", 2);

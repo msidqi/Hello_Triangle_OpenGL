@@ -19,8 +19,9 @@ t_texture	*load(t_texture *this, char *texture_path)
 
 t_texture	*bind(t_texture *this, int gl_tex_target, int texture_unit)
 {
+	this->bind_id = GL_TEXTURE0 + texture_unit;
 	glGenTextures(1, &this->gl_id);
-	glActiveTexture(GL_TEXTURE0 + texture_unit);
+	glActiveTexture(this->bind_id);
 	glBindTexture(gl_tex_target, this->gl_id);
 	this->gl_target = gl_tex_target;
 	return (this);
@@ -92,41 +93,3 @@ t_texture	*texture_construct()
 	this->destroy = &tex_destroy;
 	return (this);
 }
-
-
-
-
-
-//--------------------------------
-	// float borderColor[] = { 1.0f, 1.0f, 0.0f, 1.0f };
-	// glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
-
-	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR); // only after enabling MIPMAP with glGenerateMipmaps()
-	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR); // sets how OpenGL handles filtering between different mipmap layers
-
-/*int width, height, nrChannels;
-unsigned char *tex_data;
-char *texture_path = "texture/container.jpg";
-
-unsigned int texture;
-if (tex_data = stbi_load(texture_path, &width, &height, &nrChannels, 0))
-{
-	printf("nrChannels %d\n", nrChannels);
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set how openGL wraps textures on S axis (x)
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); // texture filterng option for when using small texture on bigger obj
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, tex_data); // generates texture on currently bound texture obj
-	glGenerateMipmap(GL_TEXTURE_2D); // saves us form calling glTexImage2D(GL_TEXTURE_2D, 0, ...) for different levels(0)
-
-	stbi_image_free(tex_data);
-}
-else
-{
-	printf("ERROR::STBI::COULD_NOT_LOAD_IMAGE : %s\n", texture_path);
-	return (-1);
-}*/

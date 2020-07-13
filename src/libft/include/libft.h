@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/07 22:13:10 by msidqi            #+#    #+#             */
-/*   Updated: 2020/06/07 12:54:25 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/07/13 00:53:40 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # include <unistd.h>
 
 # define ABS(Value) (Value >= 0) ? (Value) : -(Value)
-# define BUFF_SIZE 900
+# define BUFF_SIZE 4
 # define TRUE 1
 # define FALSE 0
 # define MALLOCC(p, size) (p = (char *)malloc(size))

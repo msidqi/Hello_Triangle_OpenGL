@@ -1,6 +1,7 @@
 #ifndef SHADERS_H
 # define SHADERS_H
 #include "libgl.h"
+#include "libft.h"
 #include <glad/glad.h> 
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,5 +25,7 @@ typedef struct		s_shader
 
 t_shader	*shader_construct(const char *vshader_path, const char *fshader_path);
 char		*read_shader_file(const char *file_name);
+void		use_shader_program(t_shader *this);
+void		init_shader(t_shader *this);
 
 #endif

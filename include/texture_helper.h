@@ -36,6 +36,7 @@ typedef struct			s_texture
 	int					h;
 	int					channels;
 	unsigned char		*data;
+	unsigned int		bind_id;
 	unsigned int		gl_id;
 	int					gl_target;
 	int					error;

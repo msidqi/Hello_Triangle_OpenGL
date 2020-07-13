@@ -6,423 +6,142 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:34 by msidqi            #+#    #+#             */
-/*   Updated: 2020/06/22 01:18:13 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/07/13 01:13:29 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "scop.h" 
 
-void	framebuffer_size_callback(GLFWwindow* window, int width, int height) // callback to resize the viewport @ window size-change
+void		ft_model_world_view(t_event_handler *e, t_mat4f *result)
 {
-    glViewport(0, 0, width, height);
+	t_mat4f identity;
+	t_mat4f model;
+	t_mat4f view;
+	t_mat4f projection;
+
+	identity = ft_mat4f_create_init(e->scaleFactor);
+	model = ft_mat4f_rotation_xyz(ft_to_radf(e->rot_angle), e->rotation);
+	view = ft_mat4f_translate(identity, e->translation);
+	projection = ft_perspective_matrixf(ft_to_radf(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+	(*result) = ft_mat4f_x_mat4f(model, ft_mat4f_x_mat4f(view, projection));
 }
 
-
-t_vec3f translation = (t_vec3f){.0f, .0f, 3.0f};
-float rot_angle = -55.0f;
-t_vec3f rotation = (t_vec3f){1.0f, 0.0f, 0.0f};
-
-typedef struct		s_event_handler
+t_texture	*load_texture(char *path, t_shader *shader)
 {
-	double		rel_mouse_ypos;
-	double		rel_mouse_xpos;
-	double		mouse_xpos_old;
-	double		mouse_ypos_old;
-	int			isScaleMode;
-	int			isLeftClick;
-	float		mixValue;
-	float		scaleFactor;
-
-}				t_event_handler;
-
-t_event_handler e;
-
-void	processInput(GLFWwindow *window)
-{
-    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
-	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
-		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        e.isScaleMode = !e.isScaleMode;
-
-	if (glfwGetKey(window, GLFW_KEY_KP_ADD) == GLFW_PRESS)
-    {
-        e.scaleFactor += 0.001f;
-    }
-    if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS)
-    {
-        e.scaleFactor -= 0.001f;
-	}
-	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-    {
-        e.mixValue += 0.0001f;
-        if(e.mixValue >= 1.0f)
-            e.mixValue = 1.0f;
-    }
-    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-    {
-        e.mixValue -= 0.0001f;
-        if (e.mixValue <= 0.0f)
-            e.mixValue = 0.0f;
-	}
-	// if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-	// 	translation.y += .003f;
-	// if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-	// 	translation.y -= .003f;
-	// if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-	// 	translation.x += .003f;
-	// if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-	// 	translation.x -= .003f;
-	// if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-	// 	translation.z += .003f;
-	// if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-	// 	translation.z -= .003f;
-	if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
-		rotation.x += .003f;
-	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
-		rotation.x -= .003f;
-	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
-		rotation.y += .003f;
-	if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS)
-		rotation.y -= .003f;
-	if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
-		rotation.z += .003f;
-	if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS)
-		rotation.z -= .003f;
-}
-
-void	scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
-{
-	if (e.isScaleMode)
-	{
-		if (yoffset > 0)
-			e.scaleFactor += 0.1f;
-		if (yoffset < 0)
-			e.scaleFactor -= 0.1f;
-	}
-	else
-	{
-		if (yoffset > 0)
-			translation.z += .3f;
-		if (yoffset < 0)
-			translation.z -= .3f;
-	}
-}
-
-void	cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
-{
-	e.rel_mouse_xpos = xpos - e.mouse_xpos_old;
-	e.rel_mouse_ypos = ypos - e.mouse_ypos_old;
-	printf("%f %f\n", e.rel_mouse_xpos, e.rel_mouse_ypos);
-	if (e.isLeftClick)
-	{
-		translation.y += .003f * -e.rel_mouse_ypos;
-		translation.x += .003f * e.rel_mouse_xpos;
-	}
-	e.mouse_xpos_old = xpos;
-	e.mouse_ypos_old = ypos;
-}
-
-void	mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
-{
-	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
-		e.isLeftClick = 1;
-	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
-		e.isLeftClick = 0;
-}
-
-void	ft_fps_print()
-{
-	static double	last_time = 0;
-	static size_t	frames_count = 0;
-	double			current_time;
-
-	if (!last_time)
-		last_time = glfwGetTime();
-	current_time = glfwGetTime();
-	frames_count++;
-	if (current_time - last_time > 1.0)
-	{
-		printf("%f ms/frame(%zu fps)\n", 1000.0/(double)frames_count, frames_count);
-		frames_count = 0;
-		last_time += 1.0;
-	}
-}
-
-int		init_setup(GLFWwindow **window, int width, int height, char *window_name)
-{
-	glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // load only core OpenGL
-#ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // for Mac OS to Initialize
-#endif
-	(*window) = glfwCreateWindow(width, height, window_name, NULL, NULL);
-	if ((*window) == NULL)
-	{
-		printf("Failed to create GLFW window");
-		return (0);
-	}
-	glfwMakeContextCurrent(*window);
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) // load OpenGL functions with GLAD
-	{
-		printf("Failed to initialize GLAD");
-		return (0);
-	}
-	glfwSetFramebufferSizeCallback(*window, framebuffer_size_callback);
-	return (1);
-}
-
-int		main(int argc, char **argv)
-{
-	GLFWwindow	*window;
-	t_shader	*shader;
-	t_obj		*obj = NULL;
+	t_texture *tex0;
 	
-	e.isLeftClick = 0;
-	e.isScaleMode = 0;
-	e.mixValue = 1.0f;
-	e.scaleFactor = 1.0f;
-	e.rel_mouse_xpos = 0;
-	e.rel_mouse_ypos = 0;
-	e.mouse_xpos_old = 0;
-	e.mouse_ypos_old = 0;
-	if (!(obj = ft_obj_from_args(argc, argv)))
-	{
-		printf("Object was not loaded\n");
-		return (0);
-	}
-	if (!ft_convert_object(obj))
-	{
-		printf("could not convert object\n");
-		return (0);
-	}
-	// if (obj) ft_destroy_object(&obj);
-	// ft_print_vertices_array(obj);
-	// return (0);
-
-
-
-
-	window = NULL;
-	if (!init_setup(&window, 800, 600, "OpenGL"))
-	{
-		glfwTerminate();
-		return (-1);
-	}
-	// if (obj) ft_destroy_object(&obj);
-	// glfwTerminate();
-	// return (0);
-
-	if (!(shader = shader_construct("src/shaders/shaderSource/vertex.glsl", "src/shaders/shaderSource/fragment.glsl")))
-	{
-		glfwTerminate();
-		printf("ERROR::SHADER::CONSTRUCTION\n");
-		return (-1);
-	}
-
-	// -------Enable depth testing globally
-	glEnable(GL_DEPTH_TEST);
-
-	t_texture *tex0 = texture_construct();
-	tex0
-	->load(tex0, "texture/wall.jpg")
-	->bind(tex0, GL_TEXTURE_2D, 0)
+	tex0 = texture_construct();
+	tex0->load(tex0, path)->bind(tex0, GL_TEXTURE_2D, 0)
 	->set_params(tex0, (t_tex_params){WRAP_R, WRAP_R, 0, FILTER_N, FILTER_N})
 	->exec(tex0);
-	
-	t_texture *tex1 = texture_construct();
-	tex1
-	->load(tex1, "texture/capsule0.jpg")
-	->bind(tex1, GL_TEXTURE_2D, 1)
-	->set_params(tex1, (t_tex_params){WRAP_R, WRAP_R, 0, FILTER_N, FILTER_N})
-	->exec(tex1);
+//	bind textures to shader >> no need to bind inside loop
+	shader->set_int(shader, "tex0Sampler", tex0->bind_id); // default is 0 // tell OpenGL that tex0Sampler belongs to texture unit 0 (previously set in bind() function)
+}
 
-	t_texture *tex2 = texture_construct();
-	tex2
-	->load(tex2, "texture/space.png")
-	->bind(tex2, GL_TEXTURE_2D, 2)
-	->set_params(tex2, (t_tex_params){WRAP_R, WRAP_R, 0, FILTER_N, FILTER_N})
-	->exec(tex2);
+void		cleanup(t_env *env)
+{
+	// -------------- cleanup --------------
+	glDeleteVertexArrays(1, &env->VAO);
+	glDeleteBuffers(1, &env->EBO);
+	glDeleteBuffers(1, &env->VBO);
+	glfwTerminate();
+	if (env->obj) ft_destroy_object(&env->obj);
+	if(env->tex) env->tex->destroy(&env->tex);
+	if(env->shader) ft_memdel((void **)&env->shader);
+}
+int			main(int argc, char **argv)
+{
+	t_event_handler *e;
+	t_env			env;
 
-//	bind both textures to shader >> no need to bind inside loop
-	shader->use(shader); // must use shader before setting uniform values
-	shader->set_int(shader, "tex0Sampler", 0); // default is 0
-	shader->set_int(shader, "tex1Sampler", 1); // tell OpenGL that tex1Sampler belongs to texture unit 1 (previously set in bind() function)
-	shader->set_int(shader, "tex2Sampler", 2);
+	if (!(env.obj = ft_obj_from_args(argc, argv)))
+	{
+		ft_putendl_fd("Object was not loaded", 2);
+		return (0);
+	}
+	if (!ft_convert_object(env.obj))
+	{
+		ft_putendl_fd("could not convert object", 2);
+		return (0);
+	}
+	if (!init_setup(&env.window, 800, 600, "OpenGL"))
+	{
+		ft_putendl_fd("OpenGL setup failed", 2);
+		glfwTerminate();
+		return (-1);
+	}
+	e = ft_event_handler_init(env.window); // must be init after init_setup()
+	if (!(env.shader = shader_construct("src/shaders/shaderSource/vertex.glsl", "src/shaders/shaderSource/fragment.glsl")))
+	{
+		glfwTerminate();
+		ft_putendl_fd("ERROR::SHADER::CONSTRUCTION", 2);
+		return (-1);
+	}
+	env.shader->use(env.shader); // must use shader before setting uniform values
+
+	env.tex = load_texture("texture/space.png", env.shader);
 //---------------------------------
-	unsigned int VBO;
-	glGenBuffers(1, &VBO);
+	// unsigned int VBO;
+	glGenBuffers(1, &env.VBO);
 
-	unsigned int VAO;
-	glGenVertexArrays(1, &VAO);
+	// unsigned int VAO;
+	glGenVertexArrays(1, &env.VAO);
 
 	// used for indexed-drawing
-	unsigned int EBO;
-	glGenBuffers(1, &EBO);
+	// unsigned int EBO;
+	glGenBuffers(1, &env.EBO);
 
 // -- bind buffers --
-if (obj->flags & F_INDEX && obj->flags & F_TEXTURE_INDEX)
-{
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * obj->vertices_len * 5, obj->vertices_array, GL_STATIC_DRAW);
+	if (env.obj->flags & F_INDEX && env.obj->flags & F_TEXTURE_INDEX)
+	{
+		// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+		glBindVertexArray(env.VAO);
+		glBindBuffer(GL_ARRAY_BUFFER, env.VBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * env.obj->vertices_len * 5, env.obj->vertices_array, GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * obj->indices_len * 3, obj->vindices_array, GL_STATIC_DRAW);
-
-// specify how data should be interpreted
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0); // enable location 0
-
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1); // enable location 0
-}
-else if (obj->flags & F_INDEX == F_INDEX)
-{
-	// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * obj->vertices_len * 3, obj->vertices_array, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * obj->indices_len * 3, obj->vindices_array, GL_STATIC_DRAW);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, env.EBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * env.obj->indices_len * 3, env.obj->vindices_array, GL_STATIC_DRAW);
 
 	// specify how data should be interpreted
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);//applies to the currently bound VBO to GL_ARRAY_BUFFER
-	glEnableVertexAttribArray(0); // enable location 0
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0); //applies to the currently bound VBO to GL_ARRAY_BUFFER
+		glEnableVertexAttribArray(0); // enable location 0
+
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float))); // https://learnopengl.com/img/getting-started/vertex_attribute_pointer_interleaved_textures.png
+		glEnableVertexAttribArray(1); // enable location 1
+	}
+	else if (env.obj->flags & F_INDEX == F_INDEX)
+	{
+		glBindVertexArray(env.VAO);
+		glBindBuffer(GL_ARRAY_BUFFER, env.VBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * env.obj->vertices_len * 3, env.obj->vertices_array, GL_STATIC_DRAW);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, env.EBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * env.obj->indices_len * 3, env.obj->vindices_array, GL_STATIC_DRAW);
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(0);
 }
-	// glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));//applies to the currently bound VBO to GL_ARRAY_BUFFER
-	// glEnableVertexAttribArray(1); // enable location 0
 
-	// glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float))); // https://learnopengl.com/img/getting-started/vertex_attribute_pointer_interleaved_textures.png
-	// glEnableVertexAttribArray(2);
-	
-	/* // cube
-	float vertices[] = {
-		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-	
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	
-		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-	};
-	unsigned int VBO;
-	glGenBuffers(1, &VBO);
-	unsigned int VAO;
-	glGenVertexArrays(1, &VAO);
-
-	glBindVertexArray(VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(2);*/
-
-// ------------------------------------------------
-	glfwSetScrollCallback(window, scroll_callback);
-	// glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	glfwSetCursorPosCallback(window, cursor_position_callback);
-
-	glfwSetMouseButtonCallback(window, mouse_button_callback);
 //window loop
-	while(!glfwWindowShouldClose(window))
+	while(!glfwWindowShouldClose(env.window))
 	{
 		ft_fps_print();
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and z-buffer
-
 		glfwPollEvents();
-		processInput(window);
-		shader->set_float(shader, "scaleFactor", e.scaleFactor);
-		shader->set_float(shader, "mixValue", e.mixValue);
-		shader->use(shader);
-		// glBindTexture(GL_TEXTURE_2D, tex0->gl_id); // no need to bind inside loop
+		processInput(env.window);
+		env.shader->set_float(env.shader, "scaleFactor", e->scaleFactor);
+		env.shader->set_float(env.shader, "mixValue", e->mixValue);
+		env.shader->use(env.shader);
 // -----------------Transform Matrix--------------------
-		t_mat4f identity;
-		t_mat4f model;
-		t_mat4f view;
-		t_mat4f projection;
-		t_mat4f result;
-
-		identity = ft_mat4f_create_init(e.scaleFactor);//ft_mat4f_create();
-		model = ft_mat4f_rotation_xyz(ft_to_radf(rot_angle), rotation);
-		view = ft_mat4f_translate(identity, translation);
-		projection = ft_perspective_matrixf(ft_to_radf(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-		result = ft_mat4f_x_mat4f(model, ft_mat4f_x_mat4f(view, projection));
-
+		ft_model_world_view(e, &env.final_matrix);
 // --------------set uniform that's in vertex shader---------
-		// shader->set_mat4f(shader, "model", &model);
-		// shader->set_mat4f(shader, "view", &view);
-		// shader->set_mat4f(shader, "projection", &projection);
-		shader->set_mat4f(shader, "result", (const t_mat4f *)&result);
+		env.shader->set_mat4f(env.shader, "final_matrix", (const t_mat4f *)&env.final_matrix);
 // -----------------------------------------------------------
-		/*// cube
-		glDrawArrays(GL_TRIANGLES, 0, 36);*/
-
-		// square
-		// glBindVertexArray(VAO);
-		// glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-		 // 42
-		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, obj->indices_len * 3, GL_UNSIGNED_INT, 0);
-
-		glfwSwapBuffers(window);
+		glBindVertexArray(env.VAO);
+		glDrawElements(GL_TRIANGLES, env.obj->indices_len * 3, GL_UNSIGNED_INT, 0);
+		glfwSwapBuffers(env.window);
 	}
-	// -------------- cleanup --------------
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &EBO);
-	glDeleteBuffers(1, &VBO);
-	glfwTerminate();
-	if (obj) ft_destroy_object(&obj);
-	if(tex0) tex0->destroy(&tex0);
-	if(tex1) tex1->destroy(&tex1);
-	if(shader) free(shader);
+	cleanup(&env);
 	return (0);
 }
