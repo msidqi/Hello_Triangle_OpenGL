@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:19 by msidqi            #+#    #+#             */
-/*   Updated: 2020/07/13 10:19:59 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/05 20:58:12 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_obj			*ft_obj_from_file(char *path)
 {
 	int		fd;
 	t_cmd	*cmd;
-	t_obj 	*obj;
+	t_obj	*obj;
 
 	if ((fd = open(path, O_RDONLY)) < 0)
 		return (NULL);

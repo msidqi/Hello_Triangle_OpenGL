@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 21:37:17 by msidqi            #+#    #+#             */
-/*   Updated: 2020/07/13 15:20:08 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/07/14 19:12:03 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	processInput(GLFWwindow *window)
             e.translation_mod = 1.0f;
 	}
 	if (e.isRotMode)
-		e.rot_angle = (float)glfwGetTime() * 20.0f;
+		e.rotation.y = .5f * (float)glfwGetTime();
 	if (e.isSmoothTransition)
 	{
 		if (e.initialTransTime == .0f)
@@ -148,8 +148,8 @@ t_event_handler	*ft_event_handler_init(GLFWwindow *window)
 	e.rel_mouse_ypos = 0;
 	e.mouse_xpos_old = 0;
 	e.mouse_ypos_old = 0;
-	e.translation = (t_vec3f){.0f, .0f, 3.0f};
-	e.translation_mod = 1.0f;
+	e.translation = (t_vec3f){.0f, .0f, 10.0f};
+	e.translation_mod = 2.0f;
 	e.rot_angle = -55.0f;
 	e.rotation = (t_vec3f){1.0f, 0.0f, 0.0f};
 	e.height = WINDOW_HEIGHT;

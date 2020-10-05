@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:24 by msidqi            #+#    #+#             */
-/*   Updated: 2020/07/13 00:58:58 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/05 20:59:55 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 unsigned int	ft_parse_geometric_vertex(char *line, t_list **vertices)
 {
-	char			**arr;
+	char					**arr;
 	unsigned int	n;
-	t_vec4f			*vertex;
+	t_vec4f				*vertex;
 
 	n = (unsigned int)ft_strlsplit(line, ' ', &arr);
 	if ((n != 4 && n != 5) || !(vertex = (t_vec4f *)ft_memalloc(sizeof(t_vec4f))))
