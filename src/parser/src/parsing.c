@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:24 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/05 20:59:55 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/07 18:44:34 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ void			ft_multi_face(t_face *face, t_list **indices)
 	}
 	if ((face->flags & F_NORMAL))
 	{
-		new_face[0]->vnormals = (unsigned int *)ft_memalloc(sizeof(unsigned int) * 3);
+  		new_face[0]->vnormals = (unsigned int *)ft_memalloc(sizeof(unsigned int) * 3);
 		new_face[0]->vnormals[0] = face->vnormals[0];
 		new_face[0]->vnormals[1] = face->vnormals[2];
 		new_face[0]->vnormals[2] = face->vnormals[3];

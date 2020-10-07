@@ -16,19 +16,6 @@ typedef struct		s_wind
 	GLFWwindow		*window;
 }					t_wind;
 
-typedef struct		s_env
-{
-	t_texture		*tex;
-	t_mat4f 		final_matrix;
-	t_obj			*obj;
-	t_shader		*shader;
-	GLFWwindow		*window;
-	unsigned int	VBO;
-	unsigned int	VAO;
-	// used for indexed-drawing
-	unsigned int	EBO;
-}					t_env;
-
 typedef struct		s_event_handler
 {
 	double			rel_mouse_ypos;
@@ -51,6 +38,20 @@ typedef struct		s_event_handler
 	int				height;
 }					t_event_handler;
 
+typedef struct		s_env
+{
+	t_event_handler	*e_handler;
+	t_texture		*tex;
+	t_mat4f 		final_matrix;
+	t_obj			*obj;
+	t_shader		*shader;
+	GLFWwindow		*window;
+	GLuint			VBO;
+	GLuint			VAO;
+	// used for indexed-drawing
+	GLuint			EBO;
+}					t_env;
+
 void				processInput(GLFWwindow *window);
 void				scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void				cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
@@ -60,6 +61,6 @@ t_event_handler		*ft_event_handler_init();
 
 void				ft_fps_print();
 
-int					init_setup(GLFWwindow **window, int width, int height, char *window_name);
+int					init_opengl(GLFWwindow **window, int width, int height, char *window_name);
 
 #endif

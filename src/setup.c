@@ -6,13 +6,13 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 21:38:17 by msidqi            #+#    #+#             */
-/*   Updated: 2020/07/13 13:24:10 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/07 23:00:43 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "scop.h" 
 
-int		init_setup(GLFWwindow **window, int width, int height, char *window_name)
+int		init_opengl(GLFWwindow **window, int width, int height, char *window_name)
 {
 	glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);

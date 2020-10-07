@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:34 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/05 20:27:07 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/07 23:26:31 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ void		ft_model_world_view(t_event_handler *e, t_mat4f *result)
 	identity = ft_mat4f_create_init(e->scaleFactor);
 	model = ft_mat4f_rotation_xyz(ft_to_radf(e->rot_angle), e->rotation);
 	view = ft_mat4f_translate(identity, e->translation);
-	projection = ft_perspective_matrixf(ft_to_radf(45.0f), (float)((float)e->width / (float)e->height), 0.1f, 100.0f);
+	projection = ft_perspective_matrixf(ft_to_radf(45.0f),
+				(float)((float)e->width / (float)e->height), 0.1f, 100.0f);
 	(*result) = ft_mat4f_x_mat4f(model, ft_mat4f_x_mat4f(view, projection));
 }
 
@@ -57,80 +58,126 @@ void		cleanup(t_env *env)
 	if(env->shader) ft_memdel((void **)&env->shader);
 }
 
+/*
+** stride == total_num_of_elements =>
+** [|v0, v1, v2,| |v3, v4|]
+** [|vertexdata | |colors|]
+** number_of_elements equals 3 for vertexdata and 2 for colors
+** 
+** index_in_stride is the starting point =>
+** 		0 (v0) for vertexdata and 3 (v3) for colors
+*/
+
+void	describe_buffer(GLuint location, GLint number_of_elements,
+		GLenum gl_type, GLboolean normalized, GLsizei stride,
+		GLuint index_in_stride, unsigned long type_size)
+{
+	// specify how data should be interpreted
+	glVertexAttribPointer(location, number_of_elements, gl_type, normalized,
+			stride * type_size, (const void *)(index_in_stride * type_size)); //applies to the currently bound VBO to GL_ARRAY_BUFFER
+	glEnableVertexAttribArray(location); // enable location 0
+}
+
+void	generate_buffer(unsigned int *vbo)
+{
+	glGenBuffers(1, vbo);
+}
+
+void	bind_buffer(GLuint target_buffer, GLuint buffer,
+		unsigned long buffer_size, const void *data)
+{
+	glBindBuffer(target_buffer, buffer);
+	glBufferData(target_buffer, buffer_size, data, GL_STATIC_DRAW);
+}
+
+void	generate_vao(GLuint *vao)
+{
+	glGenVertexArrays(1, vao);
+}
+
+void	bind_vao(GLuint vao)
+{
+	glBindVertexArray(vao);
+}
+
+void	handle_buffers(t_env *env)
+{
+	t_obj *obj;
+
+	obj = env->obj;
+	// -- generate buffers --
+	generate_buffer(&env->VBO);
+	generate_vao(&env->VAO);
+	generate_buffer(&env->EBO);
+	// -- bind buffers --
+	if (obj->flags & F_INDEX && obj->flags & F_TEXTURE_INDEX)
+	{
+		// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+		bind_vao(env->VAO);
+		bind_buffer(GL_ARRAY_BUFFER, env->VBO,
+		sizeof(float) * obj->vertices_len * 5, obj->vertices_array);
+		bind_buffer(GL_ELEMENT_ARRAY_BUFFER, env->EBO,
+		sizeof(unsigned int) * obj->indices_len * 3, obj->vindices_array);
+		describe_buffer(0, 3, GL_FLOAT, GL_FALSE, 5, 0, sizeof(float));
+		describe_buffer(1, 2, GL_FLOAT, GL_FALSE, 5, 3, sizeof(float));
+	}
+	else if (obj->flags & F_INDEX == F_INDEX)
+	{
+		bind_vao(env->VAO);
+		bind_buffer(GL_ARRAY_BUFFER, env->VBO,
+		sizeof(float) * obj->vertices_len * 3, obj->vertices_array);
+		bind_buffer(GL_ELEMENT_ARRAY_BUFFER, env->EBO,
+		sizeof(unsigned int) * obj->indices_len * 3, obj->vindices_array);
+		describe_buffer(0, 3, GL_FLOAT, GL_FALSE, 3, 0, sizeof(float));
+	}
+}
+
+void	handle_screen(GLFWwindow *window)
+{
+	glfwSwapBuffers(window);
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and z-buffer
+}
+
+void	update(t_env *env)
+{
+	processInput(env->window);
+	env->shader->set_float(env->shader, "scaleFactor", env->e_handler->scaleFactor);
+	env->shader->set_float(env->shader, "mixValue", env->e_handler->mixValue);
+// -----------------Transform Matrix--------------------
+	ft_model_world_view(env->e_handler, &env->final_matrix);
+// --------------set uniform that's in vertex shader---------
+	env->shader->set_mat4f(env->shader, "final_matrix", (const t_mat4f *)&env->final_matrix);
+// -----------------------------------------------------------
+}
+
 int			main(int argc, char **argv)
 {
-	t_event_handler *e;
-	t_env			env;
+	t_env	env;
+	const char *vshader_path = "src/shaders/shaderSource/vertex.glsl";
+	const char *fshader_path = "src/shaders/shaderSource/fragment.glsl";
 
-	if (!(env.obj = ft_obj_from_args(argc, argv)))
-		return (0);
-	if (!ft_convert_object(env.obj))
-		return (0);
-	if (!init_setup(&env.window, WINDOW_WIDTH, WINDOW_WIDTH, "OpenGL"))
-		return (-1);
-	e = ft_event_handler_init(env.window); // must be init after init_setup()
-	if (!(env.shader = shader_construct("src/shaders/shaderSource/vertex.glsl", "src/shaders/shaderSource/fragment.glsl")))
+	if (!(env.obj = ft_obj_from_args(argc, argv))
+	|| !ft_convert_object(env.obj)
+	|| !init_opengl(&env.window, WINDOW_WIDTH, WINDOW_WIDTH, "OpenGL")
+	|| !(env.shader = shader_construct(vshader_path, fshader_path)))
 	{
-		glfwTerminate();
+		cleanup(&env);
 		return (-1);
 	}
 	env.shader->use(env.shader); // must use shader before setting uniform values
-
+	env.e_handler = ft_event_handler_init(env.window); // must be init after init_opengl()
 	env.tex = load_texture(argc > 2 ? argv[2] : NULL, env.shader);
-//---------------------------------
-	glGenBuffers(1, &env.VBO);
-	glGenVertexArrays(1, &env.VAO);
-	glGenBuffers(1, &env.EBO);
-
-// -- bind buffers --
-	if (env.obj->flags & F_INDEX && env.obj->flags & F_TEXTURE_INDEX)
-	{
-		// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-		glBindVertexArray(env.VAO);
-		glBindBuffer(GL_ARRAY_BUFFER, env.VBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * env.obj->vertices_len * 5, env.obj->vertices_array, GL_STATIC_DRAW);
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, env.EBO);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * env.obj->indices_len * 3, env.obj->vindices_array, GL_STATIC_DRAW);
-
-	// specify how data should be interpreted
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0); //applies to the currently bound VBO to GL_ARRAY_BUFFER
-		glEnableVertexAttribArray(0); // enable location 0
-
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float))); // https://learnopengl.com/img/getting-started/vertex_attribute_pointer_interleaved_textures.png
-		glEnableVertexAttribArray(1); // enable location 1
-	}
-	else if (env.obj->flags & F_INDEX == F_INDEX)
-	{
-		glBindVertexArray(env.VAO);
-		glBindBuffer(GL_ARRAY_BUFFER, env.VBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * env.obj->vertices_len * 3, env.obj->vertices_array, GL_STATIC_DRAW);
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, env.EBO);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * env.obj->indices_len * 3, env.obj->vindices_array, GL_STATIC_DRAW);
-
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-		glEnableVertexAttribArray(0);
-	}
-
-//window loop
+	handle_buffers(&env);
+	// main loop
 	while(!glfwWindowShouldClose(env.window))
 	{
 		ft_fps_print();
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and z-buffer
-		glfwPollEvents();
-		processInput(env.window);
-		env.shader->set_float(env.shader, "scaleFactor", e->scaleFactor);
-		env.shader->set_float(env.shader, "mixValue", e->mixValue);
-// -----------------Transform Matrix--------------------
-		ft_model_world_view(e, &env.final_matrix);
-// --------------set uniform that's in vertex shader---------
-		env.shader->set_mat4f(env.shader, "final_matrix", (const t_mat4f *)&env.final_matrix);
-// -----------------------------------------------------------
-		glBindVertexArray(env.VAO);
+		update(&env);
+		bind_vao(env.VAO);
 		glDrawElements(GL_TRIANGLES, env.obj->indices_len * 3, GL_UNSIGNED_INT, 0);
-		glfwSwapBuffers(env.window);
+		handle_screen(env.window);
+		glfwPollEvents();
 	}
 	cleanup(&env);
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:16 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/05 23:29:23 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/06 21:39:58 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,11 @@ unsigned int	*ft_lst_to_vindices(t_list *head, size_t list_size)
 
 void			*ft_lst_to_vindices_pthread(void *param)
 {
-	t_obj			*obj = (t_obj *)param;
+	t_obj			*obj;
 	t_list			*iterator;
 	size_t			i;
 
+	obj = (t_obj *)param;
 	if (!obj->indices_len || !obj->indices || !(obj->vindices_array =
 				ft_memalloc(sizeof(unsigned int) * obj->indices_len * 3)))
 		return (NULL);
