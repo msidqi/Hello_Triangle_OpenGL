@@ -2,7 +2,7 @@
 # define SHADERS_H
 #include "libgl.h"
 #include "libft.h"
-#include <glad/glad.h> 
+#include "glad.h" 
 #include <stdio.h>
 #include <stdlib.h>
 

@@ -1,7 +1,7 @@
 #ifndef TEXTURE_HELPER_H
 # define TEXTURE_HELPER_H
-# include <glad/glad.h>
-# include <GLFW/glfw3.h>
+# include "glad.h"
+# include "GLFW/glfw3.h"
 
 enum e_tex_wrap
 {

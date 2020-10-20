@@ -1,5 +1,13 @@
 NAME = exec
-FLAGS = -lglfw -lGL -lX11 -lpthread -lXrandr -lXi -ldl -lm
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Linux)
+	FLAGS = -lglfw -lGL -lX11 -lpthread -lXrandr -lXi -ldl -lm
+endif
+ifeq ($(UNAME_S),Darwin)
+	FLAGS =  -lpthread -lm
+	LIBGLFW_MACOS = ~/.brew/Cellar/glfw/3.3.2/lib/libglfw.dylib
+	INCLUDEGLFW_MACOS = ~/.brew/Cellar/glfw/3.3.2/include/GLFW/glfw3.h
+endif
 LIBGLFW = /usr/lib/x86_64-linux-gnu/libglfw.so.3
 LIBOPENGL = /usr/lib/x86_64-linux-gnu/libGL.so
 LIBGL_H_PATH = src/libgl/include
@@ -19,7 +27,7 @@ HEADERSPATH = include
 # ----- main
 all : $(NAME)
 $(NAME) : makelibgl makelibft
-	gcc -o $(NAME) $(SRC) $(LIBGL) src/libgl/src/ft_atof.c $(LIBFT) $(PARSER) -I$(HEADERSPATH) -I$(LIBGL_H_PATH) -I$(PARSER_H_PATH) -I$(LIBFT_H_PATH) $(FLAGS)
+	gcc -o $(NAME) $(SRC) $(LIBGL) $(LIBGLFW_MACOS) $(LIBFT) $(PARSER) -I$(HEADERSPATH) -I$(LIBGL_H_PATH) -I$(PARSER_H_PATH) -I$(LIBFT_H_PATH) -I$(INCLUDEGLFW_MACOS) $(FLAGS)
 
 clean : cleanlibgl cleanlibft cleanparser
 	rm -rf $(NAME)

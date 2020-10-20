@@ -121,7 +121,7 @@ void	handle_buffers(t_env *env)
 		describe_buffer(0, 3, GL_FLOAT, GL_FALSE, 5, 0, sizeof(float));
 		describe_buffer(1, 2, GL_FLOAT, GL_FALSE, 5, 3, sizeof(float));
 	}
-	else if (obj->flags & F_INDEX == F_INDEX)
+	else if ((obj->flags & F_INDEX) == F_INDEX)
 	{
 		bind_vao(env->VAO);
 		bind_buffer(GL_ARRAY_BUFFER, env->VBO,
