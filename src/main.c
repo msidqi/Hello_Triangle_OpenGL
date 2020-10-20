@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:34 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/07 23:26:31 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/20 20:26:41 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void		ft_model_world_view(t_event_handler *e, t_mat4f *result)
 	t_mat4f view;
 	t_mat4f projection;
 
-	identity = ft_mat4f_create_init(e->scaleFactor);
+	identity = ft_mat4f_create_init(e->scale_factor);
 	model = ft_mat4f_rotation_xyz(ft_to_radf(e->rot_angle), e->rotation);
 	view = ft_mat4f_translate(identity, e->translation);
 	projection = ft_perspective_matrixf(ft_to_radf(45.0f),
@@ -49,9 +49,9 @@ t_texture	*load_texture(char *path, t_shader *shader)
 void		cleanup(t_env *env)
 {
 	// -------------- cleanup --------------
-	glDeleteVertexArrays(1, &env->VAO);
-	glDeleteBuffers(1, &env->EBO);
-	glDeleteBuffers(1, &env->VBO);
+	glDeleteVertexArrays(1, &env->vao);
+	glDeleteBuffers(1, &env->ebo);
+	glDeleteBuffers(1, &env->vbo);
 	glfwTerminate();
 	if (env->obj) ft_destroy_object(&env->obj);
 	if(env->tex) env->tex->destroy(&env->tex);
@@ -74,7 +74,7 @@ void	describe_buffer(GLuint location, GLint number_of_elements,
 {
 	// specify how data should be interpreted
 	glVertexAttribPointer(location, number_of_elements, gl_type, normalized,
-			stride * type_size, (const void *)(index_in_stride * type_size)); //applies to the currently bound VBO to GL_ARRAY_BUFFER
+			stride * type_size, (const void *)(index_in_stride * type_size)); //applies to the currently bound vbo to GL_ARRAY_BUFFER
 	glEnableVertexAttribArray(location); // enable location 0
 }
 
@@ -106,27 +106,27 @@ void	handle_buffers(t_env *env)
 
 	obj = env->obj;
 	// -- generate buffers --
-	generate_buffer(&env->VBO);
-	generate_vao(&env->VAO);
-	generate_buffer(&env->EBO);
+	generate_buffer(&env->vbo);
+	generate_vao(&env->vao);
+	generate_buffer(&env->ebo);
 	// -- bind buffers --
 	if (obj->flags & F_INDEX && obj->flags & F_TEXTURE_INDEX)
 	{
 		// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-		bind_vao(env->VAO);
-		bind_buffer(GL_ARRAY_BUFFER, env->VBO,
+		bind_vao(env->vao);
+		bind_buffer(GL_ARRAY_BUFFER, env->vbo,
 		sizeof(float) * obj->vertices_len * 5, obj->vertices_array);
-		bind_buffer(GL_ELEMENT_ARRAY_BUFFER, env->EBO,
+		bind_buffer(GL_ELEMENT_ARRAY_BUFFER, env->ebo,
 		sizeof(unsigned int) * obj->indices_len * 3, obj->vindices_array);
 		describe_buffer(0, 3, GL_FLOAT, GL_FALSE, 5, 0, sizeof(float));
 		describe_buffer(1, 2, GL_FLOAT, GL_FALSE, 5, 3, sizeof(float));
 	}
 	else if ((obj->flags & F_INDEX) == F_INDEX)
 	{
-		bind_vao(env->VAO);
-		bind_buffer(GL_ARRAY_BUFFER, env->VBO,
+		bind_vao(env->vao);
+		bind_buffer(GL_ARRAY_BUFFER, env->vbo,
 		sizeof(float) * obj->vertices_len * 3, obj->vertices_array);
-		bind_buffer(GL_ELEMENT_ARRAY_BUFFER, env->EBO,
+		bind_buffer(GL_ELEMENT_ARRAY_BUFFER, env->ebo,
 		sizeof(unsigned int) * obj->indices_len * 3, obj->vindices_array);
 		describe_buffer(0, 3, GL_FLOAT, GL_FALSE, 3, 0, sizeof(float));
 	}
@@ -141,9 +141,9 @@ void	handle_screen(GLFWwindow *window)
 
 void	update(t_env *env)
 {
-	processInput(env->window);
-	env->shader->set_float(env->shader, "scaleFactor", env->e_handler->scaleFactor);
-	env->shader->set_float(env->shader, "mixValue", env->e_handler->mixValue);
+	process_input(env->window);
+	env->shader->set_float(env->shader, "scale_factor", env->e_handler->scale_factor);
+	env->shader->set_float(env->shader, "mix_value", env->e_handler->mix_value);
 // -----------------Transform Matrix--------------------
 	ft_model_world_view(env->e_handler, &env->final_matrix);
 // --------------set uniform that's in vertex shader---------
@@ -174,7 +174,7 @@ int			main(int argc, char **argv)
 	{
 		ft_fps_print();
 		update(&env);
-		bind_vao(env.VAO);
+		bind_vao(env.vao);
 		glDrawElements(GL_TRIANGLES, env.obj->indices_len * 3, GL_UNSIGNED_INT, 0);
 		handle_screen(env.window);
 		glfwPollEvents();

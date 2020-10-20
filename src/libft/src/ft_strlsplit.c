@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strsplit.c                                      :+:      :+:    :+:   */
+/*   ft_strlsplit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msidqi <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/13 20:14:26 by msidqi            #+#    #+#             */
-/*   Updated: 2019/10/06 17:49:26 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/20 20:42:31 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,17 +30,17 @@ static size_t	ft_calc(char const *s, char c)
 	return (words);
 }
 
-static size_t	ft_len(char const *s, char c, int tl)
+static size_t	len(char const *s, char c, int tl)
 {
-	size_t	len;
+	size_t	length;
 
-	len = 0;
+	length = 0;
 	while (s[tl] && s[tl] != c)
 	{
 		tl++;
-		len++;
+		length++;
 	}
-	return (len);
+	return (length);
 }
 
 static void		ft_free_tab_s(char ***tab, int size)
@@ -74,7 +74,7 @@ size_t			ft_strlsplit(char const *s, char c, char ***new)
 		i = 0;
 		while (s[t] == c)
 			t++;
-		if (!((*new)[n[0]] = (char *)malloc(sizeof(char) * (ft_len(s, c, t) + 1))))
+		if (!((*new)[n[0]] = (char *)malloc(sizeof(char) * (len(s, c, t) + 1))))
 		{
 			ft_free_tab_s(&(*new), n[0]);
 			return (0);

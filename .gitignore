@@ -6,3 +6,4 @@ calc.c
 *.o
 *.gch
 capsule_original.obj
+log

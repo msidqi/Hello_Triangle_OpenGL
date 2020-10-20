@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_mat_create_destroy.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msidqi <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/17 15:33:45 by msidqi            #+#    #+#             */
-/*   Updated: 2019/07/17 15:34:10 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/20 20:43:12 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,11 @@ t_matrix	*ft_create_matrix(int rows, int cols)
 	return (mat);
 }
 
-t_mat4	ft_create_matrix4(void)
+t_mat4		ft_create_matrix4(void)
 {
 	unsigned int	i;
 	unsigned int	j;
-	t_mat4		mat;
+	t_mat4			mat;
 
 	i = -1;
 	while (++i < 4)
@@ -67,7 +67,7 @@ t_mat4	ft_create_matrix4(void)
 	return (mat);
 }
 
-int		ft_destroy_matrix(t_matrix *mat)
+int			ft_destroy_matrix(t_matrix *mat)
 {
 	int	i;
 

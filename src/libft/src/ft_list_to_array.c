@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:51:56 by msidqi            #+#    #+#             */
-/*   Updated: 2020/06/07 12:54:35 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/20 20:34:20 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ void	*ft_lst_to_arr(t_list *head, size_t list_size, size_t type_size)
 	iterator = head;
 	while (iterator)
 	{
-		ft_memcpy(vertices_array + i * type_size, (const void *)iterator->content, type_size);
+		ft_memcpy(vertices_array + i * type_size,
+							(const void *)iterator->content, type_size);
 		i--;
 		iterator = iterator->next;
 	}

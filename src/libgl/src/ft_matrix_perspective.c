@@ -6,12 +6,11 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/31 15:31:41 by msidqi            #+#    #+#             */
-/*   Updated: 2020/06/06 18:03:40 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/20 20:44:11 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libgl.h"
-//perspective(radians(45.0f), (float)width/(float)height, 0.1f, 100.0f);
 
 t_mat4	ft_perspective_matrix(float fov_rad, float asp_ratio, float near, float far)
 {
@@ -55,7 +54,7 @@ t_mat4f	ft_perspective_matrixf_row(float fov_rad, float asp_ratio, float near, f
 {
 	t_mat4f	perspective;
 	float	tan_fov_over_2;
-	
+
 	tan_fov_over_2 = tanf(fov_rad / 2.0f);
 	if (near < 0.0f)
 		near = 0.1f;

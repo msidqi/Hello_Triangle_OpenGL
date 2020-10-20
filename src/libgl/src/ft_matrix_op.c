@@ -1,11 +1,26 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_matrix_op.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/10/20 20:37:35 by msidqi            #+#    #+#             */
+/*   Updated: 2020/10/20 20:45:08 by msidqi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libgl.h"
 
 /*
-using row-major order // so we need to transpose the matrix for OpenGl
-https://en.wikipedia.org/wiki/Row-_and_column-major_order
+** using row-major order // so we need to transpose the matrix for OpenGl
+** https://en.wikipedia.org/wiki/Row-_and_column-major_order
 */
 
-//row type
+/*
+** row type
+*/
+
 t_vec4			ft_mat4_x_vec4(t_mat4 m, t_vec4 v)
 {
 	return ((t_vec4){
@@ -16,7 +31,10 @@ t_vec4			ft_mat4_x_vec4(t_mat4 m, t_vec4 v)
 	});
 }
 
-// for col type matrix ordering
+/*
+** for col type matrix ordering
+*/
+
 t_vec4			ft_mat4_x_vec4_col(t_mat4 m, t_vec4 v)
 {
 	return ((t_vec4){
@@ -27,7 +45,10 @@ t_vec4			ft_mat4_x_vec4_col(t_mat4 m, t_vec4 v)
 	});
 }
 
-//row type
+/*
+** row type
+*/
+
 t_mat4			ft_mat4_x_mat4(t_mat4 m0, t_mat4 m1)
 {
 	return ((t_mat4){

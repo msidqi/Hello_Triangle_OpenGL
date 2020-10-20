@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_matrix.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msidqi <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/17 15:51:58 by msidqi            #+#    #+#             */
-/*   Updated: 2019/07/17 15:53:27 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/20 20:36:03 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_mat4		ft_get_scaling_matrix4(t_mat4 mat, double x, double y,
 	return (mat);
 }
 
-t_vec4			ft_translate_vec4(t_vec4 vec, double x, double y, double z)
+t_vec4		ft_translate_vec4(t_vec4 vec, double x, double y, double z)
 {
 	t_mat4 tr_mat;
 
