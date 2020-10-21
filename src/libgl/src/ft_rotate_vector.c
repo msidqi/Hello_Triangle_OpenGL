@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_rotate_vector.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msidqi <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/26 20:13:53 by msidqi            #+#    #+#             */
-/*   Updated: 2019/12/26 20:13:55 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/21 18:02:08 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,11 @@ t_vec3	ft_vec3_rotate_x(t_vec3 vector, double rotation_angle)
 	sin(rotation_angle) * vector.y + cos(rotation_angle) * vector.z});
 }
 
-t_vec3	ft_vec3_rotate_z_const(t_vec3 vector) // @deprecated
+/*
+**  @deprecated
+*/
+
+t_vec3	ft_vec3_rotate_z_const(t_vec3 vector)
 {
 	return ((t_vec3){
 	0.99999979 * vector.x + 0.00065042 * vector.y,

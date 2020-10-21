@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_fractal_func.c                                  :+:      :+:    :+:   */
+/*   ft_utils_func.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msidqi <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/02 03:17:26 by msidqi            #+#    #+#             */
-/*   Updated: 2019/05/02 03:17:27 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/21 18:02:15 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ t_vec2		ft_vec2_lerp(t_vec2 v1, t_vec2 v2, double lrp)
 	return ((t_vec2){lerp(v1.x, v2.x, lrp), lerp(v1.y, v2.y, lrp)});
 }
 
-double	ft_lerp(double goal, double current, double delta_time)
+double		ft_lerp(double goal, double current, double delta_time)
 {
 	double diff;
 
