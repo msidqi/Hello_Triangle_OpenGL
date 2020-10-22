@@ -6,179 +6,82 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:34 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/20 20:26:41 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/22 20:40:47 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "scop.h" 
+#include "scop.h"
 
-void		ft_model_world_view(t_event_handler *e, t_mat4f *result)
+static void		cleanup(t_env *env)
 {
-	t_mat4f identity;
-	t_mat4f model;
-	t_mat4f view;
-	t_mat4f projection;
-
-	identity = ft_mat4f_create_init(e->scale_factor);
-	model = ft_mat4f_rotation_xyz(ft_to_radf(e->rot_angle), e->rotation);
-	view = ft_mat4f_translate(identity, e->translation);
-	projection = ft_perspective_matrixf(ft_to_radf(45.0f),
-				(float)((float)e->width / (float)e->height), 0.1f, 100.0f);
-	(*result) = ft_mat4f_x_mat4f(model, ft_mat4f_x_mat4f(view, projection));
-}
-
-t_texture	*load_texture(char *path, t_shader *shader)
-{
-	t_texture *tex;
-
-	if(path
-	&& (tex = texture_construct())
-	&& tex
-	->load(tex, path)
-	->bind(tex, GL_TEXTURE_2D, 0)
-	->set_params(tex, (t_tex_params){WRAP_R, WRAP_R, 0, FILTER_N, FILTER_N})
-	->exec(tex))
-	{
-	//	bind textures to shader >> no need to bind inside loop
-		shader->set_int(shader, "texSampler", tex->bind_id); // default is 0 // tell OpenGL that tex0Sampler belongs to texture unit 0 (previously set in bind() function)
-		return (tex);
-	}
-	return (NULL);
-}
-
-void		cleanup(t_env *env)
-{
-	// -------------- cleanup --------------
 	glDeleteVertexArrays(1, &env->vao);
 	glDeleteBuffers(1, &env->ebo);
 	glDeleteBuffers(1, &env->vbo);
 	glfwTerminate();
-	if (env->obj) ft_destroy_object(&env->obj);
-	if(env->tex) env->tex->destroy(&env->tex);
-	if(env->shader) ft_memdel((void **)&env->shader);
+	if (env->obj)
+		ft_destroy_object(&env->obj);
+	if (env->tex)
+		env->tex->destroy(&env->tex);
+	if (env->shader)
+		ft_memdel((void **)&env->shader);
 }
 
-/*
-** stride == total_num_of_elements =>
-** [|v0, v1, v2,| |v3, v4|]
-** [|vertexdata | |colors|]
-** number_of_elements equals 3 for vertexdata and 2 for colors
-** 
-** index_in_stride is the starting point =>
-** 		0 (v0) for vertexdata and 3 (v3) for colors
-*/
-
-void	describe_buffer(GLuint location, GLint number_of_elements,
-		GLenum gl_type, GLboolean normalized, GLsizei stride,
-		GLuint index_in_stride, unsigned long type_size)
-{
-	// specify how data should be interpreted
-	glVertexAttribPointer(location, number_of_elements, gl_type, normalized,
-			stride * type_size, (const void *)(index_in_stride * type_size)); //applies to the currently bound vbo to GL_ARRAY_BUFFER
-	glEnableVertexAttribArray(location); // enable location 0
-}
-
-void	generate_buffer(unsigned int *vbo)
-{
-	glGenBuffers(1, vbo);
-}
-
-void	bind_buffer(GLuint target_buffer, GLuint buffer,
-		unsigned long buffer_size, const void *data)
-{
-	glBindBuffer(target_buffer, buffer);
-	glBufferData(target_buffer, buffer_size, data, GL_STATIC_DRAW);
-}
-
-void	generate_vao(GLuint *vao)
-{
-	glGenVertexArrays(1, vao);
-}
-
-void	bind_vao(GLuint vao)
-{
-	glBindVertexArray(vao);
-}
-
-void	handle_buffers(t_env *env)
-{
-	t_obj *obj;
-
-	obj = env->obj;
-	// -- generate buffers --
-	generate_buffer(&env->vbo);
-	generate_vao(&env->vao);
-	generate_buffer(&env->ebo);
-	// -- bind buffers --
-	if (obj->flags & F_INDEX && obj->flags & F_TEXTURE_INDEX)
-	{
-		// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-		bind_vao(env->vao);
-		bind_buffer(GL_ARRAY_BUFFER, env->vbo,
-		sizeof(float) * obj->vertices_len * 5, obj->vertices_array);
-		bind_buffer(GL_ELEMENT_ARRAY_BUFFER, env->ebo,
-		sizeof(unsigned int) * obj->indices_len * 3, obj->vindices_array);
-		describe_buffer(0, 3, GL_FLOAT, GL_FALSE, 5, 0, sizeof(float));
-		describe_buffer(1, 2, GL_FLOAT, GL_FALSE, 5, 3, sizeof(float));
-	}
-	else if ((obj->flags & F_INDEX) == F_INDEX)
-	{
-		bind_vao(env->vao);
-		bind_buffer(GL_ARRAY_BUFFER, env->vbo,
-		sizeof(float) * obj->vertices_len * 3, obj->vertices_array);
-		bind_buffer(GL_ELEMENT_ARRAY_BUFFER, env->ebo,
-		sizeof(unsigned int) * obj->indices_len * 3, obj->vindices_array);
-		describe_buffer(0, 3, GL_FLOAT, GL_FALSE, 3, 0, sizeof(float));
-	}
-}
-
-void	handle_screen(GLFWwindow *window)
+static void		handle_screen(GLFWwindow *window)
 {
 	glfwSwapBuffers(window);
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and z-buffer
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void	update(t_env *env)
+static void		update(t_env *env)
 {
+	ft_fps_print();
 	process_input(env->window);
-	env->shader->set_float(env->shader, "scale_factor", env->e_handler->scale_factor);
-	env->shader->set_float(env->shader, "mix_value", env->e_handler->mix_value);
-// -----------------Transform Matrix--------------------
+	env->shader->set_float(env->shader, "scale_factor",
+									env->e_handler->scale_factor);
+	env->shader->set_float(env->shader, "mix_value",
+									env->e_handler->mix_value);
 	ft_model_world_view(env->e_handler, &env->final_matrix);
-// --------------set uniform that's in vertex shader---------
-	env->shader->set_mat4f(env->shader, "final_matrix", (const t_mat4f *)&env->final_matrix);
-// -----------------------------------------------------------
+	env->shader->set_mat4f(env->shader, "final_matrix",
+									(const t_mat4f *)&env->final_matrix);
 }
 
-int			main(int argc, char **argv)
+static void		init_env(t_env *e)
 {
-	t_env	env;
-	const char *vshader_path = "src/shaders/shaderSource/vertex.glsl";
-	const char *fshader_path = "src/shaders/shaderSource/fragment.glsl";
+	e->e_handler = NULL;
+	e->tex = NULL;
+	e->obj = NULL;
+	e->shader = NULL;
+	e->window = NULL;
+	e->vs_path = "src/shaders/shaderSource/vertex.glsl";
+	e->fs_path = "src/shaders/shaderSource/fragment.glsl";
+}
 
-	if (!(env.obj = ft_obj_from_args(argc, argv))
-	|| !ft_convert_object(env.obj)
-	|| !init_opengl(&env.window, WINDOW_WIDTH, WINDOW_WIDTH, "OpenGL")
-	|| !(env.shader = shader_construct(vshader_path, fshader_path)))
+int				main(int argc, char **argv)
+{
+	t_env		e;
+
+	init_env(&e);
+	if (!(e.obj = ft_obj_from_args(argc, argv)) || !ft_convert_object(e.obj)
+	|| !init_opengl(&e.window, WINDOW_WIDTH, WINDOW_WIDTH, "Scop")
+	|| !(e.shader = shader_construct(e.vs_path, e.fs_path)))
 	{
-		cleanup(&env);
+		cleanup(&e);
 		return (-1);
 	}
-	env.shader->use(env.shader); // must use shader before setting uniform values
-	env.e_handler = ft_event_handler_init(env.window); // must be init after init_opengl()
-	env.tex = load_texture(argc > 2 ? argv[2] : NULL, env.shader);
-	handle_buffers(&env);
-	// main loop
-	while(!glfwWindowShouldClose(env.window))
+	e.shader->use(e.shader);
+	e.e_handler = ft_event_handler_init(e.window);
+	e.tex = load_texture(argc > 2 ? argv[2] : NULL, e.shader);
+	handle_buffers(&e);
+	while (!glfwWindowShouldClose(e.window))
 	{
-		ft_fps_print();
-		update(&env);
-		bind_vao(env.vao);
-		glDrawElements(GL_TRIANGLES, env.obj->indices_len * 3, GL_UNSIGNED_INT, 0);
-		handle_screen(env.window);
+		update(&e);
+		bind_vao(e.vao);
+		glDrawElements(GL_TRIANGLES, e.obj->indices_len * 3,
+												GL_UNSIGNED_INT, 0);
+		handle_screen(e.window);
 		glfwPollEvents();
 	}
-	cleanup(&env);
+	cleanup(&e);
 	return (0);
 }

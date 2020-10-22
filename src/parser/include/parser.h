@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/21 18:02:23 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/21 18:05:39 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/21 18:45:21 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,14 @@
 ** IM_ON,					// 1. Color on and Ambient on
 ** IM_HIGHTLIGHT,			// 2. Highlight on
 ** IM_REF_RT,				// 3. Reflection on and Ray trace on
-** IM_TRANS_GLASS_RT,		// 4. Transparency: Glass on, Reflection: Ray trace on
+** IM_TRANS_GLASS_RT,	// 4. Transparency: Glass on, Reflection: Ray trace on
 ** IM_REF_FRENSEL_RT,		// 5. Reflection: Fresnel on and Ray trace on
-** IM_TRANS_REF_RT,		// 6. Transparency: Refraction on, Reflection: Fresnel off and Ray trace on
-** IM_TRANS_REF_FRENSEL_RT,// 7. Transparency: Refraction on, Reflection: Fresnel on and Ray trace on
+** 6. Transparency: Refraction on, Reflection: Fresnel off and Ray trace on
+** IM_TRANS_REF_RT,
+** // 7. Transparency: Refraction on, Reflection: Fresnel on and Ray trace on
+** IM_TRANS_REF_FRENSEL_RT,
 ** IM_REF_RT_OFF,			// 8. Reflection on and Ray trace off
-** IM_TRANS_GLASS_RT_OFF,	// 9. Transparency: Glass on, Reflection: Ray trace off
+** IM_TRANS_GLASS_RT_OFF,// 9. Transparency: Glass on, Reflection: Ray trace off
 ** IM_SHADOW_INVIS_SURF,	// 10. Casts shadows onto invisible surfaces
 */
 
@@ -103,7 +105,7 @@ typedef struct		s_face
 }					t_face;
 
 /*
-** char			*usemtl; // material name (defined in .mtl files by using "newmtl name")
+** char	*usemtl; // material name (defined in .mtl files by using "newmtl name")
 ** t_vec3f			ka; 	// ambient 0.0 to 1.0
 ** t_vec3f			kd; 	// diffuse 0.0 to 1.0
 ** t_vec3f			ks; 	// specular 0.0 to 1.0
@@ -132,9 +134,12 @@ typedef struct		s_cmd
 	struct s_cmd	*(*get)(struct s_cmd *this);
 	int				(*exec)(struct s_cmd *this, t_obj *obj);
 	void			(*destroy)(struct s_cmd **this);
-	unsigned int	(*parse_geometric_vertex)(char *line, t_list **vertices_lst);
-	unsigned int	(*parse_texture_coords)(char *line, t_list **tex_coords);
-	unsigned int	(*parse_indices)(char *line, t_list **indices_lst, unsigned int *indices_len);
+	unsigned int	(*parse_geometric_vertex)(char *line,
+						t_list **vertices_lst);
+	unsigned int	(*parse_texture_coords)(char *line,
+						t_list **tex_coords);
+	unsigned int	(*parse_indices)(char *line,
+						t_list **indices_lst, unsigned int *indices_len);
 }					t_cmd;
 
 t_cmd				*ft_command_construct();
@@ -142,10 +147,11 @@ t_cmd				*ft_command_construct();
 void				ft_print_vertices(t_obj *obj);
 void				ft_print_indices(t_obj *obj);
 void				ft_print_vertices_array(t_obj *obj);
-void				ft_print_vindices_array(t_obj *obj, unsigned int *vindices_array);
+void				ft_print_vindices_array(t_obj *obj,
+										unsigned int *vindices_array);
 
 /*
-* object functions
+** object functions
 */
 
 t_obj				*ft_obj_from_args(int argc, char **argv);
@@ -156,11 +162,14 @@ void				ft_delete_face(void *content, size_t size);
 void				ft_delete_content(void *content, size_t size);
 
 /*
-* parsing functions
+** parsing functions
 */
 
-unsigned int		ft_parse_indices(char *line, t_list **indices, unsigned int *indices_len);
-unsigned int		ft_parse_geometric_vertex(char *line, t_list **vertices);
-unsigned int		ft_parse_texture_coordinates(char *line, t_list **tex_coords);
+unsigned int		ft_parse_indices(char *line,
+								t_list **indices, unsigned int *indices_len);
+unsigned int		ft_parse_geometric_vertex(char *line,
+								t_list **vertices);
+unsigned int		ft_parse_texture_coordinates(char *line,
+								t_list **tex_coords);
 
 #endif

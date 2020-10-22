@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/20 20:21:26 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/20 20:27:11 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/22 20:39:00 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ typedef struct		s_env
 	GLuint			vbo;
 	GLuint			vao;
 	GLuint			ebo;
+	char			*vs_path;
+	char			*fs_path;
 }					t_env;
 
 t_event_handler		*ft_event_handler_init();
@@ -84,4 +86,16 @@ void				ft_fps_print();
 int					init_opengl(GLFWwindow **window, int width,
 											int height, char *window_name);
 
+t_texture			*load_texture(char *path, t_shader *shader);
+void				ft_model_world_view(t_event_handler *e, t_mat4f *result);
+void				handle_buffers(t_env *env);
+
+void				bind_vao(GLuint vao);
+void				generate_vao(GLuint *vao);
+void				bind_buffer(GLuint target_buffer, GLuint buffer,
+						unsigned long buffer_size, const void *data);
+void				generate_buffer(unsigned int *vbo);
+void				describe_buffer(GLuint location, GLint number_of_elements,
+						GLenum gl_type, GLboolean normalized, GLsizei stride,
+						GLuint index_in_stride, unsigned long type_size);
 #endif

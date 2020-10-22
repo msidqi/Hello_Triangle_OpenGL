@@ -6,13 +6,13 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:19 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/05 20:58:12 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/22 20:44:35 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
-t_obj			*ft_obj_from_file(char *path)
+t_obj		*ft_obj_from_file(char *path)
 {
 	int		fd;
 	t_cmd	*cmd;
@@ -45,7 +45,7 @@ void		ft_delete_content(void *content, size_t size)
 void		ft_delete_face(void *content, size_t size)
 {
 	t_face *face;
-	
+
 	face = (t_face *)content;
 	free(face->vindices);
 	free(face->vnormals);
@@ -54,7 +54,7 @@ void		ft_delete_face(void *content, size_t size)
 	(void)size;
 }
 
-void			ft_destroy_object(t_obj **obj)
+void		ft_destroy_object(t_obj **obj)
 {
 	if ((*obj)->vertices)
 		ft_lstdel(&(*obj)->vertices, ft_delete_content);
@@ -67,10 +67,11 @@ void			ft_destroy_object(t_obj **obj)
 	ft_memdel((void **)&(*obj));
 }
 
-t_obj			*ft_obj_from_args(int argc, char **argv)
+t_obj		*ft_obj_from_args(int argc, char **argv)
 {
 	t_obj	*obj;
 	char	*full_path;
+
 	if (argc < 2)
 	{
 		ft_putendl_fd("Usage: ./scop [filename] [texture]", 2);

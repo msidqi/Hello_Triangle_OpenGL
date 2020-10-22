@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/20 20:32:41 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/20 20:32:41 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/22 20:43:18 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define TEXTURE_HELPER_H
 # include "glad.h"
 # include <GLFW/glfw3.h>
+# include <stdlib.h>
 
 enum					e_tex_wrap
 {
@@ -69,5 +70,11 @@ typedef struct			s_texture
 }						t_texture;
 
 t_texture				*texture_construct();
+t_texture				*load(t_texture *this, char *texture_path);
+t_texture				*bind(t_texture *this,
+								int gl_tex_target, int texture_unit);
+t_texture				*set_params(t_texture *this, t_tex_params opts);
+int						exec(t_texture *this);
+void					tex_destroy(t_texture **this);
 
 #endif

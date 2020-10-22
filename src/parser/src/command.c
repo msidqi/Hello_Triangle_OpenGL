@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:28 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/21 18:06:10 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/21 18:46:07 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ static int		ft_command_exec(t_cmd *this, t_obj *obj)
 	return (1);
 }
 
-t_cmd			*ft_command_construct()
+t_cmd			*ft_command_construct(void)
 {
 	t_cmd	*c;
 

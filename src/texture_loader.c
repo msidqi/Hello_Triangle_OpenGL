@@ -1,31 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fps_counter.c                                      :+:      :+:    :+:   */
+/*   texture_loader.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/07/12 21:37:23 by msidqi            #+#    #+#             */
-/*   Updated: 2020/07/12 21:37:29 by msidqi           ###   ########.fr       */
+/*   Created: 2020/10/22 20:22:45 by msidqi            #+#    #+#             */
+/*   Updated: 2020/10/22 20:25:41 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "scop.h" 
+#include "scop.h"
 
-void	ft_fps_print()
+t_texture	*load_texture(char *path, t_shader *shader)
 {
-	static double	last_time = 0;
-	static size_t	frames_count = 0;
-	double			current_time;
+	t_texture *tex;
 
-	if (!last_time)
-		last_time = glfwGetTime();
-	current_time = glfwGetTime();
-	frames_count++;
-	if (current_time - last_time > 1.0)
+	if (path
+	&& (tex = texture_construct())
+	&& tex->load(tex, path)->
+	bind(tex, GL_TEXTURE_2D, 0)->set_params(tex,
+	(t_tex_params){WRAP_R, WRAP_R, 0, FILTER_N, FILTER_N})->exec(tex))
 	{
-		printf("%f ms/frame(%zu fps)\n", 1000.0/(double)frames_count, frames_count);
-		frames_count = 0;
-		last_time += 1.0;
+		shader->set_int(shader, "texSampler", tex->bind_id);
+		return (tex);
 	}
+	return (NULL);
 }

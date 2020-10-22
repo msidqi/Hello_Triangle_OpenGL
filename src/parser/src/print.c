@@ -1,6 +1,6 @@
 #include "parser.h"
 
-void	ft_print_vertices(t_obj *obj)
+void			ft_print_vertices(t_obj *obj)
 {
 	t_list	*head;
 	t_vec4f	*vertex;
@@ -27,7 +27,7 @@ void	ft_print_vertices(t_obj *obj)
 	}
 }
 
-static void	ft_print_array(char *name, unsigned int *array, unsigned int len)
+static void		ft_print_array(char *name, unsigned int *array, unsigned int len)
 {
 	unsigned int	i;
 
@@ -37,7 +37,7 @@ static void	ft_print_array(char *name, unsigned int *array, unsigned int len)
 		printf(i != len - 1 ? "%3u, " : "%3u ]\n", array[i]);
 }
 
-void		ft_print_indices(t_obj *obj)
+void			ft_print_indices(t_obj *obj)
 {
 	t_list *head;
 	t_face *face;
@@ -69,7 +69,7 @@ void		ft_print_indices(t_obj *obj)
 	}
 }
 
-static void	ft_vertices_array_no_tex(t_obj *obj)
+static void		ft_vertices_array_no_tex(t_obj *obj)
 {
 	int i;
 	
@@ -86,7 +86,7 @@ static void	ft_vertices_array_no_tex(t_obj *obj)
 	i, obj->vertices_len * 3);
 }
 
-static void	ft_vertices_array_with_tex(t_obj *obj)
+static void		ft_vertices_array_with_tex(t_obj *obj)
 {
 	int i;
 	
@@ -111,7 +111,7 @@ void		ft_print_vertices_array(t_obj *obj)
 		ft_vertices_array_no_tex(obj);
 }
 
-void		ft_print_vindices_array(t_obj *obj, unsigned int *vindices_array)
+void			ft_print_vindices_array(t_obj *obj, unsigned int *vindices_array)
 {
 	int i;
 	

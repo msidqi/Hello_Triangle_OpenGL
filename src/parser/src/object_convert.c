@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:16 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/06 21:39:58 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/22 20:49:40 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ unsigned int	*ft_lst_to_vindices(t_list *head, size_t list_size)
 	if (!list_size || !head
 		|| !(vindices_array = ft_memalloc(sizeof(unsigned int) * list_size * 3)))
 		return (NULL);
-	// i = list_size - 1;
 	i = 0;
 	iterator = head;
 	while (iterator)
@@ -40,7 +39,7 @@ unsigned int	*ft_lst_to_vindices(t_list *head, size_t list_size)
 		}
 		face = (t_face *)iterator->content;
 		j = -1;
-		while (++j < 3)//face->n_of_indices
+		while (++j < 3)
 			vindices_array[i++] = face->vindices[j];
 		iterator = iterator->next;
 	}
@@ -76,7 +75,7 @@ void			*ft_lst_to_vindices_pthread(void *param)
 	return (NULL);
 }
 
-static void	ft_lst_to_arr_with_textures(t_obj	*obj)
+static void		ft_lst_to_arr_with_textures(t_obj	*obj)
 {
 	t_list	*vert_iter;
 	t_list	*tex_iter;
@@ -103,8 +102,9 @@ static void	ft_lst_to_arr_with_textures(t_obj	*obj)
 
 void			*ft_lst_to_vertices_pthread(void *param)
 {
-	t_obj	*obj = (t_obj *)param;
-
+	t_obj	*obj;
+	
+	obj = (t_obj *)param;
 	if (obj->vertices_len <= obj->tex_len && obj->tex_len > 0)
 	{
 		ft_lst_to_arr_with_textures(obj);
@@ -124,13 +124,14 @@ void			*ft_lst_to_vertices_pthread(void *param)
 
 int				ft_convert_object(t_obj *obj)
 {
+	pthread_t id[2];
+
 	ft_putendl_fd("converting object...", 1);
 	if (!obj || obj->vertices_len < 3 || obj->indices_len < 2)
 	{
 		ft_putendl_fd("Error: Could not convert object", 2);
 		return (0);
 	}
-	pthread_t id[2];
 	pthread_create(&id[0], NULL, ft_lst_to_vindices_pthread, (void *)obj);
 	pthread_create(&id[1], NULL, ft_lst_to_vertices_pthread, (void *)obj);
 	pthread_join(id[0], NULL);
@@ -143,4 +144,3 @@ int				ft_convert_object(t_obj *obj)
 	ft_putendl_fd("converting object done.", 1);
 	return (1);
 }
-
