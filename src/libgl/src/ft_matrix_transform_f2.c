@@ -6,11 +6,12 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/06 08:04:47 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/21 18:01:23 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/24 16:19:21 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libgl.h"
+
 /*
 ** rotation around X axis matrix
 ** [1          0         0  ]
