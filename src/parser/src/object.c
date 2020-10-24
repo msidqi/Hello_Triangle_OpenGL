@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:19 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/22 20:44:35 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/24 17:15:22 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ t_obj		*ft_obj_from_args(int argc, char **argv)
 
 	if (argc < 2)
 	{
-		ft_putendl_fd("Usage: ./scop [filename] [texture]", 2);
+		ft_stderr("Usage: ./scop [filename] [, texture]");
 		return (NULL);
 	}
 	full_path = argv[1];

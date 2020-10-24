@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/20 20:32:41 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/22 20:43:18 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/24 17:25:09 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ typedef struct			s_texture
 	void				(*destroy)(struct s_texture **tex);
 }						t_texture;
 
-t_texture				*texture_construct();
+t_texture				*texture_construct(void);
 t_texture				*load(t_texture *this, char *texture_path);
 t_texture				*bind(t_texture *this,
 								int gl_tex_target, int texture_unit);

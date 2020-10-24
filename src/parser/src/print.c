@@ -7,7 +7,7 @@ void			ft_print_vertices(t_obj *obj)
 
 	if (!obj || !obj->vertices)
 	{
-		ft_putendl_fd("ft_print_vertices(): read attempt read from (nil) vertices", 2);
+		ft_stderr("ft_print_vertices(): read attempt read from (nil) vertices");
 		return ;
 	}
 	printf("Number of vertices: | %u |\n", obj->vertices_len);
@@ -16,7 +16,7 @@ void			ft_print_vertices(t_obj *obj)
 	{
 		if (!head->content)
 		{
-			ft_putendl_fd("ft_print_vertices(): read attempt from (nil) (t_vec4f *)vertices", 2);
+			ft_stderr("ft_print_vertices(): read attempt from (nil) (t_vec4f *)vertices");
 			return ;
 		}
 		vertex = (t_vec4f *)head->content;
@@ -44,7 +44,7 @@ void			ft_print_indices(t_obj *obj)
 
 	if (!obj || !obj->indices)
 	{
-		ft_putendl_fd("ft_print_indices(): read attempt read from (nil) indices", 2);
+		ft_stderr("ft_print_indices(): read attempt read from (nil) indices");
 		return ;
 	}
 	printf("Number of indices: | %u |\n", obj->indices_len);
@@ -53,7 +53,7 @@ void			ft_print_indices(t_obj *obj)
 	{
 		if (!head->content || !((t_face *)head->content)->vindices)
 		{
-			ft_putendl_fd("ft_print_indices(): read attempt from (nil) (t_face)content", 2);
+			ft_stderr("ft_print_indices(): read attempt from (nil) (t_face)content");
 			return ;
 		}
 		face = (t_face *)head->content;

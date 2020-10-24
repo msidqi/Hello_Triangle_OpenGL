@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/07 22:13:10 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/21 17:58:39 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/24 17:11:06 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,4 +108,7 @@ void				*ft_lst_to_arr(t_list *lst, size_t lsize, size_t typesize);
 int					get_next_line(const int fd, char **line);
 ssize_t				ft_str_index_of(const char *s, char c);
 size_t				ft_strlsplit(char const *s, char c, char ***new);
+
+void				ft_stderr(char *message);
+
 #endif

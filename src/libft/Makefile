@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: msidqi <marvin@42.fr>                      +#+  +:+       +#+         #
+#    By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/10/12 11:43:36 by msidqi            #+#    #+#              #
-#    Updated: 2019/10/11 11:06:16 by msidqi           ###   ########.fr        #
+#    Updated: 2020/10/24 17:20:58 by msidqi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ ft_putchar_fd.c ft_split_whitespaces.c ft_strequ.c ft_strncmp.c ft_strtrim.c \
 ft_isalnum.c ft_itoa_base.c ft_memccpy.c ft_putendl.c ft_sqrt.c ft_striter.c \
 ft_strncpy.c ft_tolower.c ft_isalpha.c ft_link_two_lists.c ft_memchr.c \
 ft_putendl_fd.c ft_strcat.c ft_striteri.c ft_strnequ.c ft_toupper.c \
-get_next_line.c ft_str_index_of.c ft_strlsplit.c
+get_next_line.c ft_str_index_of.c ft_strlsplit.c ft_stderr.c
 OBJS_DIR = .obj
 OBJ = $(addprefix $(OBJS_DIR)/,$(SRC:.c=.o))
 CC = gcc -Wall -Wextra -Werror

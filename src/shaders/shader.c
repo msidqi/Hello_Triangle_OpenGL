@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/24 16:28:53 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/24 17:04:48 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/24 17:15:03 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char		*read_shader_file(const char *file_name)
 	if ((fd = fopen(file_name, "r")) == NULL)
 	{
 		ft_putstr_fd("ERROR::OPEN::COULD_NOT_OPEN_FILE : ", 2);
-		ft_putendl_fd(file_name, 2);
+		ft_stderr((char *)file_name);
 		return (NULL);
 	}
 	fseek(fd, 0, SEEK_END);
@@ -29,7 +29,7 @@ char		*read_shader_file(const char *file_name)
 	rewind(fd);
 	if (!(shader_buffer = (char *)malloc(shader_size + 1)))
 	{
-		ft_putendl_fd("ERROR::MALLOC::COULD NOT ALLOCATE MEMORY", 2);
+		ft_stderr("ERROR::MALLOC::COULD NOT ALLOCATE MEMORY");
 		return (NULL);
 	}
 	shader_buffer[shader_size] = '\0';
@@ -82,7 +82,7 @@ int			create_link_program(
 	{
 		glGetProgramInfoLog(*shader_program, 512, NULL, info_log);
 		ft_putstr_fd("ERROR::PROGRAM::LINKING_FAILED :", 2);
-		ft_putendl_fd(info_log, 2);
+		ft_stderr(info_log);
 		return (0);
 	}
 	return (1);
@@ -102,8 +102,8 @@ t_shader	*shader_construct(
 	unsigned int	shader_ids[2];
 
 	ft_putendl_fd("building shaders...", 1);
-	if (!(shader_src[0] = read_shader_file(vshader_path))
-	|| !create_compile_shader(shader_src[0], &shader_ids[0], GL_VERTEX_SHADER))
+	if (!(shader_src[0] = read_shader_file(vshader_path)) ||
+	!create_compile_shader(shader_src[0], &shader_ids[0], GL_VERTEX_SHADER))
 		return (NULL);
 	free(shader_src[0]);
 	if (!(shader_src[1] = read_shader_file(fshader_path)) ||

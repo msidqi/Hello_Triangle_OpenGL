@@ -6,16 +6,11 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:16 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/22 20:49:40 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/24 17:20:00 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
-
-void			ft_error(char *message)
-{
-	ft_putendl_fd(message, 2);
-}
 
 unsigned int	*ft_lst_to_vindices(t_list *head, size_t list_size)
 {
@@ -25,8 +20,8 @@ unsigned int	*ft_lst_to_vindices(t_list *head, size_t list_size)
 	size_t			i;
 	size_t			j;
 
-	if (!list_size || !head
-		|| !(vindices_array = ft_memalloc(sizeof(unsigned int) * list_size * 3)))
+	if (!list_size || !head ||
+	!(vindices_array = ft_memalloc(sizeof(unsigned int) * list_size * 3)))
 		return (NULL);
 	i = 0;
 	iterator = head;
@@ -34,7 +29,7 @@ unsigned int	*ft_lst_to_vindices(t_list *head, size_t list_size)
 	{
 		if (!iterator->content || !((t_face *)iterator->content)->vindices)
 		{
-			ft_putendl_fd("ft_lst_to_vindices(): read attempt from (nil) (t_face)content", 2);
+			ft_stderr("ft_lst_to_vindices: read attempt from NULL t_face");
 			return (NULL);
 		}
 		face = (t_face *)iterator->content;
@@ -62,12 +57,12 @@ void			*ft_lst_to_vindices_pthread(void *param)
 	{
 		if (!iterator->content || !((t_face *)iterator->content)->vindices)
 		{
-			ft_error("lst_to_vindices(): read attempt from (nil) (t_face)content");
+			ft_stderr("lst_to_vindices(): read attempt from NULL t_face");
 			ft_memdel((void **)&obj->vindices_array);
 			return (NULL);
 		}
-		ft_memcpy((void *)(obj->vindices_array + i),
-		(void *)((t_face *)iterator->content)->vindices,sizeof(unsigned int) * 3 /*face->n_of_indices */);
+		ft_memcpy((void *)(obj->vindices_array + i), (void *)
+		((t_face *)iterator->content)->vindices, sizeof(unsigned int) * 3);
 		i += 3;
 		iterator = iterator->next;
 	}
@@ -75,7 +70,7 @@ void			*ft_lst_to_vindices_pthread(void *param)
 	return (NULL);
 }
 
-static void		ft_lst_to_arr_with_textures(t_obj	*obj)
+static void		ft_lst_to_arr_with_textures(t_obj *obj)
 {
 	t_list	*vert_iter;
 	t_list	*tex_iter;
@@ -103,7 +98,7 @@ static void		ft_lst_to_arr_with_textures(t_obj	*obj)
 void			*ft_lst_to_vertices_pthread(void *param)
 {
 	t_obj	*obj;
-	
+
 	obj = (t_obj *)param;
 	if (obj->vertices_len <= obj->tex_len && obj->tex_len > 0)
 	{
@@ -126,10 +121,10 @@ int				ft_convert_object(t_obj *obj)
 {
 	pthread_t id[2];
 
-	ft_putendl_fd("converting object...", 1);
+	ft_putendl("converting object...");
 	if (!obj || obj->vertices_len < 3 || obj->indices_len < 2)
 	{
-		ft_putendl_fd("Error: Could not convert object", 2);
+		ft_stderr("Error: Could not convert object");
 		return (0);
 	}
 	pthread_create(&id[0], NULL, ft_lst_to_vindices_pthread, (void *)obj);
@@ -138,9 +133,9 @@ int				ft_convert_object(t_obj *obj)
 	pthread_join(id[1], NULL);
 	if (!obj->vertices_array || !obj->vindices_array)
 	{
-		ft_putendl_fd("Error: Object was not converted", 2);
+		ft_stderr("Error: Object was not converted");
 		return (0);
 	}
-	ft_putendl_fd("converting object done.", 1);
+	ft_putendl("converting object done.");
 	return (1);
 }
