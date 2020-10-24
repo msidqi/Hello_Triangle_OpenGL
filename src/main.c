@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:34 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/22 20:40:47 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/24 14:46:18 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static void		handle_screen(GLFWwindow *window)
 static void		update(t_env *env)
 {
 	ft_fps_print();
-	process_input(env->window);
+	process_input(env->window, env->e_handler);
 	env->shader->set_float(env->shader, "scale_factor",
 									env->e_handler->scale_factor);
 	env->shader->set_float(env->shader, "mix_value",
@@ -70,7 +70,7 @@ int				main(int argc, char **argv)
 		return (-1);
 	}
 	e.shader->use(e.shader);
-	e.e_handler = ft_event_handler_init(e.window);
+	ft_event_handler_init(&e);
 	e.tex = load_texture(argc > 2 ? argv[2] : NULL, e.shader);
 	handle_buffers(&e);
 	while (!glfwWindowShouldClose(e.window))

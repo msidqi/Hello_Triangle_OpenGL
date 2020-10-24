@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/20 20:21:26 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/22 20:39:00 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/24 14:46:43 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,18 @@ typedef struct		s_env
 	char			*fs_path;
 }					t_env;
 
-t_event_handler		*ft_event_handler_init();
-void				process_input(GLFWwindow *window);
+/*
+** ----------------- events ----------------
+*/
+
+void				ft_event_handler_init(t_env *env);
+t_event_handler		*get_event_handler(void);
+
+/*
+** ----------------- events callbacks ----------------
+*/
+
+void				process_input(GLFWwindow *window, t_event_handler *e_handler);
 void				scroll_callback(GLFWwindow *window,
 											double xoffset, double yoffset);
 void				cursor_position_callback(GLFWwindow *window,
@@ -80,8 +90,18 @@ void				mouse_button_callback(GLFWwindow *window,
 											int button, int action, int mods);
 void				framebuffer_size_callback(GLFWwindow *window,
 											int width, int height);
+void				key_callback(GLFWwindow* window,
+								int key, int scancode, int action, int mods);
+
+/*
+** ----------------- debug ----------------
+*/
 
 void				ft_fps_print();
+
+/*
+** ----------------- opengl ----------------
+*/
 
 int					init_opengl(GLFWwindow **window, int width,
 											int height, char *window_name);

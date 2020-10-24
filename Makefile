@@ -16,9 +16,9 @@ PARSER_H_PATH = src/parser/include
 PARSER = src/parser/src/*.c
 LIBFT_H_PATH = src/libft/include
 LIBFT = src/libft/src/*.c
-SRC_FILES = main.c glad.c setup.c buffers.c events.c fps_counter.c texture_loader.c \
+SRC_FILES = main.c glad.c setup.c buffers.c events.c events_callbacks.c fps_counter.c texture_loader.c \
 			ft_model_world_view.c shaders/shader.c shaders/init_shader.c \
-			textures/texture_helper.c textures/texture_construct.c
+			textures/texture_helper.c textures/texture_construct.c handle_buffers.c
 SRC_PATH = src
 OBJ_PATH = .obj
 SRC = $(addprefix $(SRC_PATH)/, $(SRC_FILES))
