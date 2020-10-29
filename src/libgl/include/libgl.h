@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/22 21:43:22 by msidqi            #+#    #+#             */
-/*   Updated: 2020/06/06 14:39:10 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/29 18:29:49 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@
 # include <stdio.h>
 # include <fcntl.h>
 
-# define ABS(Value) (Value >= 0) ? (Value) : -(Value)
-# define STATIC_ARRAY_SIZE(ptr) (sizeof(ptr) / sizeof(ptr[0]))
 # define MAX_ITER 30
 # define VERTEX 0
 # define VECTOR 1
@@ -42,7 +40,6 @@
 # define BLUE 0xFF
 # define BLACK 0x0
 # define WHITE 0xFFFFFF
-# define ASPECT_RATIO HEIGHT / WIDTH
 # define PI 3.14159265358979323846
 # define N_THREADS 4
 
@@ -119,7 +116,7 @@ typedef struct		s_col
 	double			r;
 	double			g;
 	double			b;
-}					t_col;	
+}					t_col;
 
 typedef struct		s_vec3f
 {
@@ -134,13 +131,6 @@ typedef struct		s_vec3i
 	int				y;
 	int				z;
 }					t_vec3i;
-
-typedef union		u_vec3
-{
-    struct { float x, y, z; };
-    struct { float r, g, b; };
-    float arr[3];
-}					tu_vec3;
 
 typedef struct		s_matrix
 {
@@ -175,7 +165,7 @@ typedef struct		s_vec4f
 ** FUR == unit vectors describing object orientation. aka vector basis
 */
 
-union mat4 {
+union				u_mat4 {
 	struct			s_m
 	{
 		double		x0;
@@ -196,7 +186,6 @@ union mat4 {
 		double		w3;
 	}				t_m;
 	double			v[4][4];
-	// float			f[4][4];
 };
 
 typedef struct		s_mat4
@@ -311,7 +300,7 @@ t_mat4f				ft_mat4f_x_mat4f(t_mat4f m0, t_mat4f m1);
 t_mat4f				ft_mat4f_x_mat4f_col(t_mat4f m0, t_mat4f m1);
 t_mat4f				ft_mat4f_scale_f(t_mat4f mat, float x, float y, float z);
 t_mat4f				ft_mat4f_scale(t_mat4f mat, t_vec3f v);
-t_mat4f				ft_mat4f_translate_f(t_mat4f mat, float x, float y, float z);
+t_mat4f				ft_mat4f_translate_f(t_mat4f m, float x, float y, float z);
 t_mat4f				ft_mat4f_translate(t_mat4f mat, t_vec3f v);
 t_mat4f				ft_mat4f_translate_row(t_mat4f mat, t_vec3f v);
 t_mat4f				ft_mat4f_rotation_x(float angle_rad);
@@ -319,15 +308,17 @@ t_mat4f				ft_mat4f_rotation_y(float angle_rad);
 t_mat4f				ft_mat4f_rotation_z(float angle_rad);
 t_mat4f				ft_mat4f_rotation_xyz(float angle_rad, t_vec3f v);
 t_mat4f				ft_mat4f_rotate(t_mat4f mat, float angle_rad, t_vec3f v);
-t_mat4f				ft_perspective_matrixf(float fov_rad, float asp_ratio, float near, float far);
-t_mat4f				ft_perspective_matrixf_row(float fov_rad, float asp_ratio, float near, float far);
+t_mat4f				ft_perspective_matrixf(float fov_rad, float asp_ratio,
+														float near, float far);
+t_mat4f				ft_perspective_matrixf_row(float fov_rad, float asp_ratio,
+														float near, float far);
 int					ft_destroy_matrix(t_matrix *mat);
 t_mat4				ft_get_translation_matrix4(t_mat4 mat, double x,
 		double y, double z);
 t_mat4				ft_mat4_scale_d(t_mat4 mat, double x, double y,
 		double z);
 t_mat4				ft_mat4_scale(t_mat4 mat, t_vec3 v);
-t_mat4				ft_mat4_translate_d(t_mat4 mat, double x, double y, double z);
+t_mat4				ft_mat4_translate_d(t_mat4 m, double x, double y, double z);
 t_mat4				ft_mat4_translate(t_mat4 mat, t_vec3 v);
 t_mat4				ft_mat4_translate_row(t_mat4 mat, t_vec3 v);
 t_mat4				ft_mat4_rotate(t_mat4 mat, double angle, t_vec3 vec);
@@ -340,7 +331,8 @@ t_mat4				ft_mat4_x_mat4(t_mat4 m0, t_mat4 m1);
 t_mat4				ft_mat4_x_mat4_col(t_mat4 m0, t_mat4 m1);
 t_vec4				ft_mat4_x_vec4(t_mat4 mat, t_vec4 vec);
 t_vec4				ft_mat4_x_vec4_col(t_mat4 mat, t_vec4 vec);
-t_mat4				ft_perspective_matrix(float fov_rad, float asp_ratio, float near, float far);
+t_mat4				ft_perspective_matrix(float fov_rad, float asp_ratio,
+														float near, float far);
 
 void				ft_putvec3(t_vec3 *vec);
 void				ft_putvec4(t_vec4 *vec);

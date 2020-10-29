@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/21 18:02:23 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/29 17:14:12 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/29 18:31:08 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,11 +104,11 @@ typedef struct		s_face
 	unsigned int	*vtexture;
 }					t_face;
 
-typedef	struct	s_char2d
+typedef	struct		s_char2d
 {
 	char			**lines;
 	unsigned int	length;
-}				t_char2d;
+}					t_char2d;
 
 /*
 ** char	*usemtl; // material name (defined in .mtl files by using "newmtl name")
@@ -183,7 +183,7 @@ unsigned int		ft_parse_texture_coordinates(char *line,
 */
 
 void				ft_destroy_face(t_face **face);
-void			ft_store_face_components(t_face *face,
+void				ft_store_face_components(t_face *face,
 								unsigned int i, unsigned int values[3]);
 int					ft_allocate_face_components(t_face *face);
 t_face				*new_face(unsigned int flags, unsigned int n_of_indices);

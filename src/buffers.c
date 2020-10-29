@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/22 20:18:55 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/22 20:42:06 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/29 18:44:56 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,13 @@
 ** 		0 (v0) for vertexdata and 3 (v3) for colors
 */
 
-void	describe_buffer(GLuint location, GLint number_of_elements,
-		GLenum gl_type, GLboolean normalized, GLsizei stride,
-		GLuint index_in_stride, unsigned long type_size)
+void	describe_buffer(t_bp params)
 {
-	glVertexAttribPointer(location, number_of_elements, gl_type, normalized,
-			stride * type_size, (const void *)(index_in_stride * type_size));
-	glEnableVertexAttribArray(location);
+	glVertexAttribPointer(params.location, params.number_of_elements,
+		params.gl_type, params.normalized,
+		params.stride * params.type_size,
+		(const void *)(params.index_in_stride * params.type_size));
+	glEnableVertexAttribArray(params.location);
 }
 
 void	generate_buffer(unsigned int *vbo)

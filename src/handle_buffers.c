@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/22 20:38:36 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/22 20:42:18 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/29 18:38:39 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ void	handle_buffers(t_env *env)
 		sizeof(float) * obj->vertices_len * 5, obj->vertices_array);
 		bind_buffer(GL_ELEMENT_ARRAY_BUFFER, env->ebo,
 		sizeof(unsigned int) * obj->indices_len * 3, obj->vindices_array);
-		describe_buffer(0, 3, GL_FLOAT, GL_FALSE, 5, 0, sizeof(float));
-		describe_buffer(1, 2, GL_FLOAT, GL_FALSE, 5, 3, sizeof(float));
+		describe_buffer((t_bp){0, 3, GL_FLOAT, GL_FALSE, 5, 0, sizeof(float)});
+		describe_buffer((t_bp){1, 2, GL_FLOAT, GL_FALSE, 5, 3, sizeof(float)});
 	}
 	else
 	{
@@ -37,6 +37,6 @@ void	handle_buffers(t_env *env)
 		sizeof(float) * obj->vertices_len * 3, obj->vertices_array);
 		bind_buffer(GL_ELEMENT_ARRAY_BUFFER, env->ebo,
 		sizeof(unsigned int) * obj->indices_len * 3, obj->vindices_array);
-		describe_buffer(0, 3, GL_FLOAT, GL_FALSE, 3, 0, sizeof(float));
+		describe_buffer((t_bp){0, 3, GL_FLOAT, GL_FALSE, 3, 0, sizeof(float)});
 	}
 }

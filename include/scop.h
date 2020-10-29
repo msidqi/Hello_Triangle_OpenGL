@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/20 20:21:26 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/24 17:06:49 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/29 18:45:50 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,17 @@ typedef struct		s_event_handler
 	int				width;
 	int				height;
 }					t_event_handler;
+
+typedef struct		s_buffer_params
+{
+	GLuint			location;
+	GLint			number_of_elements;
+	GLenum			gl_type;
+	GLboolean		normalized;
+	GLsizei			stride;
+	GLuint			index_in_stride;
+	unsigned long	type_size;
+}					t_bp;
 
 /*
 **  used for indexed-drawing
@@ -115,7 +126,6 @@ void				generate_vao(GLuint *vao);
 void				bind_buffer(GLuint target_buffer, GLuint buffer,
 						unsigned long buffer_size, const void *data);
 void				generate_buffer(unsigned int *vbo);
-void				describe_buffer(GLuint location, GLint number_of_elements,
-						GLenum gl_type, GLboolean normalized, GLsizei stride,
-						GLuint index_in_stride, unsigned long type_size);
+void				describe_buffer(t_bp params);
+
 #endif
