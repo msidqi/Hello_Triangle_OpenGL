@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:34 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/24 14:46:18 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/29 13:43:29 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int				main(int argc, char **argv)
 	|| !(e.shader = shader_construct(e.vs_path, e.fs_path)))
 	{
 		cleanup(&e);
-		return (-1);
+		return (0);
 	}
 	e.shader->use(e.shader);
 	ft_event_handler_init(&e);
