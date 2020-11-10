@@ -14,6 +14,7 @@ float rand(vec2 co){
 
 void main(void)
 {
-	// FragColor = vec4(variantColor, 1.0);
-	FragColor = mix(texture(texSampler, TexCoord), vec4(variantColor, 1.0), mix_value);
+	FragColor = vec4(variantColor, 1.0);
+	// FragColor = mix(texture(texSampler, TexCoord), vec4(variantColor, mix_value), 0);
+	// FragColor = texture(texSampler, vec2(1.0, .5));
 }

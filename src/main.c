@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:34 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/29 13:43:29 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/10/30 14:50:41 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ int				main(int argc, char **argv)
 		bind_vao(e.vao);
 		glDrawElements(GL_TRIANGLES, e.obj->indices_len * 3,
 												GL_UNSIGNED_INT, 0);
+	printf("%d | %p | %d\n", e.obj->flags & F_TEXTURE_INDEX, e.tex, glGetError());
 		handle_screen(e.window);
 		glfwPollEvents();
 	}

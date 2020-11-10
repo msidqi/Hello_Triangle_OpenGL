@@ -17,6 +17,10 @@ out vec2 TexCoord;
 // uniform mat4 view;
 // uniform mat4 projection;
 
+float rand(vec2 co){
+    return fract(sin(dot(co.xy, vec2(12.9898,78.233))) * 43758.5453);
+}
+
 uniform mat4 final_matrix;
 
 void main(void)
