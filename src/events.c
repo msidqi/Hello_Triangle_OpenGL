@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 21:37:17 by msidqi            #+#    #+#             */
-/*   Updated: 2020/11/09 18:36:28 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/11/11 20:17:09 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,25 +34,36 @@ static void		input_smooth_transition(t_event_handler *e_handler)
 	}
 }
 
-static void		input_rotation(t_event_handler *e_handler)
+static void		smooth_noise_transition(t_event_handler *e_handler)
 {
-	e_handler->rotation.y = .5f * (float)glfwGetTime();
+	if (e_handler->initial_trans_time == .0f)
+		e_handler->initial_trans_time = (float)glfwGetTime();
+	if (e_handler->is_smooth_noise_transition == 1)
+		e_handler->noise_coef +=
+		((float)glfwGetTime() - e_handler->initial_trans_time) / 10.0f;
+	if (e_handler->is_smooth_noise_transition == -1)
+		e_handler->noise_coef -=
+		((float)glfwGetTime() - e_handler->initial_trans_time) / 10.0f;
+	if (e_handler->noise_coef >= 100.0f)
+		e_handler->is_smooth_noise_transition = -1;
+	if (e_handler->noise_coef < 2.0f)
+		e_handler->initial_trans_time = (float)glfwGetTime();
+	if (e_handler->noise_coef < 1.0f)
+		e_handler->is_smooth_noise_transition = 1;
 }
 
 void			process_input(GLFWwindow *window, t_event_handler *e_handler)
 {
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-	{
-		e_handler->mix_value += 0.0001f;
-		if (e_handler->mix_value >= 1.0f)
-			e_handler->mix_value = 1.0f;
-	}
+		e_handler->mix_value = e_handler->mix_value >= 1.0f ? 1.0
+		: e_handler->mix_value + 0.0001f;
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-	{
-		e_handler->mix_value -= 0.0001f;
-		if (e_handler->mix_value <= 0.0f)
-			e_handler->mix_value = 0.0f;
-	}
+		e_handler->mix_value = e_handler->mix_value <= 0.0f ? 0.0
+		: e_handler->mix_value - 0.0001f;
+	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+		e_handler->noise_coef += 1.0f;
+	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+		e_handler->noise_coef -= 1.0f;
 	if (glfwGetKey(window, GLFW_KEY_KP_ADD) == GLFW_PRESS)
 		e_handler->translation_mod += 0.001f;
 	if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS)
@@ -62,9 +73,11 @@ void			process_input(GLFWwindow *window, t_event_handler *e_handler)
 			e_handler->translation_mod = 1.0f;
 	}
 	if (e_handler->is_rot_mode)
-		input_rotation(e_handler);
+		e_handler->rotation.y = .5f * (float)glfwGetTime();
 	if (e_handler->is_smooth_transition)
 		input_smooth_transition(e_handler);
+	if (e_handler->is_smooth_noise_transition)
+		smooth_noise_transition(e_handler);
 }
 
 /*
@@ -82,6 +95,8 @@ void			ft_event_handler_init(t_env *env)
 	env->e_handler->is_scale_mode = 0;
 	env->e_handler->is_rot_mode = 1;
 	env->e_handler->is_smooth_transition = 0;
+	env->e_handler->is_smooth_noise_transition = 0;
+	env->e_handler->noise_coef = 0.0f;
 	env->e_handler->initial_trans_time = 0;
 	env->e_handler->mix_value = 1.0f;
 	env->e_handler->scale_factor = 1.0f;

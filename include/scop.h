@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/20 20:21:26 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/29 18:45:50 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/11/11 19:40:09 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ typedef struct		s_event_handler
 	int				is_left_click;
 	int				is_right_click;
 	float			mix_value;
+	float			noise_coef;
+	float			is_smooth_noise_transition;
 	float			scale_factor;
 	t_vec3f			translation;
 	float			translation_mod;

@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:34 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/30 14:50:41 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/11/11 19:57:42 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ static void		update(t_env *env)
 									env->e_handler->scale_factor);
 	env->shader->set_float(env->shader, "mix_value",
 									env->e_handler->mix_value);
+	env->shader->set_float(env->shader, "noise_coef",
+									env->e_handler->noise_coef);
 	ft_model_world_view(env->e_handler, &env->final_matrix);
 	env->shader->set_mat4f(env->shader, "final_matrix",
 									(const t_mat4f *)&env->final_matrix);

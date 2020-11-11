@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 21:37:17 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/29 18:45:54 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/11/11 19:47:49 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,8 @@ void	key_callback(GLFWwindow *window,
 			e->is_rot_mode = !e->is_rot_mode;
 		if (key == GLFW_KEY_T)
 			e->is_smooth_transition = !e->is_smooth_transition;
+		if (key == GLFW_KEY_N)
+			e->is_smooth_noise_transition = !e->is_smooth_noise_transition;
 		if (key == GLFW_KEY_ESCAPE)
 			glfwSetWindowShouldClose(window, GLFW_TRUE);
 		if (key == GLFW_KEY_1)
