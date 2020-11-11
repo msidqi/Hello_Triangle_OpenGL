@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/22 20:22:45 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/30 18:19:31 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/11/11 20:45:06 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,20 +92,21 @@ t_texture	*load_texture(char *path, t_shader *shader)
 {
 	t_texture *tex;
 
-	// if (path
-	// && (tex = texture_construct())
-	// && tex->load(tex, path)->
-	// bind(tex, GL_TEXTURE_2D, 0)->set_params(tex,
-	// (t_tex_params){WRAP_R, WRAP_R, 0, FILTER_N, FILTER_N})->exec(tex))
-	// {
-		GLuint id = loadBMP_custom(path);
-		printf("id == %d\n", id);
-		glActiveTexture(GL_TEXTURE0);
+	if (path
+	&& (tex = texture_construct())
+	&& tex->load(tex, path)->
+	bind(tex, GL_TEXTURE_2D, 0)->set_params(tex,
+	(t_tex_params){WRAP_R, WRAP_R, 0, FILTER_N, FILTER_N})->exec(tex))
+	{
+		// GLuint id = loadBMP_custom(path);
+		// printf("id == %d\n", id);
+		// glActiveTexture(GL_TEXTURE0);
 		// glBindTexture(GL_TEXTURE_BUFFER, id);
-		shader->set_int(shader, "texSampler", id);
+		shader->set_int(shader, "texSampler", 0);
 	// 	printf("tex->bind_id == %d\n", tex->bind_id);
 	// 	shader->set_int(shader, "texSampler", tex->bind_id);
-	// 	return (tex);
-	// }
+	printf("tex->channels %d tex->h %d tex->w %d\n", tex->channels, tex->h, tex->w);
+		return (tex);
+	}
 	return (NULL);
 }

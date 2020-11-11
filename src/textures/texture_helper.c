@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/29 11:53:12 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/30 17:42:29 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/11/11 20:44:09 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,9 @@ t_texture	*load(t_texture *this, char *texture_path)
 t_texture	*bind(t_texture *this, int gl_tex_target, int texture_unit)
 {
 	this->bind_id = GL_TEXTURE0 + texture_unit;
-	glGenTextures(1, &this->gl_id);
+	glGenTextures(1, &this->bind_id);
 	glActiveTexture(this->bind_id);
-	glBindTexture(gl_tex_target, this->gl_id);
+	glBindTexture(gl_tex_target, this->bind_id);
 	this->gl_target = gl_tex_target;
 	return (this);
 }

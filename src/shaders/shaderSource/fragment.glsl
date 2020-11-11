@@ -21,6 +21,6 @@ void main(void)
 	vec4 color = vec4(vec3(random(i)),1.0);
 	// FragColor = vec4(variantColor, 1.0);
 	// FragColor = mix(vec4(variantColor, 1.0), color, .5);
-	// FragColor = mix(texture(texSampler, TexCoord), vec4(variantColor, 1.0), mix_value);
-	FragColor = texture(texSampler, TexCoord);
+	FragColor = mix(texture(texSampler, TexCoord), vec4(variantColor, 1.0), mix_value);
+	// FragColor = texture(texSampler, TexCoord);
 }
