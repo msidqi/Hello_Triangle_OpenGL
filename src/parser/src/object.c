@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:19 by msidqi            #+#    #+#             */
-/*   Updated: 2020/11/14 12:31:53 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/11/14 20:35:10 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ t_obj		*ft_obj_from_file(char *path)
 	obj->vertices = NULL;
 	while (get_next_line(fd, &cmd->to_parse) > 0)
 		cmd->get(cmd)->exec(cmd, obj);
-	obj->center = (t_vec3f){obj->center.x / obj->vertices_len, obj->center.y / obj->vertices_len, obj->center.z / obj->vertices_len};
 	cmd->destroy(&cmd);
 	close(fd);
 	return (obj);
@@ -72,7 +71,7 @@ t_obj		*ft_obj_from_args(int argc, char **argv)
 {
 	t_obj	*obj;
 	char	*full_path;
-	t_list *iterator;
+	t_list	*iterator;
 
 	if (argc < 2)
 	{
@@ -86,6 +85,7 @@ t_obj		*ft_obj_from_args(int argc, char **argv)
 		perror("ft_obj_from_file()");
 		return (NULL);
 	}
+	obj->center = ft_vec3f_scalar(obj->center, 1.0f / (float)obj->vertices_len);
 	iterator = obj->vertices;
 	while (iterator)
 	{

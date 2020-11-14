@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:34 by msidqi            #+#    #+#             */
-/*   Updated: 2020/11/14 11:10:11 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/11/14 20:29:32 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,24 @@ static void		handle_screen(GLFWwindow *window)
 
 static void		update(t_env *env)
 {
+	static int has_tex = -1;
+
 	ft_fps_print();
 	process_input(env->window, env->e_handler);
+	if (has_tex < 0)
+	{
+		if (((env->obj->flags & F_TEXTURE_INDEX) && env->tex))
+			has_tex = 2;
+		else
+			has_tex = env->tex ? 1 : 0;
+	}
+	env->shader->set_float(env->shader, "hasTexture", has_tex);
 	env->shader->set_float(env->shader, "scale_factor",
 									env->e_handler->scale_factor);
 	env->shader->set_float(env->shader, "mix_value",
 									env->e_handler->mix_value);
+	env->shader->set_float(env->shader, "isShading",
+									env->e_handler->is_shading);
 	env->shader->set_float(env->shader, "noise_coef",
 									env->e_handler->noise_coef);
 	ft_model_world_view(env->e_handler, &env->final_matrix);

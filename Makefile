@@ -18,7 +18,8 @@ LIBFT_H_PATH = src/libft/include
 LIBFT = src/libft/src/*.c
 SRC_FILES = main.c glad.c setup.c buffers.c events.c events_callbacks.c fps_counter.c texture_loader.c \
 			shaders/shader.c shaders/init_shader.c shaders/shader_setuniforms0.c shaders/shader_setuniforms1.c \
-			ft_model_world_view.c  textures/texture_helper.c textures/texture_construct.c handle_buffers.c
+			ft_model_world_view.c  textures/texture_helper.c textures/texture_construct.c handle_buffers.c \
+			events_key_press.c
 SRC_PATH = src
 OBJ_PATH = .obj
 SRC = $(addprefix $(SRC_PATH)/, $(SRC_FILES))

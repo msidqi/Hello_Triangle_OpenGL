@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/20 20:21:26 by msidqi            #+#    #+#             */
-/*   Updated: 2020/11/14 11:09:59 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/11/14 19:45:31 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ typedef struct		s_event_handler
 	int				is_right_click;
 	float			mix_value;
 	float			noise_coef;
+	int				is_shading;
 	float			is_smooth_noise_transition;
 	float			scale_factor;
 	t_vec3f			translation;
@@ -108,6 +109,7 @@ void				framebuffer_size_callback(GLFWwindow *window,
 											int width, int height);
 void				key_callback(GLFWwindow *window,
 								int key, int scancode, int action, int mods);
+void				ft_handle_key_press(t_event_handler *e, int key);
 
 /*
 ** ----------------- debug ----------------

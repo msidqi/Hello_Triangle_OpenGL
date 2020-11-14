@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/22 21:43:22 by msidqi            #+#    #+#             */
-/*   Updated: 2020/11/14 11:38:32 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/11/14 13:41:58 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -277,6 +277,7 @@ t_vec3f				ft_vec3f_sub(t_vec3f a, t_vec3f b);
 void				ft_vec3f_sub_a(t_vec3f *a, t_vec3f b);
 t_vec2				ft_vec2_scalar(t_vec2 a, double factor);
 t_vec3				ft_vec3_scalar(t_vec3 a, double factor);
+t_vec3f				ft_vec3f_scalar(t_vec3f a, float factor);
 double				ft_vec2_mag(t_vec2 a);
 double				ft_vec3_mag(t_vec3 a);
 double				ft_vec2_mag_cmp(t_vec2 a, t_vec2 b);

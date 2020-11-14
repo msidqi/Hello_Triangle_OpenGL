@@ -6,42 +6,21 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:16 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/29 13:47:50 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/11/14 20:37:33 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
+#define GREY_GRADIENT_LEN 4
 
-unsigned int	*ft_lst_to_vindices(t_list *head, size_t list_size)
-{
-	unsigned int	*vindices_array;
-	t_list			*iterator;
-	t_face			*face;
-	size_t			i;
-	size_t			j;
+const t_vec3f g_gradients[GREY_GRADIENT_LEN][3] = {
+	{.3f, .3f, .3f},
+	{.15f, .15f, .15f},
+	{.2f, .2f, .2f},
+	{.25f, .25f, .25f}
+};
 
-	if (!list_size || !head ||
-	!(vindices_array = ft_memalloc(sizeof(unsigned int) * list_size * 3)))
-		return (NULL);
-	i = 0;
-	iterator = head;
-	while (iterator)
-	{
-		if (!iterator->content || !((t_face *)iterator->content)->vindices)
-		{
-			ft_stderr("ft_lst_to_vindices: read attempt from NULL t_face");
-			return (NULL);
-		}
-		face = (t_face *)iterator->content;
-		j = -1;
-		while (++j < 3)
-			vindices_array[i++] = face->vindices[j];
-		iterator = iterator->next;
-	}
-	return (vindices_array);
-}
-
-void			*ft_lst_to_vindices_pthread(void *param)
+static void		*ft_lst_to_vindices_pthread(void *param)
 {
 	t_obj			*obj;
 	t_list			*iterator;
@@ -75,27 +54,55 @@ static void		ft_lst_to_arr_with_textures(t_obj *obj)
 	t_list	*vert_iter;
 	t_list	*tex_iter;
 	size_t	i;
+	size_t	g_ind;
 
+	g_ind = 0;
 	i = obj->vertices_len - 1;
 	vert_iter = obj->vertices;
 	tex_iter = obj->tex_coords;
-	if (!tex_iter || !vert_iter
-		|| !(obj->vertices_array =
-			ft_memalloc(sizeof(float) * 5 * obj->vertices_len)))
+	if (!tex_iter || !vert_iter || !(obj->vertices_array =
+			ft_memalloc(sizeof(float) * 8 * obj->vertices_len)))
 		return ;
 	while (vert_iter && tex_iter)
 	{
-		ft_memcpy((obj->vertices_array + i * 5),
+		ft_memcpy((obj->vertices_array + i * 8),
 		(const void *)vert_iter->content, sizeof(float) * 3);
-		ft_memcpy((obj->vertices_array + i * 5 + 3),
+		ft_memcpy((obj->vertices_array + i * 8 + 3),
 		(const void *)tex_iter->content, sizeof(float) * 2);
+		ft_memcpy((obj->vertices_array + i * 8 + 5),
+		(const void *)&g_gradients[g_ind], sizeof(float) * 3);
 		i--;
+		g_ind = g_ind == GREY_GRADIENT_LEN - 1 ? 0 : g_ind + 1;
 		vert_iter = vert_iter->next;
 		tex_iter = tex_iter->next;
 	}
 }
 
-void			*ft_lst_to_vertices_pthread(void *param)
+static void		ft_lst_to_arr_no_textures(t_obj *obj)
+{
+	t_list	*iterator;
+	size_t	i;
+	size_t	g_ind;
+
+	g_ind = 0;
+	if (!(obj->vertices_array =
+			ft_memalloc(sizeof(float) * 6 * obj->vertices_len)))
+		return ;
+	i = obj->vertices_len - 1;
+	iterator = obj->vertices;
+	while (iterator)
+	{
+		ft_memcpy(obj->vertices_array + i * 6,
+						(const void *)iterator->content, sizeof(float) * 3);
+		ft_memcpy(obj->vertices_array + i * 6 + 3,
+						(const void *)&g_gradients[g_ind], sizeof(float) * 3);
+		i--;
+		g_ind = g_ind == GREY_GRADIENT_LEN - 1 ? 0 : g_ind + 1;
+		iterator = iterator->next;
+	}
+}
+
+static void		*ft_lst_to_vertices_pthread(void *param)
 {
 	t_obj	*obj;
 
@@ -107,8 +114,7 @@ void			*ft_lst_to_vertices_pthread(void *param)
 	}
 	else
 	{
-		obj->vertices_array = (float *)ft_lst_to_arr(obj->vertices,
-						(size_t)obj->vertices_len, sizeof(float) * 3);
+		ft_lst_to_arr_no_textures(obj);
 		obj->tex_len = 0;
 		obj->flags = F_INDEX;
 	}

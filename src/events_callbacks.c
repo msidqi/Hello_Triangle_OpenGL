@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 21:37:17 by msidqi            #+#    #+#             */
-/*   Updated: 2020/11/11 19:47:49 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/11/14 19:44:18 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,22 +86,10 @@ void	key_callback(GLFWwindow *window,
 	e = get_event_handler();
 	if (action == GLFW_PRESS)
 	{
-		if (key == GLFW_KEY_S)
-			e->is_scale_mode = !e->is_scale_mode;
-		if (key == GLFW_KEY_R)
-			e->is_rot_mode = !e->is_rot_mode;
-		if (key == GLFW_KEY_T)
-			e->is_smooth_transition = !e->is_smooth_transition;
-		if (key == GLFW_KEY_N)
-			e->is_smooth_noise_transition = !e->is_smooth_noise_transition;
 		if (key == GLFW_KEY_ESCAPE)
 			glfwSetWindowShouldClose(window, GLFW_TRUE);
-		if (key == GLFW_KEY_1)
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		if (key == GLFW_KEY_2)
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		if (key == GLFW_KEY_3)
-			glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+		else
+			ft_handle_key_press(e, key);
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 21:37:17 by msidqi            #+#    #+#             */
-/*   Updated: 2020/11/11 20:17:09 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/11/14 19:36:21 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,12 @@ static void		input_smooth_transition(t_event_handler *e_handler)
 {
 	if (e_handler->initial_trans_time == .0f)
 		e_handler->initial_trans_time = (float)glfwGetTime();
-	if (e_handler->is_smooth_transition == 1)
-		e_handler->mix_value -=
+	if (e_handler->is_smooth_transition)
+		e_handler->mix_value +=
 		((float)glfwGetTime() - e_handler->initial_trans_time) / 10000.0f;
-	if (e_handler->mix_value <= 0.0f)
+	if (e_handler->mix_value > 1.0f)
 	{
-		e_handler->mix_value = .0f;
+		e_handler->mix_value = 1.0f;
 		e_handler->is_smooth_transition = 0;
 		e_handler->initial_trans_time = .0f;
 	}
@@ -97,8 +97,9 @@ void			ft_event_handler_init(t_env *env)
 	env->e_handler->is_smooth_transition = 0;
 	env->e_handler->is_smooth_noise_transition = 0;
 	env->e_handler->noise_coef = 0.0f;
+	env->e_handler->is_shading = 0;
 	env->e_handler->initial_trans_time = 0;
-	env->e_handler->mix_value = 1.0f;
+	env->e_handler->mix_value = .0f;
 	env->e_handler->scale_factor = 1.0f;
 	env->e_handler->rel_mouse_xpos = 0;
 	env->e_handler->rel_mouse_ypos = 0;
