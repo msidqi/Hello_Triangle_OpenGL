@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/21 18:02:23 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/29 18:31:08 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/11/14 11:23:50 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ typedef struct		s_obj
 	t_list			*materials;
 	float			*vertices_array;
 	unsigned int	*vindices_array;
+	t_vec3f			center;
 }					t_obj;
 
 /*
@@ -140,8 +141,8 @@ typedef struct		s_cmd
 	struct s_cmd	*(*get)(struct s_cmd *this);
 	int				(*exec)(struct s_cmd *this, t_obj *obj);
 	void			(*destroy)(struct s_cmd **this);
-	unsigned int	(*parse_geometric_vertex)(char *line,
-						t_list **vertices_lst);
+	t_vec4f			*(*parse_geometric_vertex)(char *line,
+											t_list **vertices_lst);
 	unsigned int	(*parse_texture_coords)(char *line,
 						t_list **tex_coords);
 	unsigned int	(*parse_indices)(char *line,
@@ -173,8 +174,7 @@ void				ft_delete_content(void *content, size_t size);
 
 unsigned int		ft_parse_indices(char *line,
 								t_list **indices, unsigned int *indices_len);
-unsigned int		ft_parse_geometric_vertex(char *line,
-								t_list **vertices);
+t_vec4f				*ft_parse_geometric_vertex(char *line, t_list **vertices);
 unsigned int		ft_parse_texture_coordinates(char *line,
 								t_list **tex_coords);
 

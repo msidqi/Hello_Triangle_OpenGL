@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:34 by msidqi            #+#    #+#             */
-/*   Updated: 2020/11/11 19:57:42 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/11/14 11:10:11 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,8 @@ static void		init_env(t_env *e)
 	e->obj = NULL;
 	e->shader = NULL;
 	e->window = NULL;
-	e->vs_path = "src/shaders/shaderSource/vertex.glsl";
-	e->fs_path = "src/shaders/shaderSource/fragment.glsl";
+	e->vs_path = VERTEX_SHADER_PATH;
+	e->fs_path = FRAGEMENT_SHADER_PATH;
 }
 
 int				main(int argc, char **argv)
@@ -65,7 +65,7 @@ int				main(int argc, char **argv)
 
 	init_env(&e);
 	if (!(e.obj = ft_obj_from_args(argc, argv)) || !ft_convert_object(e.obj)
-	|| !init_opengl(&e.window, WINDOW_WIDTH, WINDOW_WIDTH, "Scop")
+	|| !init_opengl(&e.window, WINDOW_WIDTH, WINDOW_WIDTH, WINDOW_NAME)
 	|| !(e.shader = shader_construct(e.vs_path, e.fs_path)))
 	{
 		cleanup(&e);
@@ -81,7 +81,6 @@ int				main(int argc, char **argv)
 		bind_vao(e.vao);
 		glDrawElements(GL_TRIANGLES, e.obj->indices_len * 3,
 												GL_UNSIGNED_INT, 0);
-	printf("%d | %p | %d\n", e.obj->flags & F_TEXTURE_INDEX, e.tex, glGetError());
 		handle_screen(e.window);
 		glfwPollEvents();
 	}

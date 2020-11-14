@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:19 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/24 17:15:22 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/11/14 12:31:53 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ t_obj		*ft_obj_from_file(char *path)
 	obj->vertices = NULL;
 	while (get_next_line(fd, &cmd->to_parse) > 0)
 		cmd->get(cmd)->exec(cmd, obj);
+	obj->center = (t_vec3f){obj->center.x / obj->vertices_len, obj->center.y / obj->vertices_len, obj->center.z / obj->vertices_len};
 	cmd->destroy(&cmd);
 	close(fd);
 	return (obj);
@@ -71,6 +72,7 @@ t_obj		*ft_obj_from_args(int argc, char **argv)
 {
 	t_obj	*obj;
 	char	*full_path;
+	t_list *iterator;
 
 	if (argc < 2)
 	{
@@ -83,6 +85,12 @@ t_obj		*ft_obj_from_args(int argc, char **argv)
 	{
 		perror("ft_obj_from_file()");
 		return (NULL);
+	}
+	iterator = obj->vertices;
+	while (iterator)
+	{
+		ft_vec3f_sub_a((t_vec3f *)iterator->content, obj->center);
+		iterator = iterator->next;
 	}
 	ft_putendl_fd("reading file done.", 1);
 	return (obj);

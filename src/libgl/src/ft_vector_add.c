@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_vector_add.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msidqi <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/17 15:35:25 by msidqi            #+#    #+#             */
-/*   Updated: 2019/07/17 15:36:08 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/11/14 11:39:03 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,21 @@ t_vec3	ft_vec3_add(t_vec3 a, t_vec3 b)
 	ret.y = a.y + b.y;
 	ret.z = a.z + b.z;
 	return (ret);
+}
+
+t_vec3f	ft_vec3f_add(t_vec3f a, t_vec3f b)
+{
+	t_vec3f ret;
+
+	ret.x = a.x + b.x;
+	ret.y = a.y + b.y;
+	ret.z = a.z + b.z;
+	return (ret);
+}
+
+void	ft_vec3f_add_a(t_vec3f *a, t_vec3f b)
+{
+	a->x += b.x;
+	a->y += b.y;
+	a->z += b.z;
 }

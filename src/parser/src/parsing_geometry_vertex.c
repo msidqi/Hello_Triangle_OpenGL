@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/29 17:10:25 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/29 17:10:36 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/11/14 11:14:49 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@
 ** (*vertex) = (x,y,z[,w]) w default: 1.0
 */
 
-unsigned int	ft_parse_geometric_vertex(char *line, t_list **vertices)
+t_vec4f			*ft_parse_geometric_vertex(
+	char *line,
+	t_list **vertices)
 {
 	char			**arr;
 	unsigned int	n;
@@ -28,13 +30,13 @@ unsigned int	ft_parse_geometric_vertex(char *line, t_list **vertices)
 	{
 		ft_free_tab(&arr);
 		ft_stderr("ft_parse_geometric_vertex(): skiped invalid vertex");
-		return (0);
+		return (NULL);
 	}
 	(*vertex) = (t_vec4f){ft_atof(arr[1]), ft_atof(arr[2]), ft_atof(arr[3]),
 				n == 5 ? ft_atof(arr[4]) : 1.0};
 	ft_lstadd(vertices, ft_lstnew((const void *)vertex, sizeof(t_vec4f)));
 	ft_free_tab(&arr);
-	return (1);
+	return (vertex);
 }
 
 /*

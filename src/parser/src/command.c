@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:28 by msidqi            #+#    #+#             */
-/*   Updated: 2020/10/21 18:46:07 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/11/14 12:57:30 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,19 +49,21 @@ static void		ft_destory_command(t_cmd **this)
 
 static int		ft_command_exec(t_cmd *this, t_obj *obj)
 {
+	t_vec4f *vertex;
+
 	if (this->cmd_code == C_UNINITIALIZED)
-	{
-		perror("ft_command_exec()");
 		return (-1);
-	}
 	if (this->cmd_code == C_SKIP)
 	{
 		ft_memdel((void **)&this->to_parse);
 		return (0);
 	}
 	if (this->cmd_code == C_GEOMETRIC_VERTEX &&
-		this->parse_geometric_vertex(this->to_parse, &obj->vertices))
+	(vertex = this->parse_geometric_vertex(this->to_parse, &obj->vertices)))
+	{
+		ft_vec3f_add_a(&obj->center, (*(t_vec3f *)vertex));
 		obj->vertices_len++;
+	}
 	if (this->cmd_code == C_TEXTURE_COORD &&
 		this->parse_texture_coords(this->to_parse, &obj->tex_coords))
 		obj->tex_len++;

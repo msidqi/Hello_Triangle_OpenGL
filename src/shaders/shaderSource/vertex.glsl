@@ -26,8 +26,9 @@ void main(void)
 	float sinPosy = sin(aPos.y);
 	// gl_Position = projection * view * model * vec4(aPos.xyz, 1.0);
 	gl_Position = final_matrix * vec4(aPos.xyz, 1.0);
-	variantColor.x =  0.5 * float(sinPosx > 0) + 0.7 * float(sinPosx < 0);
-	variantColor.y = 0.1 * float(sinPosy > 0) + 0.5 * float(sinPosy < 0);
-	variantColor.z = 0.2;
+	variantColor.x =  0 * float(sinPosx > 0) + 0.5 * float(sinPosx < 0);
+	variantColor.y = 0 * float(sinPosy > 0) + 0.5 * float(sinPosy < 0);
+	variantColor.z = 0;
+	// variantColor = sinPosy > 0 ? vec3(0) : vec3(.2f);
 	TexCoord = aTexCord;
 }

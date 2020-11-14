@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_vector_sub.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msidqi <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/17 15:28:54 by msidqi            #+#    #+#             */
-/*   Updated: 2019/07/17 15:35:20 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/11/14 11:38:44 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,21 @@ t_vec3	ft_vec3_sub(t_vec3 a, t_vec3 b)
 	ret.y = a.y - b.y;
 	ret.z = a.z - b.z;
 	return (ret);
+}
+
+t_vec3f	ft_vec3f_sub(t_vec3f a, t_vec3f b)
+{
+	t_vec3f ret;
+
+	ret.x = a.x - b.x;
+	ret.y = a.y - b.y;
+	ret.z = a.z - b.z;
+	return (ret);
+}
+
+void	ft_vec3f_sub_a(t_vec3f *a, t_vec3f b)
+{
+	a->x -= b.x;
+	a->y -= b.y;
+	a->z -= b.z;
 }

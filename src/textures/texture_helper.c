@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/29 11:53:12 by msidqi            #+#    #+#             */
-/*   Updated: 2020/11/11 20:44:09 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/11/12 18:57:49 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,6 @@ int			exec(t_texture *this)
 		printf("ERROR::TEXTURE::EXEC\n");
 		return (0);
 	}
-	printf("this->channels %d\n", this->channels);
 	glTexImage2D(this->gl_target, 0, GL_RGB, this->w, this->h, 0,
 	this->channels == 3 ? GL_RGB : GL_RGBA, GL_UNSIGNED_BYTE, this->data);
 	glGenerateMipmap(this->gl_target);

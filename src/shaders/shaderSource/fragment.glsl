@@ -19,7 +19,7 @@ void main(void)
 	vec2 i = floor(TexCoord * noise_coef * 10);
 	vec2 f = fract(TexCoord * noise_coef * 10);
 	vec4 color = vec4(vec3(random(i)),1.0);
-	// FragColor = vec4(variantColor, 1.0);
+	// FragColor = color;
 	// FragColor = mix(vec4(variantColor, 1.0), color, .5);
 	FragColor = mix(texture(texSampler, TexCoord), vec4(variantColor, 1.0), mix_value);
 	// FragColor = texture(texSampler, TexCoord);

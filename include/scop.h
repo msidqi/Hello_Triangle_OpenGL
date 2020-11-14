@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/20 20:21:26 by msidqi            #+#    #+#             */
-/*   Updated: 2020/11/11 19:40:09 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/11/14 11:09:59 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,9 @@
 # include "parser.h"
 # define WINDOW_WIDTH 800
 # define WINDOW_HEIGHT 600
+# define WINDOW_NAME "Scop"
+# define VERTEX_SHADER_PATH "src/shaders/shaderSource/vertex.glsl"
+# define FRAGEMENT_SHADER_PATH "src/shaders/shaderSource/fragment.glsl"
 
 typedef struct		s_wind
 {
