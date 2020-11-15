@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:16 by msidqi            #+#    #+#             */
-/*   Updated: 2020/11/14 20:37:33 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/11/14 20:43:31 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 #define GREY_GRADIENT_LEN 4
 
 const t_vec3f g_gradients[GREY_GRADIENT_LEN][3] = {
-	{.3f, .3f, .3f},
-	{.15f, .15f, .15f},
-	{.2f, .2f, .2f},
-	{.25f, .25f, .25f}
+	{{0.3f, 0.3f, 0.3f}},
+	{{0.15f, 0.15f, 0.15f}},
+	{{0.2f, 0.2f, 0.2f}},
+	{{0.25f, 0.25f, 0.25f}}
 };
 
 static void		*ft_lst_to_vindices_pthread(void *param)

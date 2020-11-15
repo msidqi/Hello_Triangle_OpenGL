@@ -8,14 +8,16 @@ ifeq ($(UNAME_S),Darwin)
 	FLAGS = -framework OpenGL -lpthread -lm
 	FLAGS += $(LIBGLFW_MACOS)
 endif
+COMPILER = gcc
+COMPILER_FLAGS = -Wall -Wextra -Werror
 LIBGLFW = /usr/lib/x86_64-linux-gnu/libglfw.so.3
 LIBOPENGL = /usr/lib/x86_64-linux-gnu/libGL.so
 LIBGL_H_PATH = src/libgl/include
 LIBGL = src/libgl/libgl.a
 PARSER_H_PATH = src/parser/include
-PARSER = src/parser/src/*.c
+PARSER = src/parser/parser.a
 LIBFT_H_PATH = src/libft/include
-LIBFT = src/libft/src/*.c
+LIBFT = src/libft/libft.a
 SRC_FILES = main.c glad.c setup.c buffers.c events.c events_callbacks.c fps_counter.c texture_loader.c \
 			shaders/shader.c shaders/init_shader.c shaders/shader_setuniforms0.c shaders/shader_setuniforms1.c \
 			ft_model_world_view.c  textures/texture_helper.c textures/texture_construct.c handle_buffers.c \
@@ -29,8 +31,14 @@ HEADERSPATH = include
 
 # ----- main
 all : $(NAME)
-$(NAME) : makelibgl makelibft
-	gcc -o $(NAME) $(SRC) $(LIBGL) $(LIBFT) $(PARSER) -I$(HEADERSPATH) -I$(LIBGL_H_PATH) -I$(PARSER_H_PATH) -I$(LIBFT_H_PATH) $(FLAGS)
+$(NAME) : $(LIBFT) $(LIBGL) $(PARSER) $(OBJ)
+	$(COMPILER) $(COMPILER_FLAGS) -o $(NAME) $(SRC) $(LIBGL) $(LIBFT) $(PARSER) -I$(HEADERSPATH) -I$(LIBFT_H_PATH) -I$(LIBGL_H_PATH) -I$(PARSER_H_PATH) $(FLAGS)
+
+$(OBJ_PATH)/%.o : $(SRC_PATH)/%.c | $(OBJ_PATH)
+	$(CC) -c $< -o $@ -I$(HEADERSPATH) -I$(LIBFT_H_PATH) -I$(LIBGL_H_PATH) -I$(PARSER_H_PATH)
+
+$(OBJ_PATH):
+	mkdir $(OBJ_PATH) .obj/shaders .obj/textures
 
 clean : cleanlibgl cleanlibft cleanparser
 	rm -rf $(NAME)
@@ -39,19 +47,19 @@ fclean : clean cleanlibgl cleanlibft cleanparser
 re : fclean all
 
 # ----- parser
-makeparser:
+$(PARSER):
 	make -C src/parser
 cleanparser:
 	make fclean -C src/parser
 
 # ----- libgl
-makelibgl:
+$(LIBGL):
 	make -C src/libgl
 cleanlibgl:
 	make fclean -C src/libgl
 
 # ----- libft
-makelibft:
+$(LIBFT):
 	make -C src/libft
 cleanlibft:
 	make fclean -C src/libft
