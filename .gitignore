@@ -7,3 +7,4 @@ calc.c
 *.gch
 capsule_original.obj
 log
+scop

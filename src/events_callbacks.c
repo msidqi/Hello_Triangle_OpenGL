@@ -6,13 +6,16 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 21:37:17 by msidqi            #+#    #+#             */
-/*   Updated: 2020/11/15 12:11:12 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/11/15 14:29:06 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "scop.h"
 
-void	scroll_callback(UNUSED GLFWwindow *window, UNUSED double xoffset, double yoffset)
+void	scroll_callback(
+	GLFWwindow *window,
+	double xoffset,
+	double yoffset)
 {
 	t_event_handler *e;
 
@@ -34,14 +37,17 @@ void	scroll_callback(UNUSED GLFWwindow *window, UNUSED double xoffset, double yo
 	}
 	else
 	{
-		if (yoffset > 0)
-			e->translation.z += .3f * e->translation_mod;
-		if (yoffset < 0)
-			e->translation.z -= .3f * e->translation_mod;
+		e->translation.z = yoffset > 0 ? e->translation.z + .3f *
+		e->translation_mod : e->translation.z - .3f * e->translation_mod;
 	}
+	(void)window;
+	(void)xoffset;
 }
 
-void	cursor_position_callback(UNUSED GLFWwindow *window, double xpos, double ypos)
+void	cursor_position_callback(
+	GLFWwindow *window,
+	double xpos,
+	double ypos)
 {
 	t_event_handler *e;
 
@@ -60,10 +66,14 @@ void	cursor_position_callback(UNUSED GLFWwindow *window, double xpos, double ypo
 	}
 	e->mouse_xpos_old = xpos;
 	e->mouse_ypos_old = ypos;
+	(void)window;
 }
 
-void	mouse_button_callback(UNUSED GLFWwindow *window,
-							int button, int action, UNUSED int mods)
+void	mouse_button_callback(
+	GLFWwindow *window,
+	int button,
+	int action,
+	int mods)
 {
 	t_event_handler *e;
 
@@ -76,14 +86,16 @@ void	mouse_button_callback(UNUSED GLFWwindow *window,
 		e->is_right_click = 1;
 	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
 		e->is_right_click = 0;
+	(void)window;
+	(void)mods;
 }
 
 void	key_callback(
-	UNUSED GLFWwindow *window,
+	GLFWwindow *window,
 	int key,
-	UNUSED int scancode,
+	int scancode,
 	int action,
-	UNUSED int mods)
+	int mods)
 {
 	t_event_handler *e;
 
@@ -95,13 +107,18 @@ void	key_callback(
 		else
 			ft_handle_key_press(e, key);
 	}
+	(void)scancode;
+	(void)mods;
 }
 
 /*
 ** callback to resize the viewport @ window size-change
 */
 
-void	framebuffer_size_callback(UNUSED GLFWwindow *window, int width, int height)
+void	framebuffer_size_callback(
+	GLFWwindow *window,
+	int width,
+	int height)
 {
 	t_event_handler *e;
 
@@ -109,4 +126,5 @@ void	framebuffer_size_callback(UNUSED GLFWwindow *window, int width, int height)
 	e->height = height;
 	e->width = width;
 	glViewport(0, 0, width, height);
+	(void)window;
 }

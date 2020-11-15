@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/20 20:21:26 by msidqi            #+#    #+#             */
-/*   Updated: 2020/11/15 12:08:47 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/11/15 14:22:05 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 # define WINDOW_NAME "Scop"
 # define VERTEX_SHADER_PATH "src/shaders/shaderSource/vertex.glsl"
 # define FRAGEMENT_SHADER_PATH "src/shaders/shaderSource/fragment.glsl"
-# define UNUSED __attribute__((unused))
+
 typedef struct		s_wind
 {
 	GLFWwindow		*window;

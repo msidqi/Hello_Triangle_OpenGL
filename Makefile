@@ -1,4 +1,4 @@
-NAME = exec
+NAME = scop
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
 	FLAGS = -lglfw -lGL -lX11 -lpthread -lXrandr -lXi -ldl -lm
@@ -41,7 +41,7 @@ $(OBJ_PATH):
 	mkdir $(OBJ_PATH) .obj/shaders .obj/textures
 
 clean : cleanlibgl cleanlibft cleanparser
-	rm -rf $(NAME)
+	rm -rf .obj
 fclean : clean cleanlibgl cleanlibft cleanparser
 	rm -rf $(NAME)
 re : fclean all
