@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:34 by msidqi            #+#    #+#             */
-/*   Updated: 2020/11/14 20:29:32 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/11/15 14:56:15 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,40 +24,6 @@ static void		cleanup(t_env *env)
 		env->tex->destroy(&env->tex);
 	if (env->shader)
 		ft_memdel((void **)&env->shader);
-}
-
-static void		handle_screen(GLFWwindow *window)
-{
-	glfwSwapBuffers(window);
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
-
-static void		update(t_env *env)
-{
-	static int has_tex = -1;
-
-	ft_fps_print();
-	process_input(env->window, env->e_handler);
-	if (has_tex < 0)
-	{
-		if (((env->obj->flags & F_TEXTURE_INDEX) && env->tex))
-			has_tex = 2;
-		else
-			has_tex = env->tex ? 1 : 0;
-	}
-	env->shader->set_float(env->shader, "hasTexture", has_tex);
-	env->shader->set_float(env->shader, "scale_factor",
-									env->e_handler->scale_factor);
-	env->shader->set_float(env->shader, "mix_value",
-									env->e_handler->mix_value);
-	env->shader->set_float(env->shader, "isShading",
-									env->e_handler->is_shading);
-	env->shader->set_float(env->shader, "noise_coef",
-									env->e_handler->noise_coef);
-	ft_model_world_view(env->e_handler, &env->final_matrix);
-	env->shader->set_mat4f(env->shader, "final_matrix",
-									(const t_mat4f *)&env->final_matrix);
 }
 
 static void		init_env(t_env *e)
@@ -86,15 +52,14 @@ int				main(int argc, char **argv)
 	e.shader->use(e.shader);
 	ft_event_handler_init(&e);
 	e.tex = load_texture(argc > 2 ? argv[2] : NULL, e.shader);
+	if (((e.obj->flags & F_TEXTURE_INDEX) && e.tex))
+		e.shader->set_float(e.shader, "hasTexture", 2);
+	else
+		e.shader->set_float(e.shader, "hasTexture", e.tex ? 1 : 0);
 	handle_buffers(&e);
 	while (!glfwWindowShouldClose(e.window))
 	{
-		update(&e);
-		bind_vao(e.vao);
-		glDrawElements(GL_TRIANGLES, e.obj->indices_len * 3,
-												GL_UNSIGNED_INT, 0);
-		handle_screen(e.window);
-		glfwPollEvents();
+		main_loop(&e);
 	}
 	cleanup(&e);
 	return (0);
