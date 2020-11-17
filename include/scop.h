@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/20 20:21:26 by msidqi            #+#    #+#             */
-/*   Updated: 2020/11/15 14:53:56 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/11/17 20:38:44 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,6 @@ typedef struct		s_env
 	char			*vs_path;
 	char			*fs_path;
 }					t_env;
-
 
 void				main_loop(t_env *e);
 

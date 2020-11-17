@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:34 by msidqi            #+#    #+#             */
-/*   Updated: 2020/11/15 14:53:18 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/11/17 20:39:39 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,12 @@ static void		update(t_env *env)
 									(const t_mat4f *)&env->final_matrix);
 }
 
-void	main_loop(t_env *e)
+void			main_loop(t_env *e)
 {
-		update(e);
-		bind_vao(e->vao);
-		glDrawElements(GL_TRIANGLES, e->obj->indices_len * 3,
-												GL_UNSIGNED_INT, 0);
-		handle_screen(e->window);
-		glfwPollEvents();
+	update(e);
+	bind_vao(e->vao);
+	glDrawElements(GL_TRIANGLES, e->obj->indices_len * 3,
+											GL_UNSIGNED_INT, 0);
+	handle_screen(e->window);
+	glfwPollEvents();
 }

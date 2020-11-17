@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/07 12:50:34 by msidqi            #+#    #+#             */
-/*   Updated: 2020/11/15 14:56:15 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/11/17 20:42:01 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,14 @@
 
 static void		cleanup(t_env *env)
 {
-	glDeleteVertexArrays(1, &env->vao);
-	glDeleteBuffers(1, &env->ebo);
-	glDeleteBuffers(1, &env->vbo);
+	if (env->vao)
+		glDeleteVertexArrays(1, &env->vao);
+	if (env->ebo)
+		glDeleteBuffers(1, &env->ebo);
+	if (env->vbo)
+		glDeleteBuffers(1, &env->vbo);
+	if (env->window)
+		glfwDestroyWindow(env->window);
 	glfwTerminate();
 	if (env->obj)
 		ft_destroy_object(&env->obj);
@@ -35,6 +40,7 @@ static void		init_env(t_env *e)
 	e->window = NULL;
 	e->vs_path = VERTEX_SHADER_PATH;
 	e->fs_path = FRAGEMENT_SHADER_PATH;
+	e->window = NULL;
 }
 
 int				main(int argc, char **argv)

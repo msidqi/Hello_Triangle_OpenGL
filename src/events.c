@@ -6,7 +6,7 @@
 /*   By: msidqi <msidqi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 21:37:17 by msidqi            #+#    #+#             */
-/*   Updated: 2020/11/14 19:36:21 by msidqi           ###   ########.fr       */
+/*   Updated: 2020/11/17 20:37:23 by msidqi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,27 @@ t_event_handler	*get_event_handler(void)
 
 static void		input_smooth_transition(t_event_handler *e_handler)
 {
+	static int dir = 1;
+
 	if (e_handler->initial_trans_time == .0f)
 		e_handler->initial_trans_time = (float)glfwGetTime();
-	if (e_handler->is_smooth_transition)
+	if (dir == 1)
 		e_handler->mix_value +=
-		((float)glfwGetTime() - e_handler->initial_trans_time) / 10000.0f;
+		((float)glfwGetTime() - e_handler->initial_trans_time) / 100.0f;
+	else if (dir == -1)
+		e_handler->mix_value -=
+		((float)glfwGetTime() - e_handler->initial_trans_time) / 100.0f;
 	if (e_handler->mix_value > 1.0f)
 	{
+		dir = -1;
 		e_handler->mix_value = 1.0f;
+		e_handler->is_smooth_transition = 0;
+		e_handler->initial_trans_time = .0f;
+	}
+	else if (e_handler->mix_value < .0f)
+	{
+		dir = 1;
+		e_handler->mix_value = .0f;
 		e_handler->is_smooth_transition = 0;
 		e_handler->initial_trans_time = .0f;
 	}
